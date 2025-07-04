@@ -33,6 +33,7 @@ build-backend = "hatchling.build"
 dev = [
     "pyright>=1.1.402",
     "pytest>=8.4.1",
+    "pytest-cov>=6.2.1",
     "ruff>=0.12.1",
 ]
 
