@@ -91,14 +91,13 @@ class Polynomial:
             )
 
             monomials.append(f"{' + ' if coefficient >= 0 else ' - '}")
-            monomials.append(
-                f"{
-                    abs(int(coefficient))
-                    if float(coefficient).is_integer()
-                    else abs(coefficient)
-                }"
-                f"{'*' if variables else ''}{variables}"
-            )
+
+            if float(coefficient).is_integer():
+                coef_value = abs(int(coefficient))
+            else:
+                coef_value = abs(coefficient)
+
+            monomials.append(f"{coef_value}{'*' if variables else ''}{variables}")
 
         if self.input_coefficients[0] >= 0:
             monomials.pop(0)
