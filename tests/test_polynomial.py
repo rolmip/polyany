@@ -41,6 +41,8 @@ def test_polynomial_string_representation(input_data, expected_string):
         (([1, 2, 3], [10, 11, 12]), ValueError),
         # coefficients without 1 dimension
         (([[0, 0], [1, 0], [0, 1]], [[1, 2], [3, 4]]), ValueError),
+        # non unique exponents
+        (([[0, 0], [0, 0]], [1, 2]), ValueError),
         # different number of exponents and coefficients
         (([[1, 2], [0, 0], [1, 1], [2, 1]], [10, 11, 12]), ValueError),
         # nonlinear polynomial (negative exponents)
