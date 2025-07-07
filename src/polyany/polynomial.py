@@ -51,6 +51,10 @@ class Polynomial:
             )
             raise ValueError(msg)
 
+        if len(np.unique(converted_exponents, axis=0)) != len(converted_exponents):
+            msg = "Exponents entries must be unique."
+            raise ValueError(msg)
+
         if len(converted_exponents) != len(converted_coefficients):
             msg = (
                 "Number of exponents and coefficients must match, "
