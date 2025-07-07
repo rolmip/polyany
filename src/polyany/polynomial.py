@@ -86,6 +86,9 @@ class Polynomial:
         for exponent, coefficient in zip(
             self.input_exponents, self.input_coefficients, strict=True
         ):
+            if coefficient == 0:
+                continue
+
             variables = "*".join(
                 [
                     f"x_{idx + 1}^{deg}" if deg > 1 else f"x_{idx + 1}"
@@ -94,17 +97,22 @@ class Polynomial:
                 ]
             )
 
-            monomials.append(f"{' + ' if coefficient >= 0 else ' - '}")
-
             if float(coefficient).is_integer():
                 coef_value = abs(int(coefficient))
             else:
                 coef_value = abs(coefficient)
 
-            monomials.append(f"{coef_value}{'*' if variables else ''}{variables}")
+            coef_str = "" if coef_value == 1 and variables else str(coef_value)
 
-        if self.input_coefficients[0] >= 0:
-            monomials.pop(0)
+            term = f"{coef_str}{'*' if variables and coef_str else ''}{variables}"
+            sign = " - " if coefficient < 0 else (" + " if monomials else "")
+
+            monomials.append(f"{sign}{term}" if sign else term)
+
+        if not monomials:
+            return "0"
+
+        monomials[0] = monomials[0].replace(" ", "")
 
         return "".join(monomials)
 
