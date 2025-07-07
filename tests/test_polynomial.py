@@ -18,6 +18,17 @@ from polyany.polynomial import Polynomial
             (np.array(range(4)).reshape(-1, 1), np.array([13, 11.5, 2, 1.333])),
             "13 + 11.5*x_1 + 2*x_1^2 + 1.333*x_1^3",
         ),
+        (
+            (np.array([[0, 0], [1, 0], [0, 1], [1, 1]]), np.array([0, -1, 1, -1])),
+            "-x_1 + x_2 - x_1*x_2",
+        ),
+        (
+            (
+                np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]]),
+                np.array([0, 0, 0, 0]),
+            ),
+            "0",
+        ),
     ],
 )
 def test_polynomial_string_representation(input_data, expected_string):
