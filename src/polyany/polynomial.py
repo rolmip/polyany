@@ -18,7 +18,7 @@ class Polynomial:
     ) -> tuple[np.ndarray, np.ndarray, np.int_]:
         try:
             converted_coefficients = (
-                np.array(input_coefficients)
+                np.asarray(input_coefficients)
                 .astype(dtype=np.float64, casting="safe")
                 .squeeze()
             )
@@ -30,7 +30,7 @@ class Polynomial:
             raise TypeError(msg) from e
 
         try:
-            converted_exponents = np.array(input_exponents).astype(
+            converted_exponents = np.asarray(input_exponents).astype(
                 dtype=np.int_, casting="safe"
             )
         except Exception as e:
