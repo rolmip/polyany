@@ -49,6 +49,8 @@ uv sync
 
 ## 📄 License
 
+This project is open-source and licensed under the BSD-3-Clause.
+
 ## 👥 Contributors
 
 PolyAny is maintained by the **ROLMIP** developers:
