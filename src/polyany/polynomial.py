@@ -51,7 +51,7 @@ class Polynomial:
             )
             raise ValueError(msg)
 
-        if converted_exponents.shape[0] != converted_coefficients.shape[0]:
+        if len(converted_exponents) != len(converted_coefficients):
             msg = (
                 "Number of exponents and coefficients must match, "
                 f"got {converted_exponents.shape[0]} exponents / "
