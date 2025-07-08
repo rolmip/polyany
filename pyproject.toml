@@ -31,6 +31,7 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
+    "pre-commit>=4.2.0",
     "pyright>=1.1.402",
     "pytest>=8.4.1",
     "pytest-cov>=6.2.1",
@@ -83,7 +84,7 @@ select = [
     "N",
     "NPY",
 ]
-ignore = ["T201", "COM812"]
+ignore = ["T201", "COM812", "TD003", "FIX002"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["ANN201", "S101"]

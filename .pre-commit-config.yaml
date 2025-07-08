@@ -1,0 +1,22 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-added-large-files
+      - id: check-yaml
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.12.2
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+        exclude: ^tests/
+      - id: ruff-format
+
+  - repo: https://github.com/jsh9/pydoclint
+    rev: 0.6.7
+    hooks:
+      - id: pydoclint
+        args: [--style=numpy, --check-return-types=False]
