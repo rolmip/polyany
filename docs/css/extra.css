@@ -1,0 +1,18 @@
+:root > * {
+  --md-primary-fg-color: #341f97;
+  --md-typeset-a-color: #54a0ff;
+  --md-accent-fg-color: #2e86de;
+}
+
+.md-header__title .md-ellipsis {
+  font-family: "Young Serif", var(--md-text-font), serif;
+  font-weight: 200;
+}
+
+[dir="ltr"]
+  .md-nav--integrated
+  > .md-nav__list
+  > .md-nav__item--active
+  .md-nav--secondary {
+  border-color: var(--md-accent-fg-color);
+}

@@ -1,5 +1,5 @@
 <h1 align="center">
-<img src="assets/polyany_logo.png" alt="PolyAny Logo" height="200">
+<img src="docs/assets/polyany_logo.png" alt="PolyAny Logo" height="200">
 </h1><br>
 
 ![Static Badge](https://img.shields.io/badge/status-pre--alpha-orange)
