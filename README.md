@@ -6,6 +6,7 @@
 [![codecov](https://codecov.io/gh/rolmip/polyany/graph/badge.svg?token=XMNXDY6AZ7)](https://codecov.io/gh/rolmip/polyany)
 [![Tests](https://github.com/rolmip/polyany/actions/workflows/tests.yml/badge.svg)](https://github.com/rolmip/polyany/actions/workflows/tests.yml)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/rolmip/polyany/main.svg)](https://results.pre-commit.ci/latest/github/rolmip/polyany/main)
 
 **A Python package for algebraic manipulation of multivariate polynomials.**
 
