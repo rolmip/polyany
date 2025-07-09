@@ -60,19 +60,19 @@ PolyAny is maintained by the [ROLMIP](https://rolmip.github.io/) developers:
 
     ---
 
-    :octicons-mail-16: [agulhari@utfpr.edu.br](mailto:agulhari@utfpr.edu.br)<br>
-    :simple-github: [@agulhari](https://github.com/agulhari)<br>
-    :simple-orcid: [ORCID](https://orcid.org/0000-0001-7630-1828)
+    [:octicons-mail-16: agulhari@utfpr.edu.br](mailto:agulhari@utfpr.edu.br)<br>
+    [:simple-github: /agulhari](https://github.com/agulhari)<br>
+    [:simple-orcid: ORCID](https://orcid.org/0000-0001-7630-1828)
 
 
   - :simple-devbox: **Esdras Battosti**
 
     ---
 
-    :octicons-mail-16: [esdras.2019@alunos.utfpr.edu.br](mailto:esdras.2019@alunos.utfpr.edu.br)<br>
-    :simple-github: [/ximiraxelo](https://github.com/ximiraxelo)<br>
-    :material-linkedin: [/esdrasbattosti](https://www.linkedin.com/in/esdrasbattosti/)<br>
-    :simple-orcid: [ORCID](https://orcid.org/0000-0002-9288-6376)
+    [:octicons-mail-16: esdras.2019@alunos.utfpr.edu.br](mailto:esdras.2019@alunos.utfpr.edu.br)<br>
+    [:simple-github: /ximiraxelo](https://github.com/ximiraxelo)<br>
+    [:material-linkedin: /esdrasbattosti](https://www.linkedin.com/in/esdrasbattosti/)<br>
+    [:simple-orcid: ORCID](https://orcid.org/0000-0002-9288-6376)
 
 </div>
 
