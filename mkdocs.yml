@@ -1,5 +1,7 @@
 site_name: PolyAny
 site_url: https://rolmip.github.io/polyany
+site_author: Cristiano Agulhari, Esdras Battosti
+site_description: A Python package for algebraic manipulation of multivariate polynomials
 repo_url: https://github.com/rolmip/polyany
 repo_name: rolmip/polyany
 edit_uri: edit/main/docs/
@@ -92,3 +94,6 @@ extra_css:
 extra_javascript:
   - javascript/mathjax.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+copyright:
+  Copyright &copy; 2025 Cristiano Agulhari and Esdras Battosti
