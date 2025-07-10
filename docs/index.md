@@ -31,9 +31,9 @@
 
 ## :sparkles: Overview
 
-PolyAny provides a flexible framework for representing and manipulating multivariate polynomials using structured, non-symbolic representations.
+{{ polyany }} provides a flexible framework for representing and manipulating multivariate polynomials using structured, non-symbolic representations.
 
-Unlike symbolic engines, PolyAny operates directly on the algebraic structure of polynomials (coefficients and exponents), enabling integration with numerical libraries and efficient structural transformations.
+Unlike symbolic engines, {{ polyany }} operates directly on the algebraic structure of polynomials (coefficients and exponents), enabling integration with numerical libraries and efficient structural transformations.
 
 ---
 
@@ -52,7 +52,7 @@ This project is open-source and licensed under the [BSD-3-Clause](https://openso
 
 ## :busts_in_silhouette: Contributors
 
-PolyAny is maintained by the [ROLMIP](https://rolmip.github.io/) developers:
+{{ polyany }} is maintained by the [ROLMIP](https://rolmip.github.io/) developers:
 
 <div class="grid cards" markdown>
 

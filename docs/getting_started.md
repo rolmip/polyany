@@ -2,7 +2,7 @@
 
 ## :pencil: Creating polynomials
 
-In PolyAny a polynomial can be created in many forms. The most flexible way is defining a matrix of `exponents` and a vector of `coefficients`.
+In {{ polyany }} a polynomial can be created in many forms. The most flexible way is defining a matrix of `exponents` and a vector of `coefficients`.
 
 ### :one: From exponents and coefficients
 
@@ -44,7 +44,7 @@ The `exponents` matrix contains the exponents of each monomial of the polynomial
 
     It is very important that the coefficients appear in the **same order** as their corresponding rows in the exponents matrix.
 
-To create a polynomial from an exponents matrix and a coefficients vector in <span class="polyany">PolyAny</span>, use the following syntax:
+To create a polynomial from an exponents matrix and a coefficients vector in {{ polyany }}, use the following syntax:
 
 ```py
 from polyany import Polynomial
