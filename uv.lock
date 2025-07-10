@@ -532,10 +532,8 @@ dev = [
     { name = "pytest-cov" },
     { name = "ruff" },
 ]
-doc = [
-    { name = "mkdocs-macros-plugin" },
-]
 docs = [
+    { name = "mkdocs-macros-plugin" },
     { name = "mkdocs-material" },
 ]
 
@@ -550,8 +548,10 @@ dev = [
     { name = "pytest-cov", specifier = ">=6.2.1" },
     { name = "ruff", specifier = ">=0.12.1" },
 ]
-doc = [{ name = "mkdocs-macros-plugin", specifier = ">=1.3.7" }]
-docs = [{ name = "mkdocs-material", specifier = ">=9.6.15" }]
+docs = [
+    { name = "mkdocs-macros-plugin", specifier = ">=1.3.7" },
+    { name = "mkdocs-material", specifier = ">=9.6.15" },
+]
 
 [[package]]
 name = "pre-commit"
