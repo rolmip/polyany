@@ -25,6 +25,12 @@ dependencies = [
     "numpy>=2.3.1",
 ]
 
+[project.urls]
+Homepage = "https://rolmip.github.io/polyany/"
+Documentation = "https://rolmip.github.io/polyany/"
+Repository = "https://github.com/rolmip/polyany"
+Issues = "https://github.com/rolmip/polyany/issues"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
