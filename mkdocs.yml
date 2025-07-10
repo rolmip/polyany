@@ -51,6 +51,7 @@ theme:
 
 plugins:
   - search
+  - macros
 
 nav:
   - PolyAny: index.md
