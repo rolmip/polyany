@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from itertools import product
 
 import numpy as np
@@ -138,3 +140,17 @@ class Polynomial:
         full_coefficients = full_coefficients[sorted_idx]
 
         return full_exponents, full_coefficients
+
+    @classmethod
+    def univariate(cls, coefficients: npt.ArrayLike) -> Polynomial:
+        converted_coefficients = np.asarray(coefficients)
+
+        if converted_coefficients.ndim != 1:
+            msg = (
+                f"Coefficients must have 1 dimension, got {converted_coefficients.ndim}"
+            )
+            raise ValueError(msg)
+
+        exponents = np.arange(0, len(converted_coefficients)).reshape(-1, 1)
+
+        return cls(exponents, coefficients)
