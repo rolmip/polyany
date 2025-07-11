@@ -63,3 +63,28 @@ The code above creates the following multivariate polynomial:
 $$
 P(\mathbf{x}) = 1 + 2\,x_1 + 3\,x_2
 $$
+
+### :two: Univariate Polynomials
+
+??? definition "Univariate Polynomials"
+
+    A univariate polynomial $P(x_1)$ is a polynomial that depends on a single variable $x_1$. An example of univariate polynomial is:
+
+    $$
+    P(x_1) = 2 x_1^2 + 3 x_1 + 4
+    $$
+
+To create univariate polynomials, a simpler syntax can be used, it only requires a `coefficients` vector.
+
+```py
+from polyany import Polynomial
+
+coefficients = [1, 5, 8, 9]
+univar_poly = Polynomial.univariate(coefficients)
+```
+
+The coefficients are related with power of the variable $x_1$ in increasing degree. The code above creates the polynomial:
+
+$$
+P(x_1) = 1 + 5\,x_1 + 8\,x_1^2 + 9\,x_1^3
+$$
