@@ -22,3 +22,11 @@ repos:
     hooks:
       - id: pydoclint
         args: [--style=numpy, --check-return-types=False]
+
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.8.3
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+      - id: commitizen-branch
+        stages: [pre-push]

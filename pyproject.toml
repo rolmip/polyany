@@ -37,6 +37,7 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
+    "commitizen>=4.8.3",
     "pre-commit>=4.2.0",
     "pyright>=1.1.402",
     "pytest>=8.4.1",
@@ -126,3 +127,11 @@ executionEnvironments = [{ root = "src" }]
 addopts = "-s --color=yes --tb=short"
 pythonpath = ["src"]
 testpaths = ["tests"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "pep440"
+version_provider = "uv"
+update_changelog_on_bump = true
+major_version_zero = true
