@@ -67,3 +67,31 @@ def test_polynomial_string_representation(input_data, expected_string):
 def test_polynomial_creation_exceptions(input_data, expected_exception):
     with pytest.raises(expected_exception):
         Polynomial(*input_data)
+
+
+@pytest.mark.parametrize(
+    "input_data,expected_string",
+    [
+        ([1], "1"),
+        ([-1], "-1"),
+        ([1, 2, 3], "1 + 2*x_1 + 3*x_1^2"),
+    ],
+)
+def test_polynomial_univariate(input_data, expected_string):
+    poly = Polynomial.univariate(input_data)
+
+    assert str(poly) == expected_string
+
+
+@pytest.mark.parametrize(
+    "input_data,expected_exception",
+    [
+        # scalar input
+        (1, ValueError),
+        # coefficients without 1 dimension
+        ([[1]], ValueError),
+    ],
+)
+def test_polynomial_univariate_exceptions(input_data, expected_exception):
+    with pytest.raises(expected_exception):
+        Polynomial.univariate(input_data)
