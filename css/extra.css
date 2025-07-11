@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&family=Raleway:ital,wght@0,100..900;1,100..900&family=Young+Serif&display=swap');
+
+:root > * {
+  --md-title-font: "Young Serif";
+  --md-primary-fg-color: #341f97;
+  --md-typeset-a-color: #54a0ff;
+  --md-accent-fg-color: #2e86de;
+}
+
+.polyany,
+.md-header__title .md-ellipsis,
+.md-nav--primary .md-nav__title[for="__drawer"] {
+  font-family: var(--md-title-font), var(--md-text-font), serif;
+  font-weight: lighter;
+}
+
+[dir="ltr"]
+  .md-nav--integrated
+  > .md-nav__list
+  > .md-nav__item--active
+  .md-nav--secondary {
+  border-color: var(--md-accent-fg-color);
+}
