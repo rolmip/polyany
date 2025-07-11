@@ -6,16 +6,20 @@ import numpy.typing as npt
 
 class Polynomial:
     def __init__(self, exponents: npt.ArrayLike, coefficients: npt.ArrayLike) -> None:
-        self.input_exponents, self.input_coefficients, self.degree = (
-            self._sanitize_inputs(exponents, coefficients)
+        input_exponents, input_coefficients = self._sanitize_inputs(
+            exponents, coefficients
         )
-        self.n_monomials, self.n_vars = self.input_exponents.shape
 
-        self.exponents, self.coefficients = self._full_representation()
+        self.n_vars = input_exponents.shape[1]
+        self.degree = np.max(np.sum(input_exponents, axis=1))
+
+        self.exponents, self.coefficients = self._full_representation(
+            input_exponents, input_coefficients
+        )
 
     def _sanitize_inputs(
         self, input_exponents: npt.ArrayLike, input_coefficients: npt.ArrayLike
-    ) -> tuple[np.ndarray, np.ndarray, np.int_]:
+    ) -> tuple[np.ndarray, np.ndarray]:
         try:
             converted_coefficients = np.asarray(input_coefficients).astype(
                 dtype=np.float64, casting="safe"
@@ -68,21 +72,14 @@ class Polynomial:
             )
             raise ValueError(msg)
 
-        monomials_degree = np.sum(converted_exponents, axis=1)
-        sorted_idx = np.lexsort((*converted_exponents.T, monomials_degree))
-        converted_coefficients = converted_coefficients[sorted_idx]
-        converted_exponents = converted_exponents[sorted_idx]
-
-        polynomial_degree = np.max(monomials_degree)
-
-        return converted_exponents, converted_coefficients, polynomial_degree
+        return converted_exponents, converted_coefficients
 
     def __repr__(self) -> str:
         # TODO(@ximiraxelo): truncate output for large polynomials
 
         monomials: list[str] = []
         for exponent, coefficient in zip(
-            self.input_exponents, self.input_coefficients, strict=True
+            self.exponents, self.coefficients, strict=True
         ):
             if coefficient == 0:
                 continue
@@ -114,10 +111,13 @@ class Polynomial:
 
         return "".join(monomials)
 
-    def _full_representation(self) -> tuple[np.ndarray, np.ndarray]:
+    def _full_representation(
+        self, exponents: np.ndarray, coefficients: np.ndarray
+    ) -> tuple[np.ndarray, np.ndarray]:
+        n_monomials = len(exponents)
+
         input_monomials = {
-            tuple(self.input_exponents[i]): self.input_coefficients[i]
-            for i in range(self.n_monomials)
+            tuple(exponents[i]): coefficients[i] for i in range(n_monomials)
         }
 
         full_exponents = np.array(
@@ -131,5 +131,10 @@ class Polynomial:
         full_coefficients = np.array(
             [input_monomials.get(tuple(exponent), 0.0) for exponent in full_exponents]
         )
+
+        monomials_degree = np.sum(full_exponents, axis=1)
+        sorted_idx = np.lexsort((*full_exponents.T, monomials_degree))
+        full_exponents = full_exponents[sorted_idx]
+        full_coefficients = full_coefficients[sorted_idx]
 
         return full_exponents, full_coefficients
