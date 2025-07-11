@@ -17,10 +17,8 @@ class Polynomial:
         self, input_exponents: npt.ArrayLike, input_coefficients: npt.ArrayLike
     ) -> tuple[np.ndarray, np.ndarray, np.int_]:
         try:
-            converted_coefficients = (
-                np.asarray(input_coefficients)
-                .astype(dtype=np.float64, casting="safe")
-                .squeeze()
+            converted_coefficients = np.asarray(input_coefficients).astype(
+                dtype=np.float64, casting="safe"
             )
         except Exception as e:
             msg = (
