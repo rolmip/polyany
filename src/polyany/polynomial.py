@@ -3,11 +3,11 @@ from __future__ import annotations
 from itertools import product
 
 import numpy as np
-import numpy.typing as npt
+from numpy.typing import ArrayLike
 
 
 class Polynomial:
-    def __init__(self, exponents: npt.ArrayLike, coefficients: npt.ArrayLike) -> None:
+    def __init__(self, exponents: ArrayLike, coefficients: ArrayLike) -> None:
         input_exponents, input_coefficients = self._sanitize_inputs(
             exponents, coefficients
         )
@@ -20,7 +20,7 @@ class Polynomial:
         )
 
     def _sanitize_inputs(
-        self, input_exponents: npt.ArrayLike, input_coefficients: npt.ArrayLike
+        self, input_exponents: ArrayLike, input_coefficients: ArrayLike
     ) -> tuple[np.ndarray, np.ndarray]:
         try:
             converted_coefficients = np.asarray(input_coefficients).astype(
@@ -142,7 +142,7 @@ class Polynomial:
         return full_exponents, full_coefficients
 
     @classmethod
-    def univariate(cls, coefficients: npt.ArrayLike) -> Polynomial:
+    def univariate(cls, coefficients: ArrayLike) -> Polynomial:
         converted_coefficients = np.asarray(coefficients)
 
         if converted_coefficients.ndim != 1:
@@ -155,7 +155,7 @@ class Polynomial:
 
         return cls(exponents, coefficients)
 
-    def __call__(self, point: npt.ArrayLike) -> np.float64:
+    def __call__(self, point: ArrayLike) -> np.float64:
         try:
             converted_point = np.asarray(point).astype(dtype=np.float64, casting="safe")
         except Exception as e:
