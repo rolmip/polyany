@@ -52,6 +52,16 @@ theme:
 plugins:
   - search
   - macros
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_source: false
+            docstring_style: numpy
+            show_root_heading: true
+            show_root_full_path: false
 
 nav:
   - PolyAny: index.md
