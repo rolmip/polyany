@@ -21,7 +21,11 @@ repos:
     rev: 0.6.7
     hooks:
       - id: pydoclint
-        args: [--style=numpy, --check-return-types=False]
+        args:
+          - --style=numpy
+          - --check-return-types=False
+          - --check-class-attributes=False
+          - --skip-checking-raises=True
 
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v4.8.3
