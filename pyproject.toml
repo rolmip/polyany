@@ -125,9 +125,9 @@ venvPath = "."
 executionEnvironments = [{ root = "src" }]
 
 [tool.pytest.ini_options]
-addopts = "-s --color=yes --tb=short"
+addopts = "-s --color=yes --tb=short --doctest-modules"
 pythonpath = ["src"]
-testpaths = ["tests"]
+testpaths = ["tests", "src"]
 
 [tool.commitizen]
 name = "cz_conventional_commits"
