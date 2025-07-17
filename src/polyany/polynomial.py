@@ -154,3 +154,30 @@ class Polynomial:
         exponents = np.arange(0, len(converted_coefficients)).reshape(-1, 1)
 
         return cls(exponents, coefficients)
+
+    def __call__(self, point: npt.ArrayLike) -> np.float64:
+        try:
+            converted_point = np.asarray(point).astype(dtype=np.float64, casting="safe")
+        except Exception as e:
+            msg = (
+                "Point must be safe-convertible to NumPy 1D-arrays with float entries."
+            )
+            raise TypeError(msg) from e
+
+        if converted_point.ndim != 1:
+            msg = f"Point must have 1 dimension, got {converted_point.ndim}."
+            raise ValueError(msg)
+
+        if len(converted_point) != self.n_vars:
+            msg = (
+                f"Point must have {self.n_vars} component(s), "
+                f"got {len(converted_point)}."
+            )
+            raise ValueError(msg)
+
+        if np.all(converted_point == 0):
+            return self.coefficients[0]
+
+        return self.coefficients @ np.prod(
+            np.power(converted_point, self.exponents), axis=1
+        )
