@@ -7,6 +7,76 @@ from numpy.typing import ArrayLike
 
 
 class Polynomial:
+    """A multivariate polynomial class.
+
+    Represents a multivariate polynomial in the form:
+
+    P(X) = ∑ c_i * x_1^e_i1 * x_2^e_i2 * ... * x_n^e_in
+
+    where `c_i` are the coefficients and `e_ji` are the exponents of each monomial.
+
+    Parameters
+    ----------
+    exponents : ArrayLike
+        A nested sequence or a NumPy 2D-array with shape (n_monomials, n_vars),
+        where each row contains the exponents of one monomial.
+        The order of variables is assumed to be increasing, i.e.,
+        [x_1, x_2, ..., x_n].
+    coefficients : ArrayLike
+        A sequence or a NumPy 1D-array with shape (n_monomials,). Containing the
+        corresponding scalar multipliers of each monomial.
+
+    Attributes
+    ----------
+    n_vars : int
+        Number of variables in the polynomial.
+    degree : int
+        Total degree of the polynomial.
+    exponents : ndarray
+        A NumPy 2D-array of shape (n_monomials, n_vars) representing the exponents
+        of the complete polynomial.
+    coefficients : ndarray
+        A NumPy 1D-array with the corresponding coefficients.
+
+    Raises
+    ------
+    TypeError
+        If the exponents cannot be safely converted to a NumPy 2D-array of integers.
+        If the coefficients cannot be safely converted to a NumPy 1D-array of floats.
+
+    ValueError
+        If the number of exponents does not match the number of coefficients.
+        If the input arrays dimensions are inconsistent.
+        If the exponents rows are not unique.
+        If any exponent entry is negative.
+
+    Notes
+    -----
+    Internally, the polynomial stores a complete representation, i.e., it includes all
+    possible monomials up to the given `degree`. Both `exponents` and `coefficients` are
+    stored accordingly.
+
+    The current implementation allows coefficients to be complex numbers,
+    but complex polynomials are not yet officially supported and may produce
+    unexpected behavior.
+
+    Although attributes are publicly accessible, modifying them directly may lead
+    to bugs and unexpected behavior.
+
+    Examples
+    --------
+    >>> from polyany import Polynomial
+
+    Create the polynomial: ``5*x_1**2*x_2*x_3**4*x_5 + 3*x_1*x_2 + 4*x_4**4*x_5**3``
+
+    >>> exponents = [[1, 1, 0, 0, 0],
+    ...              [0, 0, 0, 4, 3],
+    ...              [2, 1, 4, 0, 1]]
+    >>> coefficients = [3, 4, 5]
+    >>> Polynomial(exponents, coefficients)
+    3*x_1*x_2 + 4*x_4^4*x_5^3 + 5*x_1^2*x_2*x_3^4*x_5
+    """
+
     def __init__(self, exponents: ArrayLike, coefficients: ArrayLike) -> None:
         input_exponents, input_coefficients = self._sanitize_inputs(
             exponents, coefficients
