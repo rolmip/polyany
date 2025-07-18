@@ -32,10 +32,10 @@ class Polynomial:
         Number of variables in the polynomial.
     degree : int
         Total degree of the polynomial.
-    exponents : ndarray
+    exponents : np.ndarray
         A NumPy 2D-array of shape (n_monomials, n_vars) representing the exponents
         of the complete polynomial.
-    coefficients : ndarray
+    coefficients : np.ndarray
         A NumPy 1D-array with the corresponding coefficients.
 
     Raises

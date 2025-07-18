@@ -33,8 +33,6 @@ theme:
   logo: assets/logo_white.svg
   favicon: assets/logo_purple.svg
   features:
-    - navigation.instant
-    - navigation.instant.progress
     - navigation.tracking
     - navigation.sections
     - navigation.indexes
@@ -48,6 +46,7 @@ theme:
     - content.code.annotate
     - content.action.view
     - content.action.edit
+    - content.tooltips
 
 plugins:
   - search
@@ -56,12 +55,22 @@ plugins:
       default_handler: python
       handlers:
         python:
+          inventories:
+            - https://docs.python.org/3/objects.inv
+            - https://numpy.org/doc/stable/objects.inv
           paths: [src]
           options:
             show_source: false
             docstring_style: numpy
             show_root_heading: true
             show_root_full_path: false
+            merge_init_into_class: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            separate_signature: true
+            show_signature_annotations: true
+            signature_crossrefs: true
+            docstring_section_style: spacy
 
 nav:
   - PolyAny: index.md
