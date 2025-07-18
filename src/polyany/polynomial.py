@@ -83,7 +83,7 @@ class Polynomial:
         )
 
         self.n_vars = input_exponents.shape[1]
-        self.degree = np.max(np.sum(input_exponents, axis=1))
+        self.degree = np.max(np.sum(input_exponents, axis=1)).item()
 
         self.exponents, self.coefficients = self._full_representation(
             input_exponents, input_coefficients
