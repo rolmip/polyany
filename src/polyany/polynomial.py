@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import warnings
 from itertools import product
 
 import numpy as np
@@ -222,6 +223,51 @@ class Polynomial:
             raise ValueError(msg)
 
         exponents = np.arange(0, len(converted_coefficients)).reshape(-1, 1)
+
+        return cls(exponents, coefficients)
+
+    @classmethod
+    def quadratic_form(cls, matrix: ArrayLike) -> Polynomial:
+        try:
+            converted_matrix = np.asarray(matrix).astype(
+                dtype=np.float64, casting="safe"
+            )
+        except Exception as e:
+            msg = (
+                "Matrix must be safe-convertible to NumPy 2D-array with float entries."
+            )
+            raise TypeError(msg) from e
+
+        if converted_matrix.ndim != 2:
+            msg = f"Matrix must have 2 dimensions, got {converted_matrix.ndim}"
+            raise ValueError(msg)
+
+        if converted_matrix.shape[0] != converted_matrix.shape[1]:
+            msg = f"Matrix must be square, got {converted_matrix.shape}"
+            raise ValueError(msg)
+
+        if not np.allclose(converted_matrix, converted_matrix.T):
+            msg = "Matrix is not symmetric, its symmetric part will be considered"
+            warnings.warn(msg, UserWarning, stacklevel=2)
+
+            converted_matrix = (converted_matrix + converted_matrix.T) / 2
+
+        degree = 2
+        n_vars = len(converted_matrix)
+
+        upper_plus_one_mask = np.arange(n_vars).reshape(-1, 1) < np.arange(n_vars)
+        upper_matrix = np.where(
+            upper_plus_one_mask, 2 * converted_matrix, converted_matrix
+        )
+        coefficients = np.flipud(upper_matrix[np.triu_indices(n_vars)])
+
+        exponents = np.array(
+            [
+                exponent
+                for exponent in product(range(degree + 1), repeat=n_vars)
+                if sum(exponent) == degree
+            ]
+        )
 
         return cls(exponents, coefficients)
 
