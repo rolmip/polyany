@@ -95,3 +95,41 @@ def test_polynomial_univariate(input_data, expected_string):
 def test_polynomial_univariate_exceptions(input_data, expected_exception):
     with pytest.raises(expected_exception):
         Polynomial.univariate(input_data)
+
+
+@pytest.mark.parametrize(
+    "input_data,expected_string",
+    [
+        ([[1, 2], [2, 3]], "x_1^2 + 4*x_1*x_2 + 3*x_2^2"),
+        ([[0, 1.8], [1.8, 1]], "3.6*x_1*x_2 + x_2^2"),
+        ([[0, 10], [0, 0]], "10*x_1*x_2"),
+    ],
+)
+def test_polynomial_quadratic_form(input_data, expected_string):
+    poly = Polynomial.quadratic_form(input_data)
+
+    assert str(poly) == expected_string
+
+
+@pytest.mark.parametrize(
+    "input_data,expected_exception",
+    [
+        # scalar input
+        (1, ValueError),
+        # input with 1 dimension
+        ([1], ValueError),
+        # input with 3 dimensions
+        ([[[1]]], ValueError),
+        # non-square matrix
+        ([[1, 2, 3], [4, 5, 6]], ValueError),
+    ],
+)
+def test_polynomial_quadratic_form_exceptions(input_data, expected_exception):
+    with pytest.raises(expected_exception):
+        Polynomial.quadratic_form(input_data)
+
+
+def test_polynomial_quadratic_form_warning():
+    with pytest.warns(UserWarning):
+        non_symmetric_matrix = [[1, 2], [3, 4]]
+        Polynomial.quadratic_form(non_symmetric_matrix)
