@@ -228,6 +228,39 @@ class Polynomial:
 
     @classmethod
     def quadratic_form(cls, matrix: ArrayLike) -> Polynomial:
+        """Creates a quadratic form from its associated symmetric matrix
+
+        Parameters
+        ----------
+        matrix : ArrayLike
+            A nested sequence or a NumPy 2D array of shape (`n_vars`, `n_vars`) that
+            representing the symmetric matrix associated with the quadratic form.
+
+        Returns
+        -------
+        Polynomial
+            A second-degree homogeneous multivariate polynomial, i.e, a quadratic form.
+
+        Raises
+        ------
+        TypeError
+            If `matrix` is not safe-convertible to a NumPy 2D array with float entries.
+        ValueError
+            If `matrix` does not have 2 dimensions or is not square.
+
+        Warns
+        -----
+        UserWarning
+            If `matrix`is not symmetric.
+
+        Examples
+        --------
+        >>> matrix = [[5, 3, 2],
+        ...           [3, 1, 0],
+        ...           [2, 0, 7]]
+        >>> Polynomial.quadratic_form(matrix)
+        5*x_1^2 + 6*x_1*x_2 + x_2^2 + 4*x_1*x_3 + 7*x_3^2
+        """
         try:
             converted_matrix = np.asarray(matrix).astype(
                 dtype=np.float64, casting="safe"
