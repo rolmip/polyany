@@ -114,6 +114,8 @@ def test_polynomial_quadratic_form(input_data, expected_string):
 @pytest.mark.parametrize(
     "input_data,expected_exception",
     [
+        # non safe-convertible to numpy array
+        ("polyany", TypeError),
         # scalar input
         (1, ValueError),
         # input with 1 dimension
