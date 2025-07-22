@@ -1,3 +1,5 @@
+import operator
+
 import numpy as np
 import pytest
 
@@ -101,3 +103,15 @@ def test_polynomial_equality_ndarrays():
     array = np.array([1, 2, 3])
 
     assert not np.all(poly == array)
+
+
+@pytest.mark.parametrize(
+    "operation", [operator.lt, operator.le, operator.gt, operator.ge]
+)
+@pytest.mark.parametrize(
+    "other", [1, "polyany", None, [1, 2, 3], (1, 2, 3), np.array([1, 2, 3])]
+)
+def test_polynomial_ordering_exceptions(operation, other):
+    poly = Polynomial.univariate([1, 2, 3])
+    with pytest.raises(TypeError):
+        operation(poly, other)
