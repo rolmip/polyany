@@ -88,3 +88,68 @@ The coefficients are related with power of the variable $x_1$ in increasing degr
 $$
 P(x_1) = 1 + 5\,x_1 + 8\,x_1^2 + 9\,x_1^3
 $$
+
+### :three: Quadratic forms
+
+??? definition "Quadratic forms"
+
+    A quadratic form is a second-degree homogeneous multivariate polynomial. It can be represented using a symmetric matrix $A \in \mathbb{R}^{n \times n}$ as:
+
+    $$
+    P(\mathbf{x}) = \sum_{i=1}^{n}\sum_{j=1}^{n} a_{ij} x_i x_j = \mathbf{x}^{\top}A\mathbf{x}
+    $$
+
+    For further reading, see [*Linear Algebra Done Right* by Sheldon Axler](https://linear.axler.net/)
+
+To create a quadratic form a **square matrix** must be provided.
+
+```py
+from polyany import Polynomial
+
+matrix = [[1, 2], [2, 3]] #(1)!
+quadratic_form_poly = Polynomial.quadratic_form(matrix)
+```
+
+1. The input matrix can also be nested tuples or a NumPy 2D array
+
+The code above creates the polynomial:
+
+$$
+P(\mathbf{x}) = x_1^2 + 4\,x_1\,x_2 + 3\,x_2^2
+$$
+
+!!! warning "Non-symmetric matrices"
+
+    If the input matrix $A$ is not symmetric, a warning is raised and it's **symmetric part** $A_{\mathrm{sym}}$ is used instead, where
+
+    $$
+    A_{\mathrm{sym}} = \frac{1}{2} \left( A + A^{\top} \right)
+    $$
+
+    ??? example "Example"
+
+        Suppose the input matrix is:
+
+        $$
+        A =
+        \begin{bmatrix}
+            1 & 6 \\
+            0 & 2
+        \end{bmatrix}
+        $$
+
+        Its symmetric part is:
+
+        $$
+        A_{\mathrm{sym}} =
+        \begin{bmatrix}
+            1 & 3 \\
+            3 & 2
+        \end{bmatrix}
+        $$
+
+        which corresponds to the polynomial:
+
+        $$
+        P(\mathbf{x}) = x_1^2 + 6\,x_1\,x_2 + 2\,x_2^2
+        $$
