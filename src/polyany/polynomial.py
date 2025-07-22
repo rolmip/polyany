@@ -253,6 +253,11 @@ class Polynomial:
         UserWarning
             If `matrix`is not symmetric.
 
+        Notes
+        -----
+        In `matrix` is not symmetric, its symmetric part is used instead,
+        computed as `symmetric_part = (matrix + matrix.T) / 2`.
+
         Examples
         --------
         >>> matrix = [[5, 3, 2],
