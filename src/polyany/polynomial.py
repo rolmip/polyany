@@ -336,6 +336,15 @@ class Polynomial:
             np.power(converted_point, self.exponents), axis=1
         )
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+
+        if self.degree != other.degree or self.n_vars != other.n_vars:
+            return False
+
+        return np.allclose(self.coefficients, other.coefficients)
+
     def __lt__(self, other: object) -> bool:
         return NotImplemented
 
