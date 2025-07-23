@@ -153,3 +153,30 @@ $$
         $$
         P(\mathbf{x}) = x_1^2 + 6\,x_1\,x_2 + 2\,x_2^2
         $$
+
+## :heavy_equals_sign: Comparing polynomials
+
+In {{ polyany }}, Polynomial objects support **equality comparisons** (`==`) with other polynomials, but do not support **ordering comparisons** (`<`, `<=`, `>`, `>=`), which raises a `TypeError`.
+
+Two polynomials are considered equal **if and only if** they have:
+
+- [x] The same number of variables (`n_vars` attribute)
+- [x] The same total degree (`degree` attribute)
+- [x] The same coefficients (`coefficients` attribute)[^1]
+
+[^1]:
+    A comparison is made by using [`np.allclose()`](https://numpy.org/doc/stable/reference/generated/numpy.allclose.html), which checks if two arrays are equal within a tolerance.
+
+Comparison with other types (sequences, scalars, NumPy arrays) always returns [`NotImplemented`](https://docs.python.org/3/library/constants.html#NotImplemented).
+
+???+ tip "Example"
+
+    Internally, the polynomial object stores a complete representation[^2] of the coefficients and exponents. These are stored in an **ordered way**, meaning that a polynomial is created **regardless of the order** of the input coefficients and exponents.
+
+    ```py
+    >>> poly1 = Polynomial([[0, 0], [1, 0], [0, 1]], [1, 2, 3])
+    >>> poly2 = Polynomial([[0, 1], [0, 0], [1, 0]], [3, 1, 2])
+    >>> poly1 == poly2
+    True
+    ```
+[^2]: A complete representation includes all possible monomials up to the total degree of the polynomial.
