@@ -1,0 +1,14 @@
+# https://stackoverflow.com/a/78003720
+
+name: Tests and Coverage
+on:
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - src/**
+      - tests/**
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "No relevant changes in src or tests"'
