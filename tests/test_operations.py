@@ -1,3 +1,5 @@
+import operator
+
 import numpy as np
 import pytest
 
@@ -38,3 +40,78 @@ def test_polynomial_eval_exceptions(input_data, expected_exception):
     with pytest.raises(expected_exception):
         poly = Polynomial([[0, 0, 0], [0, 1, 0], [1, 2, 0], [2, 0, 2]], [-2, 5, 9, -3])
         poly(input_data)
+
+
+def test_polynomial_equality_true():
+    poly1 = Polynomial.univariate([1, 2, 3])
+    poly2 = Polynomial([[0], [1], [2]], [1, 2, 3])
+
+    assert poly1 == poly2
+
+
+def test_polynomial_equality_false():
+    poly1 = Polynomial.univariate([1, 2, 3])
+    poly2 = Polynomial.univariate([10, 20, 30])
+
+    assert poly1 != poly2
+
+
+def test_polynomial_equality_different_order():
+    exponents1 = [[0, 0, 0], [1, 1, 2], [3, 1, 0], [0, 0, 2]]
+    coefficients1 = [1, 2, 3, 4]
+    poly1 = Polynomial(exponents1, coefficients1)
+
+    exponents2 = [[3, 1, 0], [0, 0, 0], [0, 0, 2], [1, 1, 2]]
+    coefficients2 = [3, 1, 4, 2]
+    poly2 = Polynomial(exponents2, coefficients2)
+
+    assert poly1 == poly2
+
+
+def test_polynomial_equality_different_degree():
+    poly1 = Polynomial([[0, 0], [1, 0], [0, 1]], [0, 1, 2])
+    poly2 = Polynomial([[0, 0], [1, 0], [0, 2]], [0, 1, 2])
+
+    assert poly1 != poly2
+
+
+def test_polynomial_equality_different_n_vars():
+    poly1 = Polynomial.univariate([1, 2, 3])
+    poly2 = Polynomial([[0, 0], [0, 1], [0, 2]], [1, 2, 3])
+
+    assert poly1 != poly2
+
+
+@pytest.mark.parametrize(
+    "input_data",
+    [
+        1,
+        "polyany",
+        None,
+        [1, 2, 3],
+        (1, 2, 3),
+    ],
+)
+def test_polynomial_equality_different_types(input_data):
+    poly = Polynomial.univariate([1, 2, 3])
+
+    assert poly != input_data
+
+
+def test_polynomial_equality_ndarrays():
+    poly = Polynomial.univariate([1, 2, 3])
+    array = np.array([1, 2, 3])
+
+    assert not np.all(poly == array)
+
+
+@pytest.mark.parametrize(
+    "operation", [operator.lt, operator.le, operator.gt, operator.ge]
+)
+@pytest.mark.parametrize(
+    "other", [1, "polyany", None, [1, 2, 3], (1, 2, 3), np.array([1, 2, 3])]
+)
+def test_polynomial_ordering_exceptions(operation, other):
+    poly = Polynomial.univariate([1, 2, 3])
+    with pytest.raises(TypeError):
+        operation(poly, other)

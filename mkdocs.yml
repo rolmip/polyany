@@ -107,6 +107,10 @@ markdown_extensions:
       generic: true
   - toc:
       permalink: true
+  - footnotes
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
 
 extra_css:
   - css/extra.css
