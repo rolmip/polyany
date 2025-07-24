@@ -356,3 +356,47 @@ class Polynomial:
 
     def __ge__(self, other: object) -> bool:
         return NotImplemented
+
+    def shift(self, k: int = 1) -> Polynomial:
+        if not isinstance(k, int):
+            msg = f"k must be an int, got {type(k)}."
+            raise TypeError(msg)
+
+        exponents = self.exponents.copy()
+        coefficients = self.coefficients.copy()
+
+        if k < 0:
+            vars_to_remove = ", ".join(["x_" + str(idx + 1) for idx in range(abs(k))])
+
+            if self.n_vars + k < 1:
+                msg = (
+                    f"Cannot remove ({vars_to_remove}), "
+                    "at least one variable must remain, "
+                    f"ensure that k >= {-self.n_vars + 1}."
+                )
+                raise ValueError(msg)
+
+            rows_with_nonzero_exponents = np.any(exponents[:, : abs(k)] != 0, axis=1)
+            has_nonzero_coefficients = bool(
+                np.any(coefficients[rows_with_nonzero_exponents] != 0)
+            )
+
+            if has_nonzero_coefficients:
+                msg = (
+                    f"Cannot remove ({vars_to_remove}), "
+                    "at least one associated coefficient is not zero."
+                )
+                raise ValueError(msg)
+
+            exponents = exponents[~rows_with_nonzero_exponents, abs(k) :]
+            coefficients = coefficients[~rows_with_nonzero_exponents]
+
+        if k > 0:
+            exponents = np.hstack(
+                (
+                    np.zeros(shape=(len(exponents), k), dtype=np.int_),
+                    exponents,
+                )
+            )
+
+        return self.__class__(exponents, coefficients)
