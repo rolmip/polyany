@@ -469,7 +469,7 @@ class Polynomial:
 
         return self.__class__(exponents, coefficients)
 
-    def __rshift__(self, other: object) -> Polynomial:
+    def __rshift__(self, other: int) -> Polynomial:
         if not isinstance(other, int):
             return NotImplemented
 
@@ -479,7 +479,7 @@ class Polynomial:
 
         return self.shift(other)
 
-    def __lshift__(self, other: object) -> Polynomial:
+    def __lshift__(self, other: int) -> Polynomial:
         if not isinstance(other, int):
             return NotImplemented
 
