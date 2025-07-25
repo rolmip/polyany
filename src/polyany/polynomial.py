@@ -470,6 +470,26 @@ class Polynomial:
         return self.__class__(exponents, coefficients)
 
     def __rshift__(self, other: int) -> Polynomial:
+        """Adds extra variables to the Polynomial.
+
+        A shorthand for `Polynomial.shift(k)` with `k > 0` using the right shift
+        operator (`>>`). For more details, see the `Polynomial.shift()` method.
+
+        Parameters
+        ----------
+        other : int
+            The shift count. Must be a non-negative integer.
+
+        Returns
+        -------
+        Polynomial
+            A new polynomial with shifted variables.
+
+        Raises
+        ------
+        ValueError
+            - If the shift count (`other`) is negative.
+        """
         if not isinstance(other, int):
             return NotImplemented
 
@@ -480,6 +500,26 @@ class Polynomial:
         return self.shift(other)
 
     def __lshift__(self, other: int) -> Polynomial:
+        """Removes empty variables of the Polynomial.
+
+        A shorthand for `Polynomial.shift(k)` with `k < 0` using the left shift
+        operator (`<<`). For more details, see the `Polynomial.shift()` method.
+
+        Parameters
+        ----------
+        other : int
+            The shift count. Must be a non-negative integer.
+
+        Returns
+        -------
+        Polynomial
+            A new polynomial with shifted variables.
+
+        Raises
+        ------
+        ValueError
+            - If the shift count (`other`) is negative.
+        """
         if not isinstance(other, int):
             return NotImplemented
 
