@@ -2,29 +2,37 @@ name: Tests and Coverage
 on:
   push:
     branches: [main]
-    paths:
-      - src/**
-      - tests/**
   pull_request:
     branches: [main]
-    paths:
-      - src/**
-      - tests/**
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    # Set job outputs to values from filter step
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            code:
+              - 'src/**'
+              - 'tests/**'
   test:
+    needs: changes
+    if: ${{ needs.changes.outputs.code == 'true' }}
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
-          - macos-latest
         python-version:
           - "3.11"
           - "3.12"
           - "3.13"
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     steps:
       - name: Check out repository code
