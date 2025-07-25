@@ -400,3 +400,23 @@ class Polynomial:
             )
 
         return self.__class__(exponents, coefficients)
+
+    def __rshift__(self, other: object) -> Polynomial:
+        if not isinstance(other, int):
+            return NotImplemented
+
+        if other < 0:
+            msg = "Shift count must be non-negative."
+            raise ValueError(msg)
+
+        return self.shift(other)
+
+    def __lshift__(self, other: object) -> Polynomial:
+        if not isinstance(other, int):
+            return NotImplemented
+
+        if other < 0:
+            msg = "Shift count must be non-negative."
+            raise ValueError(msg)
+
+        return self.shift(-other)
