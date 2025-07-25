@@ -490,7 +490,7 @@ class Polynomial:
         ValueError
             - If the shift count (`other`) is negative.
         """
-        if not isinstance(other, int):
+        if not isinstance(other, int):  # pragma: no cover
             return NotImplemented
 
         if other < 0:
@@ -520,7 +520,7 @@ class Polynomial:
         ValueError
             - If the shift count (`other`) is negative.
         """
-        if not isinstance(other, int):
+        if not isinstance(other, int):  # pragma: no cover
             return NotImplemented
 
         if other < 0:
