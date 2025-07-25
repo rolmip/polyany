@@ -144,3 +144,15 @@ def test_polynomial_shift_invalid_left_shift(input_k):
     poly = Polynomial([[0, 0], [0, 1], [1, 0]], [10, 20, 30])
     with pytest.raises(ValueError):
         poly.shift(input_k)
+
+
+def test_polynomial_right_shift_inverse():
+    poly = Polynomial.univariate([1, 2, 3])
+
+    assert poly.shift(1).shift(-1) == poly
+
+
+def test_polynomial_left_shift_inverse():
+    poly = Polynomial([[0, 0], [0, 3], [0, 5]], [10, 20, 30])
+
+    assert poly.shift(-1).shift(1) == poly
