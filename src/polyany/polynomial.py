@@ -358,6 +358,66 @@ class Polynomial:
         return NotImplemented
 
     def shift(self, k: int = 1) -> Polynomial:
+        """Shifts the polynomial variables.
+
+        This method returns a new polynomial with its variables shifted.
+        A positive shift adds extra variables (increasing all variable indices).
+        A negative shift removes empty variables, but only if they are empty.
+
+
+        Parameters
+        ----------
+        k : int, optional
+            The shift count. If positive, adds `k` extra variables
+            (increase the variable indices). If negative, remove the first `abs(k)`
+            variables, but only if they are empty (all corresponding exponents
+            are zero).
+
+        Returns
+        -------
+        Polynomial
+            A new polynomial with shifted variables.
+
+        Raises
+        ------
+        TypeError
+            - If `k` is not an int.
+        ValueError
+            - If `k` is negative and the number of variables after shifting
+            would be less than one.
+            - If any of the first `abs(k)` variables are
+            not empty.
+
+        Notes
+        -----
+        If k = 0 a copy of the polynomial is returned.
+
+        This method is reversible as long as both directions are valid.
+
+        - The statement `poly.shift(k).shift(-k)` will return a polynomial equal to the
+        original object `poly`.
+
+        - Likewise, if `poly.shift(-k)` is possible, then applying `shift(k)` after it
+        will also return a copy of `poly`.
+
+        Examples
+        --------
+        Adding extra variables (shift right), increases the variable indices.
+
+        >>> poly = Polynomial.univariate([1, 2, 3])
+        >>> poly
+        1 + 2*x_1 + 3*x_1^2
+        >>> poly.shift(2)
+        1 + 2*x_3 + 3*x_3^2
+
+        Removing empty variables (shift left), decreases the variable indices.
+
+        >>> poly = Polynomial([[0, 1], [0, 3], [0, 5]], [10, 20, 30])
+        >>> poly
+        10*x_2 + 20*x_2^3 + 30*x_2^5
+        >>> poly.shift(-1)
+        10*x_1 + 20*x_1^3 + 30*x_1^5
+        """
         if not isinstance(k, int):
             msg = f"k must be an int, got {type(k)}."
             raise TypeError(msg)
