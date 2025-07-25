@@ -356,3 +356,175 @@ class Polynomial:
 
     def __ge__(self, other: object) -> bool:
         return NotImplemented
+
+    def shift(self, k: int = 1) -> Polynomial:
+        """Shifts the polynomial variables.
+
+        This method returns a new polynomial with its variables shifted.
+        A positive shift adds extra variables (increasing all variable indices).
+        A negative shift removes empty variables, but only if they are empty.
+
+
+        Parameters
+        ----------
+        k : int, optional
+            The shift count. If positive, adds `k` extra variables
+            (increase the variable indices). If negative, remove the first `abs(k)`
+            variables, but only if they are empty (all corresponding exponents
+            are zero).
+
+        Returns
+        -------
+        Polynomial
+            A new polynomial with shifted variables.
+
+        Raises
+        ------
+        TypeError
+            - If `k` is not an int.
+        ValueError
+            - If `k` is negative and the number of variables after shifting
+            would be less than one.
+            - If any of the first `abs(k)` variables are
+            not empty.
+
+        Notes
+        -----
+        If k = 0 a copy of the polynomial is returned.
+
+        The Python shift operators can be used as a syntactic sugar for this method.
+        `poly >> 3` is equivalent to `poly.shift(3)`, and `poly << 2` is equivalent to
+        `poly.shift(-2)`.
+
+        This method is reversible as long as both directions are valid.
+
+        - The statement `poly.shift(k).shift(-k)` will return a polynomial equal to the
+        original object `poly`.
+
+        - Likewise, if `poly.shift(-k)` is possible, then applying `shift(k)` after it
+        will also return a copy of `poly`.
+
+        Examples
+        --------
+        Adding extra variables (shift right), increases the variable indices.
+
+        >>> poly = Polynomial.univariate([1, 2, 3])
+        >>> poly
+        1 + 2*x_1 + 3*x_1^2
+        >>> poly.shift(2)
+        1 + 2*x_3 + 3*x_3^2
+        >>> poly >> 2 # equivalent syntax
+        1 + 2*x_3 + 3*x_3^2
+
+        Removing empty variables (shift left), decreases the variable indices.
+
+        >>> poly = Polynomial([[0, 1], [0, 3], [0, 5]], [10, 20, 30])
+        >>> poly
+        10*x_2 + 20*x_2^3 + 30*x_2^5
+        >>> poly.shift(-1)
+        10*x_1 + 20*x_1^3 + 30*x_1^5
+        >>> poly << 1 # equivalent syntax
+        10*x_1 + 20*x_1^3 + 30*x_1^5
+        """
+        if not isinstance(k, int):
+            msg = f"k must be an int, got {type(k)}."
+            raise TypeError(msg)
+
+        exponents = self.exponents.copy()
+        coefficients = self.coefficients.copy()
+
+        if k < 0:
+            vars_to_remove = ", ".join(["x_" + str(idx + 1) for idx in range(abs(k))])
+
+            if self.n_vars + k < 1:
+                msg = (
+                    f"Cannot remove ({vars_to_remove}), "
+                    "at least one variable must remain, "
+                    f"ensure that k >= {-self.n_vars + 1}."
+                )
+                raise ValueError(msg)
+
+            rows_with_nonzero_exponents = np.any(exponents[:, : abs(k)] != 0, axis=1)
+            has_nonzero_coefficients = bool(
+                np.any(coefficients[rows_with_nonzero_exponents] != 0)
+            )
+
+            if has_nonzero_coefficients:
+                msg = (
+                    f"Cannot remove ({vars_to_remove}), "
+                    "at least one associated coefficient is not zero."
+                )
+                raise ValueError(msg)
+
+            exponents = exponents[~rows_with_nonzero_exponents, abs(k) :]
+            coefficients = coefficients[~rows_with_nonzero_exponents]
+
+        if k > 0:
+            exponents = np.hstack(
+                (
+                    np.zeros(shape=(len(exponents), k), dtype=np.int_),
+                    exponents,
+                )
+            )
+
+        return self.__class__(exponents, coefficients)
+
+    def __rshift__(self, other: int) -> Polynomial:
+        """Adds extra variables to the Polynomial.
+
+        A shorthand for `Polynomial.shift(k)` with `k > 0` using the right shift
+        operator (`>>`). For more details, see the `Polynomial.shift()` method.
+
+        Parameters
+        ----------
+        other : int
+            The shift count. Must be a non-negative integer.
+
+        Returns
+        -------
+        Polynomial
+            A new polynomial with shifted variables.
+
+        Raises
+        ------
+        ValueError
+            - If the shift count (`other`) is negative.
+        """
+        if not isinstance(other, int):  # pragma: no cover
+            return NotImplemented
+
+        if other < 0:
+            msg = "Shift count must be non-negative."
+            raise ValueError(msg)
+
+        return self.shift(other)
+
+    def __lshift__(self, other: int) -> Polynomial:
+        """Removes empty variables of the Polynomial.
+
+        A shorthand for `Polynomial.shift(k)` with `k < 0` using the left shift
+        operator (`<<`). For more details, see the `Polynomial.shift()` method.
+
+        Parameters
+        ----------
+        other : int
+            The shift count. Must be a non-negative integer.
+
+        Returns
+        -------
+        Polynomial
+            A new polynomial with shifted variables.
+
+        Raises
+        ------
+        ValueError
+            - If the shift count (`other`) is negative.
+        """
+        if not isinstance(other, int):  # pragma: no cover
+            return NotImplemented
+
+        if other < 0:
+            msg = "Shift count must be non-negative."
+            raise ValueError(msg)
+
+        return self.shift(-other)

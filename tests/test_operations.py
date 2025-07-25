@@ -115,3 +115,44 @@ def test_polynomial_ordering_exceptions(operation, other):
     poly = Polynomial.univariate([1, 2, 3])
     with pytest.raises(TypeError):
         operation(poly, other)
+
+
+@pytest.mark.parametrize("input_data", (np.array(1), "polyany", None, [1]))
+def test_polynomial_shift_non_int_input(input_data):
+    poly = Polynomial.univariate([1, 2, 3])
+    with pytest.raises(TypeError):
+        poly.shift(input_data)
+
+
+@pytest.mark.parametrize("operation", [operator.lshift, operator.rshift])
+def test_polynomial_shift_wrapper_negative_input(operation):
+    poly = Polynomial.univariate([1, 2, 3])
+    with pytest.raises(ValueError):
+        operation(poly, -1)
+
+
+@pytest.mark.parametrize(
+    "input_k",
+    (
+        # has nonzero coefficients
+        -1,
+        # at least one variable must remain
+        -2,
+    ),
+)
+def test_polynomial_shift_invalid_left_shift(input_k):
+    poly = Polynomial([[0, 0], [0, 1], [1, 0]], [10, 20, 30])
+    with pytest.raises(ValueError):
+        poly.shift(input_k)
+
+
+def test_polynomial_right_shift_inverse():
+    poly = Polynomial.univariate([1, 2, 3])
+
+    assert poly.shift(1).shift(-1) == poly
+
+
+def test_polynomial_left_shift_inverse():
+    poly = Polynomial([[0, 0], [0, 3], [0, 5]], [10, 20, 30])
+
+    assert poly.shift(-1).shift(1) == poly
