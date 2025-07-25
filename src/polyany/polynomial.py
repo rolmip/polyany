@@ -392,6 +392,10 @@ class Polynomial:
         -----
         If k = 0 a copy of the polynomial is returned.
 
+        The Python shift operators can be used as a syntactic sugar for this method.
+        `poly >> 3` is equivalent to `poly.shift(3)`, and `poly << 2` is equivalent to
+        `poly.shift(-2)`.
+
         This method is reversible as long as both directions are valid.
 
         - The statement `poly.shift(k).shift(-k)` will return a polynomial equal to the
@@ -409,6 +413,8 @@ class Polynomial:
         1 + 2*x_1 + 3*x_1^2
         >>> poly.shift(2)
         1 + 2*x_3 + 3*x_3^2
+        >>> poly >> 2 # equivalent syntax
+        1 + 2*x_3 + 3*x_3^2
 
         Removing empty variables (shift left), decreases the variable indices.
 
@@ -416,6 +422,8 @@ class Polynomial:
         >>> poly
         10*x_2 + 20*x_2^3 + 30*x_2^5
         >>> poly.shift(-1)
+        10*x_1 + 20*x_1^3 + 30*x_1^5
+        >>> poly << 1 # equivalent syntax
         10*x_1 + 20*x_1^3 + 30*x_1^5
         """
         if not isinstance(k, int):
