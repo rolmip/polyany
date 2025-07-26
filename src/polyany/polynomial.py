@@ -214,6 +214,32 @@ class Polynomial:
 
     @classmethod
     def univariate(cls, coefficients: ArrayLike) -> Polynomial:
+        """Creates a univariate polynomial from a coefficients vector
+
+        This classmethod is a convenient shortcut to construct a univariate polynomial
+        from a coefficients vector.
+
+        Parameters
+        ----------
+        coefficients : ArrayLike
+            The coefficients of the univariate polynomial, associated with increasing
+            powers of the variable `x_1`.
+
+        Returns
+        -------
+        Polynomial
+            A univariate polynomial.
+
+        Raises
+        ------
+        ValueError
+            - If `coefficients` does not have exactly one dimension.
+
+        Examples
+        --------
+        >>> Polynomial.univariate([1, 2, -3, -4, 5])
+        1 + 2*x_1 - 3*x_1^2 - 4*x_1^3 + 5*x_1^4
+        """
         converted_coefficients = np.asarray(coefficients)
 
         if converted_coefficients.ndim != 1:
