@@ -2,17 +2,28 @@
 <img src="docs/assets/polyany_logo.png" alt="PolyAny Logo" height="200">
 </h1><br>
 
-![Static Badge](https://img.shields.io/badge/status-pre--alpha-orange)
-[![codecov](https://codecov.io/gh/rolmip/polyany/graph/badge.svg?token=XMNXDY6AZ7)](https://codecov.io/gh/rolmip/polyany)
-[![Tests](https://github.com/rolmip/polyany/actions/workflows/tests.yml/badge.svg)](https://github.com/rolmip/polyany/actions/workflows/tests.yml)
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/rolmip/polyany/main.svg)](https://results.pre-commit.ci/latest/github/rolmip/polyany/main)
+<p align="center">
+<img src="https://img.shields.io/badge/status-pre--alpha-orange" alt="Static Badge">
+<a href="https://codecov.io/gh/rolmip/polyany">
+  <img src="https://codecov.io/gh/rolmip/polyany/graph/badge.svg?token=XMNXDY6AZ7" alt="codecov">
+</a>
+<a href="https://github.com/rolmip/polyany/actions/workflows/tests.yml">
+  <img src="https://github.com/rolmip/polyany/actions/workflows/tests.yml/badge.svg" alt="Tests">
+</a>
+<a href="https://github.com/pre-commit/pre-commit">
+  <img src="https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit" alt="pre-commit">
+</a>
+<a href="https://results.pre-commit.ci/latest/github/rolmip/polyany/main">
+  <img src="https://results.pre-commit.ci/badge/github/rolmip/polyany/main.svg" alt="pre-commit.ci status">
+</a>
 
-**A Python package for algebraic manipulation of multivariate polynomials.**
+<p align="center">
+  <strong>A Python package for algebraic manipulation of multivariate polynomials.</strong>
+</p>
 
 > 🚧 **This package is under active development.**
 >
-> It is not yet stable or ready for production use. <span style="color:red">Expect breaking changes!</span>
+> It is not yet stable or ready for production use. **Expect breaking changes!**
 
 ---
 
@@ -37,17 +48,7 @@ Unlike symbolic engines, PolyAny operates directly on the algebraic structure of
 
 > ⚠️ Not yet available in PyPI.
 
-This project uses `uv` to manage dependencies and environments.
-
-> 🚀 To install uv, follow the instructions in the [official documentation](https://docs.astral.sh/uv/getting-started/installation/).
-
-For local development:
-
-```bash
-git clone https://github.com/rolmip/polyany.git
-cd polyany
-uv sync
-```
+For local development, see the [instructions in the documentation](https://rolmip.github.io/polyany/installation/#how-to-contribute)
 
 ## 📄 License
 
