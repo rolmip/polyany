@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import warnings
-from itertools import product
 
 import numpy as np
 from numpy.typing import ArrayLike
@@ -321,13 +320,9 @@ class Polynomial:
         )
         coefficients = np.flipud(upper_matrix[np.triu_indices(n_vars)])
 
-        exponents = np.array(
-            [
-                exponent
-                for exponent in product(range(degree + 1), repeat=n_vars)
-                if sum(exponent) == degree
-            ]
-        )
+        full_exponents = get_full_exponents(n_vars, degree)
+        degree_mask = np.sum(full_exponents, axis=1) == degree
+        exponents = full_exponents[degree_mask]
 
         return cls(exponents, coefficients)
 
