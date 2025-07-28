@@ -6,6 +6,8 @@ from itertools import product
 import numpy as np
 from numpy.typing import ArrayLike
 
+from .exponents import get_full_exponents
+
 
 class Polynomial:
     """A multivariate polynomial class.
@@ -193,13 +195,7 @@ class Polynomial:
             tuple(exponents[i]): coefficients[i] for i in range(n_monomials)
         }
 
-        full_exponents = np.array(
-            [
-                exponent
-                for exponent in product(range(self.degree + 1), repeat=self.n_vars)
-                if sum(exponent) <= self.degree
-            ]
-        )
+        full_exponents = get_full_exponents(self.n_vars, self.degree)
 
         full_coefficients = np.array(
             [input_monomials.get(tuple(exponent), 0.0) for exponent in full_exponents]
