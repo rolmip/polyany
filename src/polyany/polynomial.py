@@ -43,14 +43,16 @@ class Polynomial:
     Raises
     ------
     TypeError
-        If the exponents cannot be safely converted to a NumPy 2D-array of integers.
-        If the coefficients cannot be safely converted to a NumPy 1D-array of floats.
+        - If the input exponents cannot be safely converted to a
+        NumPy 2D-array of integers.
+        - If the input coefficients cannot be safely converted to a
+        NumPy 1D-array of floats.
 
     ValueError
-        If the number of exponents does not match the number of coefficients.
-        If the input arrays dimensions are inconsistent.
-        If the exponents rows are not unique.
-        If any exponent entry is negative.
+        - If the number of exponents does not match the number of coefficients.
+        - If the input arrays dimensions are inconsistent.
+        - If the input exponents rows are not unique.
+        - If any input exponent entry is negative.
 
     Notes
     -----
@@ -265,14 +267,16 @@ class Polynomial:
         Raises
         ------
         TypeError
-            If `matrix` is not safe-convertible to a NumPy 2D array with float entries.
+            - If `matrix` is not safe-convertible to a
+            NumPy 2D array with float entries.
         ValueError
-            If `matrix` does not have 2 dimensions or is not square.
+            - If `matrix` does not have 2 dimensions.
+            - If `matrix` is not square.
 
         Warns
         -----
         UserWarning
-            If `matrix`is not symmetric.
+            - If `matrix`is not symmetric.
 
         Notes
         -----
