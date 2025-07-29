@@ -154,6 +154,32 @@ $$
         P(\mathbf{x}) = x_1^2 + 6\,x_1\,x_2 + 2\,x_2^2
         $$
 
+## :input_numbers: Evaluating polynomials
+
+Polynomials can be easily evaluated in {{ polyany }} by treating the polynomial object as a callable function.
+The input argument (`point`) must be a vector with `n_vars` components.
+
+```pycon
+>>> poly = Polynomial.univariate([1, 2, 3])
+>>> poly([2]) #(1)!
+np.float64(17.0)
+```
+
+1. Even for univariate polynomials, `point` needs to be a list, tuple or NumPy 1D-array.
+
+For multivariate polynomials:
+
+```pycon
+>>> matrix = [[1, 2, 3],
+...           [2, 4, 5],
+...           [3, 5, 6]]
+>>> poly = Polynomial.quadratic_form(matrix)
+>>> poly([0, 0, 0])
+np.float64(0.0)
+>>> poly([1, 1, 1])
+np.float64(31.0)
+```
+
 ## :heavy_equals_sign: Comparing polynomials
 
 In {{ polyany }}, Polynomial objects support **equality comparisons** (`==`) with other polynomials, but do not support **ordering comparisons** (`<`, `<=`, `>`, `>=`), which raises a `TypeError`.
