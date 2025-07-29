@@ -35,7 +35,7 @@ class Polynomial:
     degree : int
         Total degree of the polynomial.
     exponents : np.ndarray
-        A NumPy 2D-array of shape (n_monomials, n_vars) representing the exponents
+        A NumPy 2D-array representing the exponents
         of the complete polynomial.
     coefficients : np.ndarray
         A NumPy 1D-array with the corresponding coefficients.
@@ -43,14 +43,16 @@ class Polynomial:
     Raises
     ------
     TypeError
-        If the exponents cannot be safely converted to a NumPy 2D-array of integers.
-        If the coefficients cannot be safely converted to a NumPy 1D-array of floats.
+        - If the input exponents cannot be safely converted to a
+        NumPy 2D-array of integers.
+        - If the input coefficients cannot be safely converted to a
+        NumPy 1D-array of floats.
 
     ValueError
-        If the number of exponents does not match the number of coefficients.
-        If the input arrays dimensions are inconsistent.
-        If the exponents rows are not unique.
-        If any exponent entry is negative.
+        - If the number of exponents does not match the number of coefficients.
+        - If the input arrays dimensions are inconsistent.
+        - If the input exponents rows are not unique.
+        - If any input exponent entry is negative.
 
     Notes
     -----
@@ -265,18 +267,20 @@ class Polynomial:
         Raises
         ------
         TypeError
-            If `matrix` is not safe-convertible to a NumPy 2D array with float entries.
+            - If `matrix` is not safe-convertible to a
+            NumPy 2D array with float entries.
         ValueError
-            If `matrix` does not have 2 dimensions or is not square.
+            - If `matrix` does not have 2 dimensions.
+            - If `matrix` is not square.
 
         Warns
         -----
         UserWarning
-            If `matrix`is not symmetric.
+            - If `matrix`is not symmetric.
 
         Notes
         -----
-        In `matrix` is not symmetric, its symmetric part is used instead,
+        If `matrix` is not symmetric, its symmetric part is used instead,
         computed as `symmetric_part = (matrix + matrix.T) / 2`.
 
         Examples
@@ -421,7 +425,7 @@ class Polynomial:
 
         This method returns a new polynomial with its variables shifted.
         A positive shift adds extra variables (increasing all variable indices).
-        A negative shift removes empty variables, but only if they are empty.
+        A negative shift removes variables, but only if they are empty.
 
 
         Parameters
@@ -449,7 +453,7 @@ class Polynomial:
 
         Notes
         -----
-        If k = 0 a copy of the polynomial is returned.
+        If `k` = 0 a copy of the polynomial is returned.
 
         The Python shift operators can be used as a syntactic sugar for this method.
         `poly >> 3` is equivalent to `poly.shift(3)`, and `poly << 2` is equivalent to
@@ -532,7 +536,8 @@ class Polynomial:
         """Adds extra variables to the Polynomial.
 
         A shorthand for `Polynomial.shift(k)` with `k > 0` using the right shift
-        operator (`>>`). For more details, see the `Polynomial.shift()` method.
+        operator (`>>`). For more details, see the
+        [`Polynomial.shift()`][polyany.polynomial.Polynomial.shift] method.
 
         Parameters
         ----------
@@ -562,7 +567,8 @@ class Polynomial:
         """Removes empty variables of the Polynomial.
 
         A shorthand for `Polynomial.shift(k)` with `k < 0` using the left shift
-        operator (`<<`). For more details, see the `Polynomial.shift()` method.
+        operator (`<<`). For more details, see the
+        [`Polynomial.shift()`][polyany.polynomial.Polynomial.shift] method.
 
         Parameters
         ----------
