@@ -280,7 +280,7 @@ class Polynomial:
 
         Notes
         -----
-        In `matrix` is not symmetric, its symmetric part is used instead,
+        If `matrix` is not symmetric, its symmetric part is used instead,
         computed as `symmetric_part = (matrix + matrix.T) / 2`.
 
         Examples
