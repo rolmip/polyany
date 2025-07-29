@@ -536,7 +536,8 @@ class Polynomial:
         """Adds extra variables to the Polynomial.
 
         A shorthand for `Polynomial.shift(k)` with `k > 0` using the right shift
-        operator (`>>`). For more details, see the `Polynomial.shift()` method.
+        operator (`>>`). For more details, see the
+        [`Polynomial.shift()`][polyany.polynomial.Polynomial.shift] method.
 
         Parameters
         ----------
@@ -566,7 +567,8 @@ class Polynomial:
         """Removes empty variables of the Polynomial.
 
         A shorthand for `Polynomial.shift(k)` with `k < 0` using the left shift
-        operator (`<<`). For more details, see the `Polynomial.shift()` method.
+        operator (`<<`). For more details, see the
+        [`Polynomial.shift()`][polyany.polynomial.Polynomial.shift] method.
 
         Parameters
         ----------
