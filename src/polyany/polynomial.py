@@ -35,7 +35,7 @@ class Polynomial:
     degree : int
         Total degree of the polynomial.
     exponents : np.ndarray
-        A NumPy 2D-array of shape (n_monomials, n_vars) representing the exponents
+        A NumPy 2D-array representing the exponents
         of the complete polynomial.
     coefficients : np.ndarray
         A NumPy 1D-array with the corresponding coefficients.
