@@ -1,0 +1,36 @@
+bug:
+  - head-branch:
+      - "^fix"
+
+CI:
+  - changed-files:
+      - any-glob-to-any-file:
+          - .github/**
+          - .pre-commit-config.yaml
+  - head-branch:
+      - "^ci"
+      - "^pre-commit-ci"
+
+dependencies:
+  - head-branch:
+      - "^build(deps)"
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - docs/**
+          - mkdocs.yml
+          - readme.md
+  - head-branch:
+      - "^docs"
+
+enhancement:
+  - head-branch:
+      - "^feat"
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - tests/**
+  - head-branch:
+      - "^test"
