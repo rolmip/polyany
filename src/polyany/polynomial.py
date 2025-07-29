@@ -425,7 +425,7 @@ class Polynomial:
 
         This method returns a new polynomial with its variables shifted.
         A positive shift adds extra variables (increasing all variable indices).
-        A negative shift removes empty variables, but only if they are empty.
+        A negative shift removes variables, but only if they are empty.
 
 
         Parameters
