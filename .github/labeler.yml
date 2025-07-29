@@ -12,6 +12,9 @@ CI:
       - "^pre-commit-ci"
 
 dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - uv.lock
   - head-branch:
       - "^build(deps)"
 
