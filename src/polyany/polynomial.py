@@ -453,7 +453,7 @@ class Polynomial:
 
         Notes
         -----
-        If k = 0 a copy of the polynomial is returned.
+        If `k` = 0 a copy of the polynomial is returned.
 
         The Python shift operators can be used as a syntactic sugar for this method.
         `poly >> 3` is equivalent to `poly.shift(3)`, and `poly << 2` is equivalent to
