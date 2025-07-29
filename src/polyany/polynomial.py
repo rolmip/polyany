@@ -327,6 +327,48 @@ class Polynomial:
         return cls(exponents, coefficients)
 
     def __call__(self, point: ArrayLike) -> np.float64:
+        """Evaluate the polynomial at a given point
+
+        Parameters
+        ----------
+        point : ArrayLike
+            A point with `n_vars` components.
+
+        Returns
+        -------
+        np.float64
+            The result of evaluating the polynomial at `point`.
+
+        Raises
+        ------
+        TypeError
+            - If `point` cannot be safely converted to a NumPy 1D-array of floats.
+        ValueError
+            - If `point` does not have exactly one dimension.
+            - If `point` does not have `n_vars` components.
+
+        Examples
+        --------
+        For univariate polynomials:
+
+        >>> poly = Polynomial.univariate([1, 2, 3])
+        >>> poly([0])
+        np.float64(1.0)
+        >>> poly([2])
+        np.float64(17.0)
+
+        For multivariate polynomials:
+        >>> exponents = [[0, 0],
+        ...              [1, 0],
+        ...              [0, 1],
+        ...              [1, 1]]
+        >>> coefficients = [9, 7, 5, 3]
+        >>> poly = Polynomial(exponents, coefficients)
+        >>> poly([0, 0])
+        np.float64(9.0)
+        >>> poly([1, 2])
+        np.float64(32.0)
+        """
         try:
             converted_point = np.asarray(point).astype(dtype=np.float64, casting="safe")
         except Exception as e:
