@@ -4,6 +4,24 @@ from collections.abc import Generator
 import numpy as np
 
 
+def domain_expansion(
+    exponents: np.ndarray, coefficients: np.ndarray, expanded_n_vars: int
+) -> tuple[np.ndarray, np.ndarray]:
+    exponents = exponents.copy()
+    coefficients = coefficients.copy()
+    extra_vars = expanded_n_vars - exponents.shape[1]
+
+    if extra_vars > 0:
+        exponents = np.hstack(
+            (
+                exponents,
+                np.zeros(shape=(len(exponents), extra_vars), dtype=np.int16),
+            )
+        )
+
+    return exponents, coefficients
+
+
 def get_full_exponents(n_vars: int, degree: int) -> np.ndarray:
     count = math.comb(n_vars + degree, degree)
     dtype = np.int16 if n_vars == 1 else (np.int16, n_vars)

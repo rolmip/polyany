@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 from numpy.typing import ArrayLike
 
-from .exponents import get_full_exponents
+from .exponents import domain_expansion, get_full_exponents
 
 if TYPE_CHECKING:
     from .types import Algebraic, Scalar
@@ -405,6 +405,44 @@ class Polynomial:
 
     def __neg__(self) -> Polynomial:
         return self.__class__(self.exponents.copy(), -self.coefficients)
+
+    def __add__(self, other: object) -> Polynomial:
+        if not isinstance(other, ALGEBRAIC_TYPE):
+            return NotImplemented
+
+        if isinstance(other, SCALAR_TYPE):
+            return self._add_scalar(other)
+
+        return self._add_polynomial(other)
+
+    def _add_scalar(self, other: Scalar) -> Polynomial:
+        coefficients = self.coefficients.copy()
+        coefficients[0] += other
+
+        return self.__class__(self.exponents.copy(), coefficients)
+
+    def _add_polynomial(self, other: Polynomial) -> Polynomial:
+        max_n_vars = max(self.n_vars, other.n_vars)
+
+        self_exponents, self_coefficients = domain_expansion(
+            self.exponents, self.coefficients, max_n_vars
+        )
+        other_exponents, other_coefficients = domain_expansion(
+            other.exponents, other.coefficients, max_n_vars
+        )
+
+        if len(self_coefficients) < len(other_coefficients):
+            self_exponents, self_coefficients, other_exponents, other_coefficients = (
+                other_exponents,
+                other_coefficients,
+                self_exponents,
+                self_coefficients,
+            )
+
+        n_monomials = len(other_coefficients)
+        self_coefficients[:n_monomials] += other_coefficients
+
+        return self.__class__(self_exponents, self_coefficients)
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
