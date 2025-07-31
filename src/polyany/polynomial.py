@@ -403,6 +403,9 @@ class Polynomial:
             np.power(converted_point, self.exponents), axis=1
         )
 
+    def __neg__(self) -> Polynomial:
+        return self.__class__(self.exponents.copy(), -self.coefficients)
+
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             return NotImplemented
