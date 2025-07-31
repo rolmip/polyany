@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import warnings
+from typing import TYPE_CHECKING
 
 import numpy as np
 from numpy.typing import ArrayLike
 
 from .exponents import get_full_exponents
+
+if TYPE_CHECKING:
+    from .types import Algebraic, Scalar
 
 
 class Polynomial:
