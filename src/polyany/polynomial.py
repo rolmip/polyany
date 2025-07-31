@@ -450,6 +450,9 @@ class Polynomial:
     def __radd__(self, other: Scalar) -> Polynomial:
         return self.__add__(other)
 
+    def __rsub__(self, other: Scalar) -> Polynomial:
+        return (-self).__add__(other)
+
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             return NotImplemented
