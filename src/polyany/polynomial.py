@@ -447,6 +447,9 @@ class Polynomial:
     def __sub__(self, other: Algebraic) -> Polynomial:
         return self.__add__(-other)
 
+    def __radd__(self, other: Scalar) -> Polynomial:
+        return self.__add__(other)
+
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             return NotImplemented
