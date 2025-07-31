@@ -597,3 +597,7 @@ class Polynomial:
             raise ValueError(msg)
 
         return self.shift(-other)
+
+
+SCALAR_TYPE = (int, float, np.integer, np.floating)
+ALGEBRAIC_TYPE = (*SCALAR_TYPE, Polynomial)
