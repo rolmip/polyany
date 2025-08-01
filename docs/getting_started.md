@@ -197,7 +197,7 @@ Comparison with other types (sequences, scalars, NumPy arrays) always returns [`
 
 ???+ tip "Example"
 
-    Internally, the polynomial object stores a complete representation[^2] of the coefficients and exponents. These are stored in an **ordered way**, meaning that a polynomial is created **regardless of the order** of the input coefficients and exponents.
+    Internally, the polynomial object stores the coefficients and exponents in an **ordered way**, meaning that a polynomial is created **regardless of the order** of the input coefficients and exponents.
 
     ```py
     >>> poly1 = Polynomial([[0, 0], [1, 0], [0, 1]], [1, 2, 3])
@@ -205,4 +205,3 @@ Comparison with other types (sequences, scalars, NumPy arrays) always returns [`
     >>> poly1 == poly2
     True
     ```
-[^2]: A complete representation includes all possible monomials up to the total degree of the polynomial.
