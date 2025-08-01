@@ -89,7 +89,7 @@ class Polynomial:
         self.n_vars = input_exponents.shape[1]
         self.degree = np.max(np.sum(input_exponents, axis=1)).item()
 
-        self.exponents, self.coefficients = self._full_representation(
+        self.exponents, self.coefficients = self._sort_inputs(
             input_exponents, input_coefficients
         )
 
@@ -187,27 +187,13 @@ class Polynomial:
 
         return "".join(monomials)
 
-    def _full_representation(
+    def _sort_inputs(
         self, exponents: np.ndarray, coefficients: np.ndarray
     ) -> tuple[np.ndarray, np.ndarray]:
-        n_monomials = len(exponents)
+        monomials_degree = np.sum(exponents, axis=1)
+        sorted_idx = np.lexsort((*exponents.T, monomials_degree))
 
-        input_monomials = {
-            tuple(exponents[i]): coefficients[i] for i in range(n_monomials)
-        }
-
-        full_exponents = get_full_exponents(self.n_vars, self.degree)
-
-        full_coefficients = np.array(
-            [input_monomials.get(tuple(exponent), 0.0) for exponent in full_exponents]
-        )
-
-        monomials_degree = np.sum(full_exponents, axis=1)
-        sorted_idx = np.lexsort((*full_exponents.T, monomials_degree))
-        full_exponents = full_exponents[sorted_idx]
-        full_coefficients = full_coefficients[sorted_idx]
-
-        return full_exponents, full_coefficients
+        return exponents[sorted_idx], coefficients[sorted_idx]
 
     @classmethod
     def univariate(cls, coefficients: ArrayLike) -> Polynomial:
