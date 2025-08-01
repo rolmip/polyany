@@ -36,7 +36,7 @@ class Polynomial:
         Total degree of the polynomial.
     exponents : np.ndarray
         A NumPy 2D-array representing the exponents
-        of the complete polynomial.
+        of the polynomial.
     coefficients : np.ndarray
         A NumPy 1D-array with the corresponding coefficients.
 
@@ -56,10 +56,6 @@ class Polynomial:
 
     Notes
     -----
-    Internally, the polynomial stores a complete representation, i.e., it includes all
-    possible monomials up to the given `degree`. Both `exponents` and `coefficients` are
-    stored accordingly.
-
     The current implementation allows coefficients to be complex numbers,
     but complex polynomials are not yet officially supported and may produce
     unexpected behavior.
