@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 from numpy.typing import ArrayLike
 
-from .exponents import domain_expansion, get_full_exponents
+from .exponents import get_quadratic_exponents
 
 if TYPE_CHECKING:
     from .types import Algebraic, Scalar
@@ -40,7 +40,7 @@ class Polynomial:
         Total degree of the polynomial.
     exponents : np.ndarray
         A NumPy 2D-array representing the exponents
-        of the complete polynomial.
+        of the polynomial.
     coefficients : np.ndarray
         A NumPy 1D-array with the corresponding coefficients.
 
@@ -60,10 +60,6 @@ class Polynomial:
 
     Notes
     -----
-    Internally, the polynomial stores a complete representation, i.e., it includes all
-    possible monomials up to the given `degree`. Both `exponents` and `coefficients` are
-    stored accordingly.
-
     The current implementation allows coefficients to be complex numbers,
     but complex polynomials are not yet officially supported and may produce
     unexpected behavior.
@@ -93,7 +89,7 @@ class Polynomial:
         self.n_vars = input_exponents.shape[1]
         self.degree = np.max(np.sum(input_exponents, axis=1)).item()
 
-        self.exponents, self.coefficients = self._full_representation(
+        self.exponents, self.coefficients = self._sort_inputs(
             input_exponents, input_coefficients
         )
 
@@ -191,27 +187,13 @@ class Polynomial:
 
         return "".join(monomials)
 
-    def _full_representation(
+    def _sort_inputs(
         self, exponents: np.ndarray, coefficients: np.ndarray
     ) -> tuple[np.ndarray, np.ndarray]:
-        n_monomials = len(exponents)
+        monomials_degree = np.sum(exponents, axis=1)
+        sorted_idx = np.lexsort((*exponents.T, monomials_degree))
 
-        input_monomials = {
-            tuple(exponents[i]): coefficients[i] for i in range(n_monomials)
-        }
-
-        full_exponents = get_full_exponents(self.n_vars, self.degree)
-
-        full_coefficients = np.array(
-            [input_monomials.get(tuple(exponent), 0.0) for exponent in full_exponents]
-        )
-
-        monomials_degree = np.sum(full_exponents, axis=1)
-        sorted_idx = np.lexsort((*full_exponents.T, monomials_degree))
-        full_exponents = full_exponents[sorted_idx]
-        full_coefficients = full_coefficients[sorted_idx]
-
-        return full_exponents, full_coefficients
+        return exponents[sorted_idx], coefficients[sorted_idx]
 
     @classmethod
     def univariate(cls, coefficients: ArrayLike) -> Polynomial:
@@ -297,7 +279,7 @@ class Polynomial:
         """
         try:
             converted_matrix = np.asarray(matrix).astype(
-                dtype=np.float64, casting="safe"
+                dtype=np.float64, casting="safe", copy=True
             )
         except Exception as e:
             msg = (
@@ -319,18 +301,15 @@ class Polynomial:
 
             converted_matrix = (converted_matrix + converted_matrix.T) / 2
 
-        degree = 2
         n_vars = len(converted_matrix)
+        index = np.arange(n_vars)
 
-        upper_plus_one_mask = np.arange(n_vars).reshape(-1, 1) < np.arange(n_vars)
-        upper_matrix = np.where(
-            upper_plus_one_mask, 2 * converted_matrix, converted_matrix
-        )
-        coefficients = np.flipud(upper_matrix[np.triu_indices(n_vars)])
+        upper_triangular_mask = index.reshape(-1, 1) < index
+        converted_matrix[upper_triangular_mask] *= 2
+        np.fill_diagonal(upper_triangular_mask, val=True)
+        coefficients = converted_matrix[upper_triangular_mask]
 
-        full_exponents = get_full_exponents(n_vars, degree)
-        degree_mask = np.sum(full_exponents, axis=1) == degree
-        exponents = full_exponents[degree_mask]
+        exponents = get_quadratic_exponents(n_vars)
 
         return cls(exponents, coefficients)
 
