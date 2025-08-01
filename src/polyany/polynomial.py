@@ -5,7 +5,7 @@ import warnings
 import numpy as np
 from numpy.typing import ArrayLike
 
-from .exponents import get_full_exponents
+from .exponents import get_quadratic_exponents
 
 
 class Polynomial:
@@ -279,7 +279,7 @@ class Polynomial:
         """
         try:
             converted_matrix = np.asarray(matrix).astype(
-                dtype=np.float64, casting="safe"
+                dtype=np.float64, casting="safe", copy=True
             )
         except Exception as e:
             msg = (
@@ -301,18 +301,15 @@ class Polynomial:
 
             converted_matrix = (converted_matrix + converted_matrix.T) / 2
 
-        degree = 2
         n_vars = len(converted_matrix)
+        index = np.arange(n_vars)
 
-        upper_plus_one_mask = np.arange(n_vars).reshape(-1, 1) < np.arange(n_vars)
-        upper_matrix = np.where(
-            upper_plus_one_mask, 2 * converted_matrix, converted_matrix
-        )
-        coefficients = np.flipud(upper_matrix[np.triu_indices(n_vars)])
+        upper_triangular_mask = index.reshape(-1, 1) < index
+        converted_matrix[upper_triangular_mask] *= 2
+        np.fill_diagonal(upper_triangular_mask, val=True)
+        coefficients = converted_matrix[upper_triangular_mask]
 
-        full_exponents = get_full_exponents(n_vars, degree)
-        degree_mask = np.sum(full_exponents, axis=1) == degree
-        exponents = full_exponents[degree_mask]
+        exponents = get_quadratic_exponents(n_vars)
 
         return cls(exponents, coefficients)
 
