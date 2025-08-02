@@ -386,7 +386,7 @@ class Polynomial:
         return self.__class__(self.exponents.copy(), -self.coefficients)
 
     def __add__(self, other: object) -> Polynomial:
-        if not isinstance(other, ALGEBRAIC_TYPE):
+        if not isinstance(other, ALGEBRAIC_TYPE):  # pragma: no cover
             return NotImplemented
 
         if isinstance(other, SCALAR_TYPE):
