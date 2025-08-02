@@ -243,3 +243,48 @@ def test_polynomial_add_quadratic_form():
     expected = Polynomial.quadratic_form(matrix1 + matrix2)
 
     assert (poly1 + poly2) == expected
+
+
+@pytest.mark.parametrize(
+    "scalar,expected_coefficient",
+    [
+        (-1, [2, 2, 3]),
+        (0, [1, 2, 3]),
+        (1, [0, 2, 3]),
+    ],
+)
+def test_polynomial_sub_scalar_with_constant_term(scalar, expected_coefficient):
+    poly = Polynomial.univariate([1, 2, 3])
+    expected = Polynomial.univariate(expected_coefficient)
+
+    assert (poly - scalar) == expected
+
+
+@pytest.mark.parametrize(
+    "scalar,expected_coefficient",
+    [
+        (-1, [1, 1, 2]),
+        (0, [0, 1, 2]),
+        (1, [-1, 1, 2]),
+    ],
+)
+def test_polynomial_sub_scalar_without_constant_term(scalar, expected_coefficient):
+    poly = Polynomial([[1, 0], [0, 1]], [1, 2])
+    expected = Polynomial([[0, 0], [1, 0], [0, 1]], expected_coefficient)
+
+    assert (poly - scalar) == expected
+
+
+@pytest.mark.parametrize(
+    "scalar,expected_coefficient",
+    [
+        (-1, [-2, -2, -3]),
+        (0, [-1, -2, -3]),
+        (1, [0, -2, -3]),
+    ],
+)
+def test_polynomial_reflected_sub_scalar(scalar, expected_coefficient):
+    poly = Polynomial.univariate([1, 2, 3])
+    expected = Polynomial.univariate(expected_coefficient)
+
+    assert (scalar - poly) == expected
