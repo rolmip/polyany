@@ -156,3 +156,10 @@ def test_polynomial_left_shift_inverse():
     poly = Polynomial([[0, 0], [0, 3], [0, 5]], [10, 20, 30])
 
     assert poly.shift(-1).shift(1) == poly
+
+
+def test_polynomial_neg():
+    poly = Polynomial.univariate([1, -2, 3])
+    neg_poly = Polynomial.univariate([-1, 2, -3])
+
+    assert -poly == neg_poly
