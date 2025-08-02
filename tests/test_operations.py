@@ -208,3 +208,38 @@ def test_polynomial_reflected_add_scalar(scalar, expected_coefficient):
     expected = Polynomial.univariate(expected_coefficient)
 
     assert (scalar + poly) == expected
+
+
+@pytest.mark.parametrize(
+    "input_exponents,input_coefficients,expected",
+    [
+        ([[0]], [0], "1 + 2*x_1 + 3*x_2 + 4*x_1^2 + 5*x_2^2"),
+        ([[1]], [1], "1 + 3*x_1 + 3*x_2 + 4*x_1^2 + 5*x_2^2"),
+        ([[2]], [1], "1 + 2*x_1 + 3*x_2 + 5*x_1^2 + 5*x_2^2"),
+        ([[0, 1]], [1], "1 + 2*x_1 + 4*x_2 + 4*x_1^2 + 5*x_2^2"),
+        (
+            [[0, 2], [1, 1]],
+            [0.5, -1.5],
+            "1 + 2*x_1 + 3*x_2 + 4*x_1^2 - 1.5*x_1*x_2 + 5.5*x_2^2",
+        ),
+        ([[0, 0, 1]], [-2], "1 + 2*x_1 + 3*x_2 - 2*x_3 + 4*x_1^2 + 5*x_2^2"),
+    ],
+)
+def test_polynomial_add_polynomial(input_exponents, input_coefficients, expected):
+    # 1 + 2*x_1 + 3*x_2 + 4*x_1^2 + 5*x_2^2
+    poly1 = Polynomial([[0, 0], [1, 0], [0, 1], [2, 0], [0, 2]], [1, 2, 3, 4, 5])
+    poly2 = Polynomial(input_exponents, input_coefficients)
+
+    assert str(poly1 + poly2) == expected
+
+
+def test_polynomial_add_quadratic_form():
+    matrix1 = np.array([[1.5, 3.14], [3.14, 2.17]])
+    poly1 = Polynomial.quadratic_form(matrix1)
+
+    matrix2 = np.array([[10, 20], [20, 30]])
+    poly2 = Polynomial.quadratic_form(matrix2)
+
+    expected = Polynomial.quadratic_form(matrix1 + matrix2)
+
+    assert (poly1 + poly2) == expected
