@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 from numpy.typing import ArrayLike
 
-from .exponents import get_quadratic_exponents
+from .exponents import domain_expansion, get_quadratic_exponents
 
 if TYPE_CHECKING:  # pragma: no cover
     from .types import Algebraic, Scalar
@@ -396,32 +396,36 @@ class Polynomial:
 
     def _add_scalar(self, other: Scalar) -> Polynomial:
         coefficients = self.coefficients.copy()
-        coefficients[0] += other
+        exponents = self.exponents.copy()
 
-        return self.__class__(self.exponents.copy(), coefficients)
+        has_constant_term = np.any(
+            np.all(self.exponents == np.zeros(self.n_vars), axis=1)
+        )
+
+        if has_constant_term:
+            coefficients[0] += other
+        else:
+            exponents = np.vstack(
+                (np.zeros((1, self.n_vars), dtype=exponents.dtype), exponents)
+            )
+            coefficients = np.concatenate((np.atleast_1d(other), coefficients))
+
+        return self.__class__(exponents, coefficients)
 
     def _add_polynomial(self, other: Polynomial) -> Polynomial:
         max_n_vars = max(self.n_vars, other.n_vars)
 
-        self_exponents, self_coefficients = domain_expansion(
-            self.exponents, self.coefficients, max_n_vars
-        )
-        other_exponents, other_coefficients = domain_expansion(
-            other.exponents, other.coefficients, max_n_vars
-        )
+        self_exponents = domain_expansion(self.exponents, max_n_vars)
+        other_exponents = domain_expansion(other.exponents, max_n_vars)
 
-        if len(self_coefficients) < len(other_coefficients):
-            self_exponents, self_coefficients, other_exponents, other_coefficients = (
-                other_exponents,
-                other_coefficients,
-                self_exponents,
-                self_coefficients,
-            )
+        stacked_exponents = np.vstack((self_exponents, other_exponents))
+        stacked_coefficients = np.concatenate((self.coefficients, other.coefficients))
 
-        n_monomials = len(other_coefficients)
-        self_coefficients[:n_monomials] += other_coefficients
+        exponents, indices = np.unique(stacked_exponents, axis=0, return_inverse=True)
+        coefficients = np.zeros(len(exponents))
+        np.add.at(coefficients, indices, stacked_coefficients)
 
-        return self.__class__(self_exponents, self_coefficients)
+        return self.__class__(exponents, coefficients)
 
     def __sub__(self, other: Algebraic) -> Polynomial:
         return self.__add__(-other)
