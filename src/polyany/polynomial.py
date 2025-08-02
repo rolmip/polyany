@@ -8,7 +8,7 @@ from numpy.typing import ArrayLike
 
 from .exponents import get_quadratic_exponents
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from .types import Algebraic, Scalar
 
 
