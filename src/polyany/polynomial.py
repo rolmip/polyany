@@ -383,6 +383,15 @@ class Polynomial:
         )
 
     def __neg__(self) -> Polynomial:
+        """The negation of the polynomial.
+
+        All coefficients are multiplied by `-1`. The exponents remain unchanged.
+
+        Returns
+        -------
+        Polynomial
+            A new polynomial with negated coefficients.
+        """
         return self.__class__(self.exponents.copy(), -self.coefficients)
 
     def __add__(self, other: object) -> Polynomial:
