@@ -386,6 +386,18 @@ class Polynomial:
         return self.__class__(self.exponents.copy(), -self.coefficients)
 
     def __add__(self, other: object) -> Polynomial:
+        """Addition with another polynomial or scalar
+
+        Parameters
+        ----------
+        other : object
+            The value to be added. A scalar can be an int, float, or NumPy scalars.
+
+        Returns
+        -------
+        Polynomial
+            A new polynomial representing the sum.
+        """
         if not isinstance(other, ALGEBRAIC_TYPE):  # pragma: no cover
             return NotImplemented
 
