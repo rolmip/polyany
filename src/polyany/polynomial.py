@@ -449,6 +449,19 @@ class Polynomial:
         return self.__class__(exponents, coefficients)
 
     def __sub__(self, other: Algebraic) -> Polynomial:
+        """Subtraction with another polynomial or scalar
+
+        Parameters
+        ----------
+        other : Algebraic
+            The value to be subtracted. A scalar can be an int, float,
+            or NumPy scalars.
+
+        Returns
+        -------
+        Polynomial
+            A new polynomial representing the difference.
+        """
         return self.__add__(-other)
 
     def __radd__(self, other: Scalar) -> Polynomial:
