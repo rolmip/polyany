@@ -17,8 +17,26 @@ from polyany import Polynomial
         ([1.9793, -4.477, -1.6816], 299.4298549970985),
     ],
 )
-def test_polynomial_eval(input_data, expected_output):
+def test_polynomial_eval_with_constant_term(input_data, expected_output):
     poly = Polynomial([[0, 0, 0], [0, 1, 0], [1, 2, 0], [2, 0, 2]], [-2, 5, 9, -3])
+
+    assert np.isclose(poly(input_data), expected_output)
+
+
+@pytest.mark.parametrize(
+    "input_data,expected_output",
+    [
+        ([0, 0, 0], 0),
+        ([4.5717, -0.7824, 1.5574], 1028.66970372905),
+        ([-0.1462, 4.1574, -4.6429], 966.154570347007),
+        ([3.0028, 2.9221, 3.4913], 13929.5674925524),
+        ([-3.5811, 4.5949, 4.3399], -42068.4310265224),
+    ],
+)
+def test_polynomial_eval_without_constant_term(input_data, expected_output):
+    poly = Polynomial(
+        [[0, 1, 2], [1, 2, 3], [2, 2, 2], [3, 2, 1]], [3.14, 2.6, 3.1, 10]
+    )
 
     assert np.isclose(poly(input_data), expected_output)
 
