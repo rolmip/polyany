@@ -205,3 +205,32 @@ Comparison with other types (sequences, scalars, NumPy arrays) always returns [`
     >>> poly1 == poly2
     True
     ```
+
+## :heavy_plus_sign: Addition and subtraction
+
+In {{ polyany }}, Polynomial objects can be added or subtracted with scalars[^2] and other polynomials.
+
+```pycon
+>>> poly = Polynomial.univariate([1, -2, 3])
+>>> poly
+1 - 2*x_1 + 3*x_1^2
+>>> poly + 5
+6 - 2*x_1 + 3*x_1^2
+>>> poly - 1
+-2*x_1 + 3*x_1^2
+```
+
+For addition/subtraction between polynomials:
+
+```pycon
+>>> another_poly = Polynomial([[0, 0], [1, 0], [0, 1], [1, 1]], [1, -2, 3, -4])
+>>> another_poly
+1 - 2*x_1 + 3*x_2 - 4*x_1*x_2
+>>> poly + another_poly
+2 - 4*x_1 + 3*x_2 + 3*x_1^2 - 4*x_1*x_2
+>>> poly - another_poly
+-3*x_2 + 3*x_1^2 + 4*x_1*x_2
+```
+
+[^2]:
+    Python builtins numeric types (`int`, `float`) and NumPy scalars. See [`Scalar`][polyany.types.Scalar]

@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import warnings
+from typing import TYPE_CHECKING
 
 import numpy as np
 from numpy.typing import ArrayLike
 
-from .exponents import get_quadratic_exponents
+from .exponents import domain_expansion, get_quadratic_exponents
+
+if TYPE_CHECKING:  # pragma: no cover
+    from .types import Algebraic, Scalar
 
 
 class Polynomial:
@@ -380,6 +384,92 @@ class Polynomial:
             np.power(converted_point, self.exponents), axis=1
         )
 
+    def __neg__(self) -> Polynomial:
+        """The negation of the polynomial.
+
+        All coefficients are multiplied by `-1`. The exponents remain unchanged.
+
+        Returns
+        -------
+        Polynomial
+            A new polynomial with negated coefficients.
+        """
+        return self.__class__(self.exponents.copy(), -self.coefficients)
+
+    def __add__(self, other: object) -> Polynomial:
+        """Addition with another polynomial or scalar
+
+        Parameters
+        ----------
+        other : object
+            The value to be added. A scalar can be an int, float, or NumPy scalars.
+
+        Returns
+        -------
+        Polynomial
+            A new polynomial representing the sum.
+        """
+        if not isinstance(other, ALGEBRAIC_TYPE):  # pragma: no cover
+            return NotImplemented
+
+        if isinstance(other, SCALAR_TYPE):
+            return self._add_scalar(other)
+
+        return self._add_polynomial(other)
+
+    def _add_scalar(self, other: Scalar) -> Polynomial:
+        coefficients = self.coefficients.copy()
+        exponents = self.exponents.copy()
+
+        has_constant_term = np.all(self.exponents[0] == 0)
+
+        if has_constant_term:
+            coefficients[0] += other
+        else:
+            exponents = np.vstack(
+                (np.zeros((1, self.n_vars), dtype=exponents.dtype), exponents)
+            )
+            coefficients = np.concatenate((np.atleast_1d(other), coefficients))
+
+        return self.__class__(exponents, coefficients)
+
+    def _add_polynomial(self, other: Polynomial) -> Polynomial:
+        max_n_vars = max(self.n_vars, other.n_vars)
+
+        self_exponents = domain_expansion(self.exponents, max_n_vars)
+        other_exponents = domain_expansion(other.exponents, max_n_vars)
+
+        stacked_exponents = np.vstack((self_exponents, other_exponents))
+        stacked_coefficients = np.concatenate((self.coefficients, other.coefficients))
+
+        exponents, indices = np.unique(stacked_exponents, axis=0, return_inverse=True)
+        coefficients = np.zeros(len(exponents))
+        np.add.at(coefficients, indices, stacked_coefficients)
+
+        return self.__class__(exponents, coefficients)
+
+    def __sub__(self, other: Algebraic) -> Polynomial:
+        """Subtraction with another polynomial or scalar
+
+        Parameters
+        ----------
+        other : Algebraic
+            The value to be subtracted. A scalar can be an int, float,
+            or NumPy scalars.
+
+        Returns
+        -------
+        Polynomial
+            A new polynomial representing the difference.
+        """
+        return self.__add__(-other)
+
+    def __radd__(self, other: Scalar) -> Polynomial:
+        return self.__add__(other)
+
+    def __rsub__(self, other: Scalar) -> Polynomial:
+        return (-self).__add__(other)
+
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             return NotImplemented
@@ -574,3 +664,7 @@ class Polynomial:
             raise ValueError(msg)
 
         return self.shift(-other)
+
+
+SCALAR_TYPE = (int, float, np.integer, np.floating)
+ALGEBRAIC_TYPE = (*SCALAR_TYPE, Polynomial)
