@@ -421,9 +421,7 @@ class Polynomial:
         coefficients = self.coefficients.copy()
         exponents = self.exponents.copy()
 
-        has_constant_term = np.any(
-            np.all(self.exponents == np.zeros(self.n_vars), axis=1)
-        )
+        has_constant_term = np.all(self.exponents[0] == 0)
 
         if has_constant_term:
             coefficients[0] += other
