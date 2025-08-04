@@ -372,7 +372,9 @@ class Polynomial:
             raise ValueError(msg)
 
         if np.all(converted_point == 0):
-            return self.coefficients[0]
+            if np.all(self.exponents[0] == 0):
+                return self.coefficients[0]
+            return np.float64(0)
 
         return self.coefficients @ np.prod(
             np.power(converted_point, self.exponents), axis=1
