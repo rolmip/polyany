@@ -318,3 +318,58 @@ def test_polynomial_prune():
 
     assert np.array_equal(pruned.exponents, expected_exponents)
     assert np.array_equal(pruned.coefficients, expected_coefficients)
+
+
+@pytest.mark.parametrize(
+    "var_index,expected_exponents,expected_coefficients",
+    [
+        (0, [[3, 1, 1], [2, 2, 2], [1, 0, 1], [0, 0, 3]], [-19.6, 1.8, 0.4, 1.1]),
+        (
+            1,
+            [[4, 0, 1], [3, 1, 2], [0, 3, 0], [0, 1, 0], [0, 0, 3]],
+            [-4.9, 1.2, -10.8, -1.2, 1.1],
+        ),
+        (
+            2,
+            [[4, 1, 0], [3, 2, 1], [2, 0, 0], [1, 0, 2], [0, 1, 2]],
+            [-4.9, 1.2, 0.2, 3.3, 3.3],
+        ),
+    ],
+)
+def test_polynomial_partial(var_index, expected_exponents, expected_coefficients):
+    exponents = [
+        [3, 2, 2],
+        [0, 4, 0],
+        [4, 1, 1],
+        [0, 2, 0],
+        [2, 0, 1],
+        [1, 0, 3],
+        [0, 1, 3],
+    ]
+    coefficients = [0.6, -2.7, -4.9, -0.6, 0.2, 1.1, 1.1]
+    poly = Polynomial(exponents, coefficients)
+    expected = Polynomial(expected_exponents, expected_coefficients)
+
+    assert poly.partial(var_index) == expected
+
+
+def test_polynomial_partial_constant():
+    poly = Polynomial.univariate([1])
+
+    assert poly.partial(0) == Polynomial.zeros(1)
+
+
+@pytest.mark.parametrize("var_index", [0, 1, 2])
+def test_polynomial_partial_null_coefficient(var_index):
+    poly = Polynomial([[1, 2, 3]], [0])
+
+    assert poly.partial(var_index) == Polynomial.zeros(3)
+
+
+@pytest.mark.parametrize(
+    "var_index,expected_exception",
+    [(1.5, TypeError), (-1, ValueError), (1, ValueError)],
+)
+def test_polynomial_partial_exceptions(var_index, expected_exception):
+    with pytest.raises(expected_exception):
+        Polynomial.univariate([1, 2, 3]).partial(var_index)
