@@ -340,6 +340,16 @@ class Polynomial:
         Notes
         -----
         Primarily intended for internal use in specific cases.
+
+        Examples
+        --------
+        >>> poly = Polynomial.zeros(3)
+        >>> poly
+        0
+        >>> poly.exponents
+        array([[0, 0, 0]])
+        >>> poly.coefficients
+        array([0.])
         """
         if not isinstance(n_vars, int):
             msg = f"n_vars must be an int, got {type(n_vars)}."
