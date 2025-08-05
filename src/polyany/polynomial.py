@@ -371,6 +371,11 @@ class Polynomial:
         Polynomial
             A pruned polynomial, containing only monomials with non-zero coefficients.
 
+        Notes
+        -----
+        If all coefficients are zero, a [`zeros`][polyany.Polynomial.zeros] polynomial
+        with the same number of variables is returned.
+
         Examples
         --------
         >>> poly = Polynomial.univariate([1, 0, 0, 1])
@@ -391,6 +396,9 @@ class Polynomial:
         The result keeps only the non-empty monomials, discarding all others.
         """
         non_empty_mask = self.coefficients != 0
+
+        if not np.any(non_empty_mask):
+            return self.__class__.zeros(self.n_vars)
 
         return self.__class__(
             self.exponents[non_empty_mask], self.coefficients[non_empty_mask]

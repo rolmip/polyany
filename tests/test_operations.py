@@ -318,3 +318,9 @@ def test_polynomial_prune():
 
     assert np.array_equal(pruned.exponents, expected_exponents)
     assert np.array_equal(pruned.coefficients, expected_coefficients)
+
+
+def test_polynomial_prune_all_zero_coefficients():
+    poly = Polynomial.univariate([0, 0, 0])
+
+    assert poly.prune() == Polynomial.zeros(1)
