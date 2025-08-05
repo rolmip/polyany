@@ -306,3 +306,15 @@ def test_polynomial_reflected_sub_scalar(scalar, expected_coefficient):
     expected = Polynomial.univariate(expected_coefficient)
 
     assert (scalar - poly) == expected
+
+
+def test_polynomial_prune():
+    pruned = Polynomial(
+        [[0, 0, 0], [0, 0, 1], [0, 1, 0], [1, 0, 0]], [1, 0, 3, 0]
+    ).prune()
+
+    expected_exponents = [[0, 0, 0], [0, 1, 0]]
+    expected_coefficients = [1, 3]
+
+    assert np.array_equal(pruned.exponents, expected_exponents)
+    assert np.array_equal(pruned.coefficients, expected_coefficients)
