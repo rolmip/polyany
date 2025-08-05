@@ -210,7 +210,7 @@ Comparison with other types (sequences, scalars, NumPy arrays) always returns [`
 
 Pruning is the process of removing **empty monomials** of a polynomial. The
 [`Polynomial`][polyany.Polynomial] object stores the exponents and coefficients
-provided by the user.
+provided by the user in a **ordered way**.
 
 ```numpy
 >>> poly = Polynomial([[0, 0], [0, 1], [1, 0], [1, 1]], [1, 0, 2, 0])
@@ -233,12 +233,12 @@ To prune a polynomial, use the [`prune`][polyany.Polynomial.prune] method:
 >>> pruned = poly.prune()
 >>> pruned.exponents
 array([[0, 0],
-       [0, 1]])
+       [1, 0]])
 >>> pruned.coefficients
 array([1., 2.])
 ```
 
-The pruned polynomial retains only the first and third term, which are the
+The pruned polynomial retains only the first and second term, which are the
 non-empty monomials.
 
 ## :heavy_plus_sign: Addition and subtraction
