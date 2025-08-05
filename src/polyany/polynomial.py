@@ -313,6 +313,54 @@ class Polynomial:
 
         return cls(exponents, coefficients)
 
+    @classmethod
+    def zeros(cls, n_vars: int) -> Polynomial:
+        """Create a zero polynomial.
+
+        Returns a polynomial with a single monomial (the constant 0)
+        in `n_vars` variables.
+
+        Parameters
+        ----------
+        n_vars : int
+            Number of variables in the polynomial.
+
+        Returns
+        -------
+        Polynomial
+            A zero polynomial.
+
+        Raises
+        ------
+        TypeError
+            - If `n_vars` is not an int.
+        ValueError
+            - If `n_vars` is less than 1.
+
+        Notes
+        -----
+        Primarily intended for internal use in specific cases.
+
+        Examples
+        --------
+        >>> poly = Polynomial.zeros(3)
+        >>> poly
+        0
+        >>> poly.exponents
+        array([[0, 0, 0]])
+        >>> poly.coefficients
+        array([0.])
+        """
+        if not isinstance(n_vars, int):
+            msg = f"n_vars must be an int, got {type(n_vars)}."
+            raise TypeError(msg)
+
+        if n_vars < 1:
+            msg = f"n_vars must be greater or equal to 1, got {n_vars}"
+            raise ValueError(msg)
+
+        return cls(np.zeros((1, n_vars), dtype=np.int_), np.zeros(1))
+
     def prune(self) -> Polynomial:
         """Prune the empty monomials of a polynomial.
 

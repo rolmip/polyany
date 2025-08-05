@@ -135,3 +135,19 @@ def test_polynomial_quadratic_form_warning():
     with pytest.warns(UserWarning):
         non_symmetric_matrix = [[1, 2], [3, 4]]
         Polynomial.quadratic_form(non_symmetric_matrix)
+
+
+@pytest.mark.parametrize(
+    "n_vars,expected_exception",
+    [
+        # non int input
+        (1.5, TypeError),
+        # Negative input
+        (-1, ValueError),
+        # Zero input
+        (0, ValueError),
+    ],
+)
+def test_polynomial_zeros_exceptions(n_vars, expected_exception):
+    with pytest.raises(expected_exception):
+        Polynomial.zeros(n_vars)
