@@ -371,6 +371,11 @@ class Polynomial:
         Polynomial
             A pruned polynomial, containing only monomials with non-zero coefficients.
 
+        Notes
+        -----
+        If all coefficients are zero, a [`zeros`][polyany.Polynomial.zeros] polynomial
+        with the same number of variables is returned.
+
         Examples
         --------
         >>> poly = Polynomial.univariate([1, 0, 0, 1])
