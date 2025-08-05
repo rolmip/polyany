@@ -313,6 +313,41 @@ class Polynomial:
 
         return cls(exponents, coefficients)
 
+    def prune(self) -> Polynomial:
+        """Prune the empty monomials of a polynomial.
+
+        Removes all monomials whose associated coefficients are exactly zero.
+
+        Returns
+        -------
+        Polynomial
+            A pruned polynomial, containing only monomials with non-zero coefficients.
+
+        Examples
+        --------
+        >>> poly = Polynomial.univariate([1, 0, 0, 1])
+        >>> poly.exponents
+        array([[0],
+               [1],
+               [2],
+               [3]])
+
+        This polynomial has four terms, but only the first and last have a
+        non-zero coefficient.
+
+        >>> pruned = poly.prune()
+        >>> pruned.exponents
+        array([[0],
+               [3]])
+
+        The result keeps only the non-empty monomials, discarding all others.
+        """
+        non_empty_mask = self.coefficients != 0
+
+        return self.__class__(
+            self.exponents[non_empty_mask], self.coefficients[non_empty_mask]
+        )
+
     def __call__(self, point: ArrayLike) -> np.float64:
         """Evaluate the polynomial at a given point
 
