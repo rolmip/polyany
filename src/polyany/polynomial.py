@@ -796,7 +796,7 @@ class Polynomial:
         if not (0 <= var_index < self.n_vars):
             if self.n_vars == 1:
                 msg = "For a univariate polynomial, var_index must be 0"
-            else:
+            else:  # pragma: no cover
                 msg = f"var_index must be between 0 and {self.n_vars - 1} (inclusive)"
             msg += f", got {var_index}."
             raise ValueError(msg)
