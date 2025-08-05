@@ -749,6 +749,38 @@ class Polynomial:
         return self.shift(-other)
 
     def partial(self, var_index: int) -> Polynomial:
+        """Partial derivative of a polynomial
+
+        Computes the partial derivative of the polynomial with respect to the variable
+        indexed by `var_index`.
+
+        Parameters
+        ----------
+        var_index : int
+            The variable index to perform the partial derivative.
+
+        Returns
+        -------
+        Polynomial
+            The resulting polynomial after differentiation.
+
+        Raises
+        ------
+        TypeError
+            - If `var_index` is not an int.
+        ValueError
+            - If `var_index` is outside the valid range [0, `n_vars` - 1].
+
+        Examples
+        --------
+        >>> poly = Polynomial([[1, 0], [2, 1]], [3, 5])
+        >>> poly
+        3*x_1 + 5*x_1^2*x_2
+        >>> poly.partial(0)
+        3 + 10*x_1*x_2
+        >>> poly.partial(1)
+        5*x_1^2
+        """
         if not isinstance(var_index, int):
             msg = f"var_index must be an int, got {type(var_index)}."
             raise TypeError(msg)
