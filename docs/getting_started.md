@@ -206,6 +206,41 @@ Comparison with other types (sequences, scalars, NumPy arrays) always returns [`
     True
     ```
 
+## :scissors: Pruning
+
+Pruning is the process of removing **empty monomials** of a polynomial. The
+[`Polynomial`][polyany.Polynomial] object stores the exponents and coefficients
+provided by the user.
+
+```numpy
+>>> poly = Polynomial([[0, 0], [0, 1], [1, 0], [1, 1]], [1, 0, 2, 0])
+>>> poly.exponents
+array([[0, 0],
+       [1, 0],
+       [0, 1],
+       [1, 1]])
+>>> poly.coefficients
+array([1., 2., 0., 0.])
+```
+
+When a polynomial is pruned, all empty monomials are removed, that is, the entries in
+`exponents` whose associated coefficients are  exactly zero, which have no effect
+on the polynomial behavior.
+
+To prune a polynomial, use the [`prune`][polyany.Polynomial.prune] method:
+
+```numpy
+>>> pruned = poly.prune()
+>>> pruned.exponents
+array([[0, 0],
+       [0, 1]])
+>>> pruned.coefficients
+array([1., 2.])
+```
+
+The pruned polynomial retains only the first and third term, which are the
+non-empty monomials.
+
 ## :heavy_plus_sign: Addition and subtraction
 
 In {{ polyany }}, Polynomial objects can be added or subtracted with scalars[^2] and other polynomials.
