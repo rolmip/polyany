@@ -392,6 +392,9 @@ class Polynomial:
         """
         non_empty_mask = self.coefficients != 0
 
+        if not np.any(non_empty_mask):
+            return self.__class__.zeros(self.n_vars)
+
         return self.__class__(
             self.exponents[non_empty_mask], self.coefficients[non_empty_mask]
         )
