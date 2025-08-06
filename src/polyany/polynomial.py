@@ -765,7 +765,7 @@ class Polynomial:
         Parameters
         ----------
         var_index : int
-            The variable index to perform the partial derivative.
+            The variable index to perform the partial derivative (zero-based).
 
         Returns
         -------
