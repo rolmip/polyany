@@ -1,6 +1,6 @@
 [project]
 name = "polyany"
-version = "0.1.0"
+version = "0.2.0"
 description = "A Python package for algebraic manipulation of multivariate polynomials"
 readme = "README.md"
 authors = [
