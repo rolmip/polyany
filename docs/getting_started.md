@@ -269,3 +269,41 @@ For addition/subtraction between polynomials:
 
 [^2]:
     Python builtins numeric types (`int`, `float`) and NumPy scalars. See [`Scalar`][polyany.types.Scalar]
+
+## :curly_loop: Partial derivatives
+
+The partial derivatives of polynomials can be evaluated by using the
+[`partial`][polyany.Polynomial.partial] method. Let's consider the polynomial:
+
+$$
+P(\mathbf{x}) = 10 + 2\,x_1^2\,x_2\,x_3 + 5\,x_1\,x_2^3\,x_3^2
+$$
+
+This can be declared in {{ polyany }} as:
+
+```pycon
+>>> poly = Polynomial([[0, 0, 0], [2, 1, 1], [1, 3, 2]], [10, 2, 5])
+```
+
+Their first partial derivatives are:
+
+$$
+\begin{cases}
+\displaystyle\frac{\partial P(\mathbf{x})}{\partial x_1} = 4\,x_1\,x_2\,x_3 + 5\,x_2^3\,x_3^2 \\[.5em]
+\displaystyle\frac{\partial P(\mathbf{x})}{\partial x_2} = 2\,x_1^2\,x_3 + 15\,x_1\,x_2^2\,x_3^2 \\[.5em]
+\displaystyle\frac{\partial P(\mathbf{x})}{\partial x_3} = 2\,x_1^2\,x_2 + 10\,x_1\,x_2^3\,x_3
+\end{cases}
+$$
+
+which can be obtained in {{ polyany }} as:
+
+```pycon
+>>> poly.partial(0) #(1)!
+4*x_1*x_2*x_3 + 5*x_2^3*x_3^2
+>>> poly.partial(1)
+2*x_1^2*x_3 + 15*x_1*x_2^2*x_3^2
+>>> poly.partial(2)
+2*x_1^2*x_2 + 10*x_1*x_2^3*x_3
+```
+
+1. The method [partial][polyany.Polynomial.partial] uses a zero-based index.

@@ -756,6 +756,67 @@ class Polynomial:
 
         return self.shift(-other)
 
+    def partial(self, var_index: int) -> Polynomial:
+        """Partial derivative of a polynomial
+
+        Computes the partial derivative of the polynomial with respect to the variable
+        indexed by `var_index`.
+
+        Parameters
+        ----------
+        var_index : int
+            The variable index to perform the partial derivative (zero-based).
+
+        Returns
+        -------
+        Polynomial
+            The resulting polynomial after differentiation.
+
+        Raises
+        ------
+        TypeError
+            - If `var_index` is not an int.
+        ValueError
+            - If `var_index` is outside the valid range [0, `n_vars` - 1].
+
+        Examples
+        --------
+        >>> poly = Polynomial([[1, 0], [2, 1]], [3, 5])
+        >>> poly
+        3*x_1 + 5*x_1^2*x_2
+        >>> poly.partial(0)
+        3 + 10*x_1*x_2
+        >>> poly.partial(1)
+        5*x_1^2
+        """
+        if not isinstance(var_index, int):
+            msg = f"var_index must be an int, got {type(var_index)}."
+            raise TypeError(msg)
+
+        if not (0 <= var_index < self.n_vars):
+            if self.n_vars == 1:
+                msg = "For a univariate polynomial, var_index must be 0"
+            else:  # pragma: no cover
+                msg = f"var_index must be between 0 and {self.n_vars - 1} (inclusive)"
+            msg += f", got {var_index}."
+            raise ValueError(msg)
+
+        exponents = self.exponents.copy()
+        coefficients = self.coefficients.copy()
+
+        coefficients *= exponents[:, var_index]
+        exponents[:, var_index] = np.maximum(0, exponents[:, var_index] - 1)
+
+        non_empty_mask = coefficients != 0
+
+        if not np.any(non_empty_mask):
+            return self.__class__.zeros(self.n_vars)
+
+        exponents = exponents[non_empty_mask]
+        coefficients = coefficients[non_empty_mask]
+
+        return self.__class__(exponents, coefficients)
+
 
 SCALAR_TYPE = (int, float, np.integer, np.floating)
 ALGEBRAIC_TYPE = (*SCALAR_TYPE, Polynomial)
