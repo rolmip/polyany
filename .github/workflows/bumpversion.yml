@@ -25,12 +25,13 @@ jobs:
       - name: Build
         run: uv build
       - name: Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@605f567f95cfaf9465d68c7dbf509f374691fb12
         with:
           body_path: "body.md"
           tag_name: ${{ env.REVISION }}
           files: |
             dist/*.tar.gz
             dist/*.whl
+          overwrite_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
