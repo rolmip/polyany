@@ -574,7 +574,7 @@ class Polynomial:
         Polynomial
             A new polynomial representing the multiplication.
         """
-        if not isinstance(other, ALGEBRAIC_TYPE):
+        if not isinstance(other, ALGEBRAIC_TYPE):  # pragma: no cover
             return NotImplemented
 
         if isinstance(other, SCALAR_TYPE):
