@@ -610,6 +610,36 @@ class Polynomial:
 
         return self.__class__(exponents, coefficients)
 
+    @np.errstate(divide="raise")
+    def __truediv__(self, other: Scalar) -> Polynomial:
+        """Division with a scalar
+
+        Parameters
+        ----------
+        other : Scalar
+            The value to divide the polynomial by.
+
+        Returns
+        -------
+        Polynomial
+            A new polynomial representing the division.
+
+        Raises
+        ------
+        ZeroDivisionError
+            - If `other` is a builtin scalar and equal to zero.
+        FloatingPointError
+            - If `other` is a NumPy scalar and equal to zero.
+
+        Notes
+        -----
+        Currently, division can only be performed between polynomials and scalars.
+        """
+        if not isinstance(other, SCALAR_TYPE):
+            return NotImplemented
+
+        return self.__mul__(1 / other)
+
     def __rmul__(self, other: Scalar) -> Polynomial:
         return self.__mul__(other)
 
