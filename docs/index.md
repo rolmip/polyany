@@ -20,6 +20,9 @@
 <a href="https://results.pre-commit.ci/latest/github/rolmip/polyany/main">
   <img src="https://results.pre-commit.ci/badge/github/rolmip/polyany/main.svg" alt="pre-commit.ci status">
 </a>
+<a href="https://pypi.org/project/polyany/">
+  <img alt="PyPI - Version" src="https://img.shields.io/pypi/v/polyany?logo=pypi&logoColor=white&logoSize=auto&labelColor=blue&color=limegreen">
+</a>
 
 </p>
 
