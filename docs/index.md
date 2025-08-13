@@ -81,6 +81,6 @@ This project is open-source and licensed under the [BSD-3-Clause](https://openso
 </div>
 
 
-## :information_source: Status
+## :information_source: About
 
 This repository is part of the early foundation of **RolmiPy**, a Python implementation of ROLMIP.
