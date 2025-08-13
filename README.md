@@ -66,6 +66,6 @@ PolyAny is maintained by the **ROLMIP** developers:
 * [Cristiano Agulhari](mailto:agulhari@utfpr.edu.br)
 * [Esdras Battosti](mailto:esdras.2019@alunos.utfpr.edu.br)
 
-## 🧪 Status
+## 🧪 About
 
 This repository is part of the early foundation of **RolmiPy**, a Python implementation of ROLMIP.
