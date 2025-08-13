@@ -1,3 +1,9 @@
+## 0.4.0 (2025-08-13)
+
+### Feat
+
+- latex representation on jupyter notebook (#42)
+
 ## 0.3.0 (2025-08-13)
 
 ### Feat
