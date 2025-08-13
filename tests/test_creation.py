@@ -38,6 +38,26 @@ def test_polynomial_string_representation(input_data, expected_string):
 
 
 @pytest.mark.parametrize(
+    "input_exponents,input_coefficients,expected_string",
+    [
+        ([[0]], [0], "$0$"),
+        ([[0]], [5], "$5$"),
+        ([[1]], [1], r"$x_{1}$"),
+        ([[1]], [-1], r"$-x_{1}$"),
+        ([[0], [1], [2]], [1, -2, 3], r"$1 - 2\,x_{1} + 3\,x_{1}^{2}$"),
+        ([[1, 2, 3, 4]], [1], r"$x_{1}\,x_{2}^{2}\,x_{3}^{3}\,x_{4}^{4}$"),
+        ([[0, 0, 0, 0, 0, 0, 0, 0, 0, 10]], [-1], r"$-x_{10}^{10}$"),
+    ],
+)
+def test_polynomial_latex_representation(
+    input_exponents, input_coefficients, expected_string
+):
+    poly = Polynomial(input_exponents, input_coefficients)
+
+    assert poly._repr_latex_() == expected_string
+
+
+@pytest.mark.parametrize(
     "input_data,expected_exception",
     [
         # string input as exponent
