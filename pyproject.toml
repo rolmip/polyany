@@ -11,8 +11,11 @@ license = "BSD-3-Clause"
 license-files = ["LICENSE"]
 keywords = ["polynomials", "multivariate", "algebra"]
 classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 3 - Alpha",
     "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Scientific/Engineering :: Mathematics",
     "Operating System :: Microsoft :: Windows",
