@@ -4,13 +4,23 @@ title: PolyAny
 
 ## :package: How to install
 
-!!! warning "Not yet available in PyPI"
+Using [`uv`](https://docs.astral.sh/uv/):
+
+```bash
+$ uv pip install polyany
+```
+
+!!! note "To install uv, follow the instructions in the [official documentation](https://docs.astral.sh/uv/getting-started/installation/)."
+
+Using pip:
+
+```bash
+$ pip install polyany
+```
 
 ## :computer: How to contribute
 
 This project uses `uv` to manage dependencies and environments.
-
-!!! note "To install uv, follow the instructions in the [official documentation](https://docs.astral.sh/uv/getting-started/installation/)."
 
 1. Clone the repository
 

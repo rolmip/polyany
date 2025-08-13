@@ -49,7 +49,9 @@ Unlike symbolic engines, PolyAny operates directly on the algebraic structure of
 
 ## 📦 Installation
 
-> ⚠️ Not yet available in PyPI.
+```bash
+pip install polyany
+```
 
 For local development, see the [instructions in the documentation](https://rolmip.github.io/polyany/installation/#how-to-contribute)
 
