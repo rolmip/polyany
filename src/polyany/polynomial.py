@@ -561,6 +561,88 @@ class Polynomial:
     def __rsub__(self, other: Scalar) -> Polynomial:
         return (-self).__add__(other)
 
+    def __mul__(self, other: object) -> Polynomial:
+        """Multiplication with another polynomial or scalar
+
+        Parameters
+        ----------
+        other : object
+            The value to be multiplied. A scalar can be an int, float, or NumPy scalars.
+
+        Returns
+        -------
+        Polynomial
+            A new polynomial representing the multiplication.
+        """
+        if not isinstance(other, ALGEBRAIC_TYPE):  # pragma: no cover
+            return NotImplemented
+
+        if isinstance(other, SCALAR_TYPE):
+            return self._mul_scalar(other)
+
+        return self._mul_polynomial(other)
+
+    def _mul_scalar(self, other: Scalar) -> Polynomial:
+        if other == 0:
+            return self.__class__.zeros(self.n_vars)
+
+        coefficients = self.coefficients * other
+
+        return self.__class__(self.exponents.copy(), coefficients)
+
+    def _mul_polynomial(self, other: Polynomial) -> Polynomial:
+        max_n_vars = max(self.n_vars, other.n_vars)
+
+        self_exponents = domain_expansion(self.exponents, max_n_vars)
+        other_exponents = domain_expansion(other.exponents, max_n_vars)
+
+        cross_exponents = (
+            self_exponents[np.newaxis, :, :] + other_exponents[:, np.newaxis, :]
+        ).reshape(-1, max_n_vars)
+
+        cross_coefficients = (
+            self.coefficients[np.newaxis, :] * other.coefficients[:, np.newaxis]
+        ).ravel()
+
+        exponents, indices = np.unique(cross_exponents, axis=0, return_inverse=True)
+        coefficients = np.zeros(len(exponents))
+        np.add.at(coefficients, indices, cross_coefficients)
+
+        return self.__class__(exponents, coefficients)
+
+    @np.errstate(divide="raise")
+    def __truediv__(self, other: Scalar) -> Polynomial:
+        """Division with a scalar
+
+        Parameters
+        ----------
+        other : Scalar
+            The value to divide the polynomial by.
+
+        Returns
+        -------
+        Polynomial
+            A new polynomial representing the division.
+
+        Raises
+        ------
+        ZeroDivisionError
+            - If `other` is a builtin scalar and equal to zero.
+        FloatingPointError
+            - If `other` is a NumPy scalar and equal to zero.
+
+        Notes
+        -----
+        Currently, division can only be performed between polynomials and scalars.
+        """
+        if not isinstance(other, SCALAR_TYPE):  # pragma: no cover
+            return NotImplemented
+
+        return self.__mul__(1 / other)
+
+    def __rmul__(self, other: Scalar) -> Polynomial:
+        return self.__mul__(other)
+
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             return NotImplemented

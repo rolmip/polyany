@@ -308,6 +308,86 @@ def test_polynomial_reflected_sub_scalar(scalar, expected_coefficient):
     assert (scalar - poly) == expected
 
 
+@pytest.mark.parametrize(
+    "scalar,expected_coefficient",
+    [
+        (-1, [-1, -2, -3]),
+        (0, [0]),
+        (1, [1, 2, 3]),
+    ],
+)
+def test_polynomial_mul_scalar(scalar, expected_coefficient):
+    poly = Polynomial.univariate([1, 2, 3])
+    expected = Polynomial.univariate(expected_coefficient)
+
+    assert (poly * scalar) == expected
+
+
+@pytest.mark.parametrize(
+    "scalar,expected_coefficient",
+    [
+        (-1, [-1, -2, -3]),
+        (0, [0]),
+        (1, [1, 2, 3]),
+    ],
+)
+def test_polynomial_reflected_mul_scalar(scalar, expected_coefficient):
+    poly = Polynomial.univariate([1, 2, 3])
+    expected = Polynomial.univariate(expected_coefficient)
+
+    assert (scalar * poly) == expected
+
+
+@pytest.mark.parametrize(
+    "input_exponents,input_coefficients,expected",
+    [
+        ([[0]], [0], "0"),
+        ([[0]], [1], "1 + 4*x_3 + 2*x_1*x_2^2 + 3*x_1*x_2*x_3"),
+        ([[0]], [-1], "-1 - 4*x_3 - 2*x_1*x_2^2 - 3*x_1*x_2*x_3"),
+        (
+            [[0, 0], [0, 1], [1, 0]],
+            [1, 1, 1],
+            (
+                "1 + x_1 + x_2 + 4*x_3 + 4*x_1*x_3 + 4*x_2*x_3 + 2*x_1*x_2^2 "
+                "+ 3*x_1*x_2*x_3 + 2*x_1^2*x_2^2 + 2*x_1*x_2^3 + 3*x_1^2*x_2*x_3 "
+                "+ 3*x_1*x_2^2*x_3"
+            ),
+        ),
+        (
+            [[0], [1]],
+            [-1, 1],
+            (
+                "-1 + x_1 - 4*x_3 + 4*x_1*x_3 - 2*x_1*x_2^2 "
+                "- 3*x_1*x_2*x_3 + 2*x_1^2*x_2^2 + 3*x_1^2*x_2*x_3"
+            ),
+        ),
+    ],
+)
+def test_polynomial_mul_polynomial(input_exponents, input_coefficients, expected):
+    # 1 + 4*x_3 + 2*x_1*x_2^2 + 3*x_1*x_2*x_3
+    poly1 = Polynomial([[0, 0, 0], [1, 2, 0], [1, 1, 1], [0, 0, 1]], [1, 2, 3, 4])
+    poly2 = Polynomial(input_exponents, input_coefficients)
+
+    assert str(poly1 * poly2) == expected
+
+
+@pytest.mark.parametrize(
+    "scalar,expected_coefficients",
+    [
+        (1, [10, 20, 30]),
+        (2, [5, 10, 15]),
+        (5, [2, 4, 6]),
+        (7, [1.42857, 2.85714, 4.28571]),
+        (10, [1, 2, 3]),
+    ],
+)
+def test_polynomial_true_div_scalar(scalar, expected_coefficients):
+    poly = Polynomial.univariate([10, 20, 30])
+    expected = Polynomial.univariate(expected_coefficients)
+
+    assert (poly / scalar) == expected
+
+
 def test_polynomial_prune():
     pruned = Polynomial(
         [[0, 0, 0], [0, 0, 1], [0, 1, 0], [1, 0, 0]], [1, 0, 3, 0]

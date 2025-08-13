@@ -270,6 +270,45 @@ For addition/subtraction between polynomials:
 [^2]:
     Python builtins numeric types (`int`, `float`) and NumPy scalars. See [`Scalar`][polyany.types.Scalar]
 
+## :heavy_multiplication_x: Multiplication and division
+
+Polynomials can be multiplied with other polynomials and scalars[^2].
+
+```pycon
+>>> poly = Polynomial.univariate([10, -20, 5])
+>>> poly
+10 - 20*x_1 + 5*x_1^2
+>>> poly * 2
+20 - 40*x_1 + 10*x_1^2
+```
+
+Multiplying two polynomials:
+
+```pycon
+>>> poly1 = Polynomial.univariate([1, -2, 3])
+>>> poly1
+1 - 2*x_1 + 3*x_1^2
+>>> poly2 = Polynomial([[0, 0], [1, 1]], [3, 3])
+>>> poly2
+3 + 3*x_1*x_2
+>>> poly1 * poly2
+3 - 6*x_1 + 9*x_1^2 + 3*x_1*x_2 - 6*x_1^2*x_2 + 9*x_1^3*x_2
+```
+
+!!! warning "Division between polynomials"
+    Currently, division can only be performed **between polynomials and scalars**.
+    In the future, it is possible that division between polynomials will be supported.
+
+Dividing a polynomial by a scalar:
+
+```pycon
+>>> poly = Polynomial.univariate([10, -20, 5])
+>>> poly
+10 - 20*x_1 + 5*x_1^2
+>>> poly / 5
+2 - 4*x_1 + x_1^2
+```
+
 ## :curly_loop: Partial derivatives
 
 The partial derivatives of polynomials can be evaluated by using the
