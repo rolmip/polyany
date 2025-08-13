@@ -1,3 +1,9 @@
+## 0.3.0 (2025-08-13)
+
+### Feat
+
+- multiplication and division (#40)
+
 ## 0.2.0 (2025-08-06)
 
 ### Feat
