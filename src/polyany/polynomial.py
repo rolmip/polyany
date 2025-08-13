@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import warnings
 from typing import TYPE_CHECKING
 
@@ -186,6 +187,24 @@ class Polynomial:
         monomials[0] = monomials[0].replace(" ", "")
 
         return "".join(monomials)
+
+    def _repr_latex_(self) -> str:
+        """LaTeX representation of a polynomial
+
+        Returns
+        -------
+        str
+            The LaTeX expression enclosed by `$` signs.
+
+        Notes
+        -----
+        This method is primarily used to produce rich outputs in Jupyter Notebooks.
+        """
+        representation = str(self).replace("*", r"\,")
+        representation = re.sub(r"x_(\d+)", r"x_{\1}", representation)
+        representation = re.sub(r"\^(\d+)", r"^{\1}", representation)
+
+        return f"${representation}$"
 
     def _sort_inputs(
         self, exponents: np.ndarray, coefficients: np.ndarray
