@@ -371,6 +371,23 @@ def test_polynomial_mul_polynomial(input_exponents, input_coefficients, expected
     assert str(poly1 * poly2) == expected
 
 
+@pytest.mark.parametrize(
+    "scalar,expected_coefficients",
+    [
+        (1, [10, 20, 30]),
+        (2, [5, 10, 15]),
+        (5, [2, 4, 6]),
+        (7, [1.42857, 2.85714, 4.28571]),
+        (10, [1, 2, 3]),
+    ],
+)
+def test_polynomial_true_div_scalar(scalar, expected_coefficients):
+    poly = Polynomial.univariate([10, 20, 30])
+    expected = Polynomial.univariate(expected_coefficients)
+
+    assert (poly / scalar) == expected
+
+
 def test_polynomial_prune():
     pruned = Polynomial(
         [[0, 0, 0], [0, 0, 1], [0, 1, 0], [1, 0, 0]], [1, 0, 3, 0]
