@@ -24,9 +24,9 @@
   <strong>A Python package for algebraic manipulation of multivariate polynomials.</strong>
 </p>
 
-> 🚧 **This package is under active development.**
+> 🚧 **This package is in alpha stage.**
 >
-> It is not yet stable or ready for production use. **Expect breaking changes!**
+> Some **breaking changes** may occur.
 
 ---
 
