@@ -14,7 +14,7 @@ repos:
           - --unsafe
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.8
+    rev: v0.12.9
     hooks:
       - id: ruff-check
         args: [--fix]
@@ -27,7 +27,7 @@ repos:
       - id: pyright
 
   - repo: https://github.com/jsh9/pydoclint
-    rev: 0.6.7
+    rev: 0.6.10
     hooks:
       - id: pydoclint
         args:
