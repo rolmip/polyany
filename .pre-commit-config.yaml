@@ -14,7 +14,7 @@ repos:
           - --unsafe
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.10
+    rev: v0.12.12
     hooks:
       - id: ruff-check
         args: [--fix]
@@ -22,12 +22,12 @@ repos:
       - id: ruff-format
 
   - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.404
+    rev: v1.1.405
     hooks:
       - id: pyright
 
   - repo: https://github.com/jsh9/pydoclint
-    rev: 0.6.10
+    rev: 0.7.3
     hooks:
       - id: pydoclint
         args:
@@ -37,7 +37,7 @@ repos:
           - --skip-checking-raises=True
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.8.3
+    rev: v4.8.4
     hooks:
       - id: commitizen
         stages: [commit-msg]
