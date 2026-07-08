@@ -5,6 +5,7 @@ on:
     tags:
       - "*"
 
+permissions: {}
 jobs:
   pypi:
     name: Publish to PyPI
