@@ -693,7 +693,7 @@ class Polynomial:
 
         Parameters
         ----------
-        k : int, optional
+        k : int
             The shift count. If positive, adds `k` extra variables
             (increase the variable indices). If negative, remove the first `abs(k)`
             variables, but only if they are empty (all corresponding exponents
