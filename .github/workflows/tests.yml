@@ -14,8 +14,8 @@ jobs:
     outputs:
       code: ${{ steps.filter.outputs.code }}
     steps:
-      - uses: actions/checkout@v5
-      - uses: dorny/paths-filter@v3
+      - uses: actions/checkout@e8d4307400f9427dba7cb98e488d6ab85f1cec5f
+      - uses: dorny/paths-filter@9af6e5a9d010d1ae8ec570390b3d793e2b70a402
         id: filter
         with:
           filters: |
@@ -36,10 +36,10 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v5
+        uses: actions/checkout@e8d4307400f9427dba7cb98e488d6ab85f1cec5f
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@6a191366842ac1502ba6c07e9b5acd5c2d9d8db3
         with:
           version: "0.7.17"
           python-version: ${{ matrix.python-version }}
@@ -48,6 +48,6 @@ jobs:
         run: uv run --frozen pytest --doctest-modules --cov=src --cov-branch --cov-report=xml
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
