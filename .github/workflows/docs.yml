@@ -20,7 +20,7 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
       - uses: astral-sh/setup-uv@6a191366842ac1502ba6c07e9b5acd5c2d9d8db3
         with:
-          version: "0.7.17"
+          version: "0.11.28"
           python-version: "3.13"
       - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
