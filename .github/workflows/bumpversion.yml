@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: write
+  pull-requests: write
 jobs:
   bump-version:
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
@@ -11,21 +14,21 @@ jobs:
     name: "Bump version and create changelog with commitizen"
     steps:
       - name: Check out
-        uses: actions/checkout@v5
+        uses: actions/checkout@e8d4307400f9427dba7cb98e488d6ab85f1cec5f
         with:
           token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
           fetch-depth: 0
       - name: Create bump and changelog
-        uses: commitizen-tools/commitizen-action@master
+        uses: commitizen-tools/commitizen-action@338bbd841b75aaee6bf5340e1fa12f6ab58ff9ff
         with:
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           changelog_increment_filename: body.md
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78
       - name: Build
         run: uv build
       - name: Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@132dbbba49e22bd4837f09b46d32a8edaf6baa58
         with:
           body_path: "body.md"
           tag_name: ${{ env.REVISION }}

@@ -3,8 +3,9 @@ name: Upload Python Package
 on:
   push:
     tags:
-      - "*"
+      - '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$'
 
+permissions: {}
 jobs:
   pypi:
     name: Publish to PyPI
@@ -14,8 +15,8 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - uses: actions/checkout@v5
-      - uses: astral-sh/setup-uv@v7
+      - uses: actions/checkout@e8d4307400f9427dba7cb98e488d6ab85f1cec5f
+      - uses: astral-sh/setup-uv@6a191366842ac1502ba6c07e9b5acd5c2d9d8db3
       - run: uv build
       - name: Smoke test (wheel)
         run: uv run --isolated --no-project --with dist/*.whl tests/smoke_test.py
