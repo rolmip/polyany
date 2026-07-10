@@ -44,7 +44,9 @@ class BasePolynomial(ABC):
         return converted_exponents
 
     @abstractmethod
-    def _sanitize_coefficients(self, coefficients: ArrayLike) -> np.ndarray:
+    def _sanitize_coefficients(
+        self, coefficients: ArrayLike
+    ) -> np.ndarray:  # pragma: no cover
         pass
 
     def _validate_inputs(self) -> None:
