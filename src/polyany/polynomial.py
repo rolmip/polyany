@@ -625,7 +625,7 @@ class Polynomial:
 
         exponents, indices = np.unique(cross_exponents, axis=0, return_inverse=True)
         coefficients = np.zeros(len(exponents))
-        np.add.at(coefficients, indices, cross_coefficients)
+        np.add.at(coefficients, indices.ravel(), cross_coefficients)
 
         return self.__class__(exponents, coefficients)
 
