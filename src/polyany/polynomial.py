@@ -7,13 +7,14 @@ from typing import TYPE_CHECKING
 import numpy as np
 from numpy.typing import ArrayLike
 
+from .base import BasePolynomial
 from .exponents import domain_expansion, get_quadratic_exponents
 
 if TYPE_CHECKING:  # pragma: no cover
     from .types import Algebraic, Scalar
 
 
-class Polynomial:
+class Polynomial(BasePolynomial):
     """A multivariate polynomial class.
 
     Represents a multivariate polynomial in the form:
@@ -82,23 +83,9 @@ class Polynomial:
     3*x_1*x_2 + 4*x_4^4*x_5^3 + 5*x_1^2*x_2*x_3^4*x_5
     """
 
-    def __init__(self, exponents: ArrayLike, coefficients: ArrayLike) -> None:
-        input_exponents, input_coefficients = self._sanitize_inputs(
-            exponents, coefficients
-        )
-
-        self.n_vars = input_exponents.shape[1]
-        self.degree = np.max(np.sum(input_exponents, axis=1)).item()
-
-        self.exponents, self.coefficients = self._sort_inputs(
-            input_exponents, input_coefficients
-        )
-
-    def _sanitize_inputs(
-        self, input_exponents: ArrayLike, input_coefficients: ArrayLike
-    ) -> tuple[np.ndarray, np.ndarray]:
+    def _sanitize_coefficients(self, coefficients: ArrayLike) -> np.ndarray:
         try:
-            converted_coefficients = np.asarray(input_coefficients).astype(
+            converted_coefficients = np.asarray(coefficients).astype(
                 dtype=np.float64, casting="safe"
             )
         except Exception as e:
@@ -108,21 +95,6 @@ class Polynomial:
             )
             raise TypeError(msg) from e
 
-        try:
-            converted_exponents = np.asarray(input_exponents).astype(
-                dtype=np.int_, casting="safe"
-            )
-        except Exception as e:
-            msg = (
-                "Exponents must be safe-convertible to NumPy 2D-arrays "
-                "with int entries."
-            )
-            raise TypeError(msg) from e
-
-        if converted_exponents.ndim != 2:
-            msg = f"Exponents must have 2 dimensions, got {converted_exponents.ndim}."
-            raise ValueError(msg)
-
         if converted_coefficients.ndim != 1:
             msg = (
                 "Coefficients must have 1 dimension, "
@@ -130,26 +102,7 @@ class Polynomial:
             )
             raise ValueError(msg)
 
-        if len(np.unique(converted_exponents, axis=0)) != len(converted_exponents):
-            msg = "Exponents entries must be unique."
-            raise ValueError(msg)
-
-        if len(converted_exponents) != len(converted_coefficients):
-            msg = (
-                "Number of exponents and coefficients must match, "
-                f"got {converted_exponents.shape[0]} exponents / "
-                f"{converted_coefficients.shape[0]} coefficients."
-            )
-            raise ValueError(msg)
-
-        if not np.all(converted_exponents >= 0):
-            msg = (
-                "PolyAny is not yet able to handle nonlinear polynomials. "
-                "Make sure that all exponents are >= 0."
-            )
-            raise ValueError(msg)
-
-        return converted_exponents, converted_coefficients
+        return converted_coefficients
 
     def __repr__(self) -> str:
         # TODO(@ximiraxelo): truncate output for large polynomials
@@ -205,14 +158,6 @@ class Polynomial:
         representation = re.sub(r"\^(\d+)", r"^{\1}", representation)
 
         return f"${representation}$"
-
-    def _sort_inputs(
-        self, exponents: np.ndarray, coefficients: np.ndarray
-    ) -> tuple[np.ndarray, np.ndarray]:
-        monomials_degree = np.sum(exponents, axis=1)
-        sorted_idx = np.lexsort((*exponents.T, monomials_degree))
-
-        return exponents[sorted_idx], coefficients[sorted_idx]
 
     @classmethod
     def univariate(cls, coefficients: ArrayLike) -> Polynomial:
@@ -494,18 +439,6 @@ class Polynomial:
             np.power(converted_point, self.exponents), axis=1
         )
 
-    def __neg__(self) -> Polynomial:
-        """The negation of the polynomial.
-
-        All coefficients are multiplied by `-1`. The exponents remain unchanged.
-
-        Returns
-        -------
-        Polynomial
-            A new polynomial with negated coefficients.
-        """
-        return self.__class__(self.exponents.copy(), -self.coefficients)
-
     def __add__(self, other: object) -> Polynomial:
         """Addition with another polynomial or scalar
 
@@ -661,27 +594,6 @@ class Polynomial:
 
     def __rmul__(self, other: Scalar) -> Polynomial:
         return self.__mul__(other)
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, self.__class__):
-            return NotImplemented
-
-        if self.degree != other.degree or self.n_vars != other.n_vars:
-            return False
-
-        return np.allclose(self.coefficients, other.coefficients)
-
-    def __lt__(self, other: object) -> bool:
-        return NotImplemented
-
-    def __le__(self, other: object) -> bool:
-        return NotImplemented
-
-    def __gt__(self, other: object) -> bool:
-        return NotImplemented
-
-    def __ge__(self, other: object) -> bool:
-        return NotImplemented
 
     def shift(self, k: int = 1) -> Polynomial:
         """Shifts the polynomial variables.
