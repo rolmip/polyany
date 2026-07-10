@@ -554,7 +554,7 @@ class Polynomial:
 
         exponents, indices = np.unique(stacked_exponents, axis=0, return_inverse=True)
         coefficients = np.zeros(len(exponents))
-        np.add.at(coefficients, indices, stacked_coefficients)
+        np.add.at(coefficients, indices.ravel(), stacked_coefficients)
 
         return self.__class__(exponents, coefficients)
 
