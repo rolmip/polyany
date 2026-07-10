@@ -13,9 +13,11 @@ keywords = ["polynomials", "multivariate", "algebra"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Scientific/Engineering :: Mathematics",
     "Operating System :: Microsoft :: Windows",
@@ -23,9 +25,9 @@ classifiers = [
     "Operating System :: Unix",
     "Operating System :: MacOS",
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 dependencies = [
-    "numpy>=2.3.1",
+    "numpy>=2.0.0,<3",
 ]
 
 [project.urls]
