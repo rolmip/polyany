@@ -84,6 +84,13 @@ class BasePolynomial(ABC):
                 )
             )
 
+    @staticmethod
+    def _get_quadratic_exponents(n_vars: int) -> np.ndarray:
+        eye = np.eye(n_vars, dtype=np.int16)
+        i, j = np.triu_indices(n_vars)
+
+        return eye[i] + eye[j]
+
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             return NotImplemented

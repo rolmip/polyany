@@ -8,7 +8,6 @@ import numpy as np
 from numpy.typing import ArrayLike
 
 from .base import BasePolynomial
-from .exponents import get_quadratic_exponents
 
 if TYPE_CHECKING:  # pragma: no cover
     from .types import Algebraic, Scalar
@@ -273,7 +272,7 @@ class Polynomial(BasePolynomial):
         np.fill_diagonal(upper_triangular_mask, val=True)
         coefficients = converted_matrix[upper_triangular_mask]
 
-        exponents = get_quadratic_exponents(n_vars)
+        exponents = cls._get_quadratic_exponents(n_vars)
 
         return cls(exponents, coefficients)
 
