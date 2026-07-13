@@ -73,6 +73,17 @@ class BasePolynomial(ABC):
             msg = "Exponents entries must be unique."
             raise ValueError(msg)
 
+    def _domain_expansion(self, n_vars: int) -> None:
+        extra_vars = n_vars - self.exponents.shape[1]
+
+        if extra_vars > 0:
+            self.exponents = np.hstack(
+                (
+                    self.exponents,
+                    np.zeros(shape=(len(self.exponents), extra_vars), dtype=np.int16),
+                )
+            )
+
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             return NotImplemented

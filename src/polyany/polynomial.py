@@ -8,7 +8,7 @@ import numpy as np
 from numpy.typing import ArrayLike
 
 from .base import BasePolynomial
-from .exponents import domain_expansion, get_quadratic_exponents
+from .exponents import get_quadratic_exponents
 
 if TYPE_CHECKING:  # pragma: no cover
     from .types import Algebraic, Scalar
@@ -479,10 +479,10 @@ class Polynomial(BasePolynomial):
     def _add_polynomial(self, other: Polynomial) -> Polynomial:
         max_n_vars = max(self.n_vars, other.n_vars)
 
-        self_exponents = domain_expansion(self.exponents, max_n_vars)
-        other_exponents = domain_expansion(other.exponents, max_n_vars)
+        self._domain_expansion(max_n_vars)
+        other._domain_expansion(max_n_vars)
 
-        stacked_exponents = np.vstack((self_exponents, other_exponents))
+        stacked_exponents = np.vstack((self.exponents, other.exponents))
         stacked_coefficients = np.concatenate((self.coefficients, other.coefficients))
 
         exponents, indices = np.unique(stacked_exponents, axis=0, return_inverse=True)
@@ -545,11 +545,11 @@ class Polynomial(BasePolynomial):
     def _mul_polynomial(self, other: Polynomial) -> Polynomial:
         max_n_vars = max(self.n_vars, other.n_vars)
 
-        self_exponents = domain_expansion(self.exponents, max_n_vars)
-        other_exponents = domain_expansion(other.exponents, max_n_vars)
+        self._domain_expansion(max_n_vars)
+        other._domain_expansion(max_n_vars)
 
         cross_exponents = (
-            self_exponents[np.newaxis, :, :] + other_exponents[:, np.newaxis, :]
+            self.exponents[np.newaxis, :, :] + other.exponents[:, np.newaxis, :]
         ).reshape(-1, max_n_vars)
 
         cross_coefficients = (
