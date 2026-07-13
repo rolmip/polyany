@@ -14,13 +14,14 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class Polynomial(BasePolynomial):
-    """A multivariate polynomial class.
+    """A scalar multivariate polynomial class.
 
     Represents a multivariate polynomial in the form:
 
     P(X) = ∑ c_i * x_1^e_i1 * x_2^e_i2 * ... * x_n^e_in
 
-    where `c_i` are the coefficients and `e_ji` are the exponents of each monomial.
+    where `c_i` are the scalar coefficients and `e_ji` are the exponents of each
+    monomial.
 
     Parameters
     ----------
