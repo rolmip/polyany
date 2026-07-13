@@ -8,6 +8,51 @@ TBasePolynomial = TypeVar("TBasePolynomial", bound="BasePolynomial")
 
 
 class BasePolynomial(ABC):
+    """A multivariate polynomial abstract base class.
+
+    Abstract implementation of the core structure of polynomials.
+
+    Parameters
+    ----------
+    exponents : ArrayLike
+        A nested sequence or a NumPy 2D-array with shape (n_monomials, n_vars),
+        where each row contains the exponents of one monomial.
+        The order of variables is assumed to be increasing, i.e.,
+        [x_1, x_2, ..., x_n].
+    coefficients : ArrayLike
+        A sequence or NumPy array of coefficients corresponding to each monomial.
+        The exact shape is defined by the concrete subclasses.
+
+    Attributes
+    ----------
+    n_vars : int
+        Number of variables in the polynomial.
+    degree : int
+        Total degree of the polynomial.
+    exponents : np.ndarray
+        A NumPy 2D-array representing the exponents
+        of the polynomial.
+    coefficients : np.ndarray
+        A NumPy array of coefficients with shape defined by the concrete subclass.
+
+    Raises
+    ------
+    TypeError
+        - If the input exponents cannot be safely converted to a
+        NumPy 2D-array of integers.
+
+    ValueError
+        - If the number of exponents does not match the number of coefficients.
+        - If the input arrays dimensions are inconsistent.
+        - If the input exponents rows are not unique.
+        - If any input exponent entry is negative.
+
+    Notes
+    -----
+    Although attributes are publicly accessible, modifying them directly may lead
+    to bugs and unexpected behavior.
+    """
+
     def __init__(self, exponents: ArrayLike, coefficients: ArrayLike) -> None:
         self.exponents = self._sanitize_exponents(exponents)
         self.coefficients = self._sanitize_coefficients(coefficients)
