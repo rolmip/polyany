@@ -15,7 +15,7 @@ jobs:
     outputs:
       code: ${{ steps.filter.outputs.code }}
     steps:
-      - uses: actions/checkout@e8d4307400f9427dba7cb98e488d6ab85f1cec5f
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: dorny/paths-filter@9af6e5a9d010d1ae8ec570390b3d793e2b70a402
         id: filter
         with:
@@ -42,7 +42,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@e8d4307400f9427dba7cb98e488d6ab85f1cec5f
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Install uv
         uses: astral-sh/setup-uv@6a191366842ac1502ba6c07e9b5acd5c2d9d8db3
