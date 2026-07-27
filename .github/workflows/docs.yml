@@ -13,7 +13,7 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@e8d4307400f9427dba7cb98e488d6ab85f1cec5f
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
       - name: Configure Git Credentials
         run: |
           git config user.name github-actions[bot]
