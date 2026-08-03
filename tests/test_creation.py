@@ -1,7 +1,10 @@
 import numpy as np
 import pytest
 
+from polyany.matrix import MatrixPolynomial
 from polyany.polynomial import Polynomial
+
+## Scalar polynomials
 
 
 @pytest.mark.parametrize(
@@ -171,3 +174,31 @@ def test_polynomial_quadratic_form_warning():
 def test_polynomial_zeros_exceptions(n_vars, expected_exception):
     with pytest.raises(expected_exception):
         Polynomial.zeros(n_vars)
+
+
+## Matrix polynomials
+
+
+@pytest.mark.parametrize(
+    "input_data,expected_string",
+    [
+        (
+            (
+                np.array([[10, 2], [1, 1], [0, 0]]),
+                [np.eye(2), np.zeros((2, 2)), [[3, 14], [15, 92]]],
+            ),
+            (
+                "[[ 3. 14.]    [[1. 0.]              \n"
+                " [15. 92.]] +  [0. 1.]]*x_1^10*x_2^2"
+            ),
+        ),
+        (
+            ([[1, 0], [0, 1]], [np.zeros((3, 2)), np.zeros((3, 2))]),
+            ("[[0. 0.]\n [0. 0.]\n [0. 0.]]"),
+        ),
+    ],
+)
+def test_matrix_polynomial_string_representation(input_data, expected_string):
+    mpoly = MatrixPolynomial(*input_data)
+
+    assert str(mpoly) == expected_string
