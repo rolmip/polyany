@@ -31,6 +31,8 @@ class MatrixPolynomial(BasePolynomial):
         Number of variables in the polynomial.
     degree : int
         Total degree of the polynomial.
+    shape  : tuple of ints
+        Common shape of the matrices (n_rows, n_cols).
     exponents : np.ndarray
         A NumPy 2D-array representing the exponents
         of the polynomial.
@@ -86,6 +88,11 @@ class MatrixPolynomial(BasePolynomial):
     [[1. 0.]        [[0. 1.]
      [0. 1.]]*x_1 +  [2. 3.]]*x_2
     """
+
+    def __init__(self, exponents: ArrayLike, coefficients: ArrayLike) -> None:
+        super().__init__(exponents, coefficients)
+
+        self.shape = self.coefficients.shape[1:]
 
     def _sanitize_coefficients(self, coefficients: ArrayLike) -> np.ndarray:
         try:
