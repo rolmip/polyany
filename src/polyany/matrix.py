@@ -143,6 +143,9 @@ class MatrixPolynomial(BasePolynomial):
                     [line.ljust(max_size) for line in split_monomial]
                 )
 
+            if not formatted_monomials:
+                return str(np.zeros(self.shape))
+
         formatted_lines: list[str] = []
         last_line = len(formatted_monomials[0]) - 1
         for idx, line in enumerate(zip(*formatted_monomials, strict=True)):
