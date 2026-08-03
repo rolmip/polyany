@@ -117,31 +117,31 @@ class MatrixPolynomial(BasePolynomial):
 
     def __repr__(self) -> str:
         formatted_monomials: list[list[str]] = []
-        for exponent, coefficient in zip(
-            self.exponents, self.coefficients, strict=True
+        with np.printoptions(
+            linewidth=1_000,
+            threshold=50,
         ):
-            if np.all(coefficient == 0):
-                continue
-
-            variables = "*".join(
-                [
-                    f"x_{idx + 1}^{deg}" if deg > 1 else f"x_{idx + 1}"
-                    for idx, deg in enumerate(exponent)
-                    if deg > 0
-                ]
-            )
-
-            with np.printoptions(
-                linewidth=1_000,
-                threshold=50,
+            for exponent, coefficient in zip(
+                self.exponents, self.coefficients, strict=True
             ):
+                if np.all(coefficient == 0):
+                    continue
+
+                variables = "*".join(
+                    [
+                        f"x_{idx + 1}^{deg}" if deg > 1 else f"x_{idx + 1}"
+                        for idx, deg in enumerate(exponent)
+                        if deg > 0
+                    ]
+                )
+
                 monomial_str = f"{coefficient}{'*' if variables else ''}{variables}"
 
-            split_monomial = monomial_str.split("\n")
-            max_size = len(split_monomial[-1])
-            formatted_monomials.append(
-                [line.ljust(max_size) for line in split_monomial]
-            )
+                split_monomial = monomial_str.split("\n")
+                max_size = len(split_monomial[-1])
+                formatted_monomials.append(
+                    [line.ljust(max_size) for line in split_monomial]
+                )
 
         formatted_lines: list[str] = []
         last_line = len(formatted_monomials[0]) - 1
