@@ -16,7 +16,7 @@ jobs:
       code: ${{ steps.filter.outputs.code }}
     steps:
       - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
-      - uses: dorny/paths-filter@9af6e5a9d010d1ae8ec570390b3d793e2b70a402
+      - uses: dorny/paths-filter@4711b7a31b4aa89103d8c6ffab2e3b8e7b6381c7
         id: filter
         with:
           filters: |
