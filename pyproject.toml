@@ -57,7 +57,7 @@ docs = [
 
 [tool.ruff]
 line-length = 88
-target-version = "py313"
+target-version = "py310"
 fix = true
 show-fixes = true
 indent-width = 4
@@ -115,7 +115,7 @@ known-first-party = ["polyany"]
 
 [tool.pyright]
 typeCheckingMode = "basic"
-pythonVersion = "3.13"
+pythonVersion = "3.10"
 include = ["src", 'tests']
 exclude = [
     "**/venv",
