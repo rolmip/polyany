@@ -131,6 +131,7 @@ executionEnvironments = [{ root = "src" }]
 
 [tool.pytest.ini_options]
 addopts = "-s --color=yes --tb=short --doctest-modules"
+doctest_optionflags = ["NORMALIZE_WHITESPACE"]
 pythonpath = ["src"]
 testpaths = ["tests", "src"]
 

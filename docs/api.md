@@ -6,6 +6,8 @@
 
 ::: polyany.polynomial.Polynomial
 
+::: polyany.matrix.MatrixPolynomial
+
 ## :construction: Internal
 
 !!! warning
