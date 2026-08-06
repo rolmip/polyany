@@ -346,3 +346,50 @@ which can be obtained in {{ polyany }} as:
 ```
 
 1. The method [partial][polyany.Polynomial.partial] uses a zero-based index.
+
+## :material-matrix: Matrix Polynomials
+
+!!! definition
+
+    A matrix polynomial is a polynomial whose coefficients are matrices of the same shape. An example of a matrix polynomial is:
+
+    $$
+    P(\mathbf{x}) =
+      \begin{bmatrix}
+        1 & 0 \\
+        0 & 1
+      \end{bmatrix}\,x_1
+      +
+      \begin{bmatrix}
+        3 & 1 \\
+        4 & 5
+      \end{bmatrix}\,x_2
+    $$
+
+In {{ polyany }}, a matrix polynomial can be created from exponents and coefficients, similar to [scalar polynomials](#from-exponents-and-coefficients), using the [MatrixPolynomial][polyany.matrix.MatrixPolynomial] class.
+
+If we want to declare the matrix polynomial in the definition above, we define:
+
+```py
+from polyany import MatrixPolynomial
+
+exponents = [[1, 0], [0, 1]] #(1)!
+C_1 = [[1, 0], [0, 1]] #(2)!
+C_2 = [[3, 1], [4, 5]]
+coefficients = [C_1, C_2] #(3)!
+
+mpoly = MatrixPolynomial(exponents, coefficients)
+```
+
+1. The exponents matrix can also be nested tuples or a NumPy 2D array.
+2. You could use [`np.eye`](https://numpy.org/doc/stable/reference/generated/numpy.eye.html) method.
+3. The coefficients array can also be nested tuples or a NumPy 3D array.
+
+???+ info "The `shape` attribute"
+
+    The shape (number of rows and the number of columns) of the matrices in the polynomial can be obtained by the `shape` attribute. Following the example:
+
+    ```numpy
+    >>> mpoly.shape
+    (2, 2)
+    ```
