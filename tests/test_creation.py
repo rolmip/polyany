@@ -202,3 +202,19 @@ def test_matrix_polynomial_string_representation(input_data, expected_string):
     mpoly = MatrixPolynomial(*input_data)
 
     assert str(mpoly) == expected_string
+
+
+@pytest.mark.parametrize(
+    "input_data,expected_exception",
+    [
+        # matrix coefficients without 3 dimensions
+        (([[0, 0], [1, 0], [0, 1]], [[1, 2], [3, 4]]), ValueError),
+        # matrix coefficients without 3 dimensions
+        (([[0, 0], [1, 0], [0, 1]], [[1, 2, 3]]), ValueError),
+        # non safe-convertible coefficient to float
+        (([[0, 0]], [[["1"]]]), TypeError),
+    ],
+)
+def test_matrix_polynomial_creation_exceptions(input_data, expected_exception):
+    with pytest.raises(expected_exception):
+        MatrixPolynomial(*input_data)
