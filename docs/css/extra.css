@@ -14,10 +14,11 @@
   font-weight: lighter;
 }
 
-[dir="ltr"]
-  .md-nav--integrated
-  > .md-nav__list
-  > .md-nav__item--active
-  .md-nav--secondary {
-  border-color: var(--md-accent-fg-color);
+.md-nav--secondary {
+    border-color: var(--md-accent-fg-color) !important;
+}
+
+.author {
+    border-radius: 50%;
+    border: 3px solid var(--md-typeset-a-color);
 }

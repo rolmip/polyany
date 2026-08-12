@@ -1,3 +1,7 @@
+---
+icon: lucide/code-xml
+---
+
 ## :white_check_mark: Public
 
 !!! info

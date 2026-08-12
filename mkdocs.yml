@@ -10,11 +10,19 @@ theme:
   name: material
   custom_dir: docs/overrides
   palette:
+    # Auto mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: lucide/sun-moon
+        name: Switch to dark mode
+      primary: custom
+      accent: custom
+
     # Dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       toggle:
-        icon: material/white-balance-sunny
+        icon: lucide/moon
         name: Switch to light mode
       primary: custom
       accent: custom
@@ -23,13 +31,13 @@ theme:
     - media: "(prefers-color-scheme: light)"
       scheme: default
       toggle:
-        icon: material/weather-night
-        name: Switch to dark mode
+        icon: lucide/sun
+        name: Switch to system preference
       primary: custom
       accent: custom
   font:
     text: Inter
-    code: JetBrains Mono
+    code: Lilex
   logo: assets/logo_white.svg
   favicon: assets/logo_purple.svg
   features:
@@ -75,8 +83,8 @@ plugins:
 nav:
   - PolyAny: index.md
   - Installation: installation.md
-  - Getting Started: "getting_started.md"
-  - API reference: "api.md"
+  - Getting Started: getting_started.md
+  - API reference: api.md
 
 markdown_extensions:
   - attr_list
@@ -123,4 +131,4 @@ extra:
   polyany: <span class="polyany">PolyAny</span>
 
 copyright:
-  Copyright &copy; 2025 Cristiano Agulhari and Esdras Battosti
+  Copyright &copy; 2025 ROLMIP Team
