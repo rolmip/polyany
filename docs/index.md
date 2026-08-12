@@ -67,6 +67,8 @@ This project is open-source and licensed under the [BSD-3-Clause](https://openso
 
     ---
 
+    ![Cristiano Agulhari](./assets/agulhari.png){ align=left width=165 .author }
+
     [:octicons-mail-16: agulhari@utfpr.edu.br](mailto:agulhari@utfpr.edu.br)<br>
     [:simple-github: /agulhari](https://github.com/agulhari)<br>
     [:simple-orcid: ORCID](https://orcid.org/0000-0001-7630-1828)
@@ -75,6 +77,8 @@ This project is open-source and licensed under the [BSD-3-Clause](https://openso
   - :simple-devbox: **Esdras Battosti**
 
     ---
+
+    ![Esdras Battosti](./assets/esdras.png){ align=left width=165 .author }
 
     [:octicons-mail-16: esdras.2019@alunos.utfpr.edu.br](mailto:esdras.2019@alunos.utfpr.edu.br)<br>
     [:simple-github: /ximiraxelo](https://github.com/ximiraxelo)<br>

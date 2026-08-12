@@ -20,4 +20,8 @@
   > .md-nav__item--active
   .md-nav--secondary {
   border-color: var(--md-accent-fg-color);
+
+.author {
+    border-radius: 50%;
+    border: 3px solid var(--md-typeset-a-color);
 }
