@@ -22,7 +22,7 @@ theme:
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       toggle:
-        icon: material/white-balance-sunny
+        icon: lucide/moon
         name: Switch to light mode
       primary: custom
       accent: custom
@@ -31,8 +31,8 @@ theme:
     - media: "(prefers-color-scheme: light)"
       scheme: default
       toggle:
-        icon: material/weather-night
-        name: Switch to dark mode
+        icon: lucide/sun
+        name: Switch to system preference
       primary: custom
       accent: custom
   font:
