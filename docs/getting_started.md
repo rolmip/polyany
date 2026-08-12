@@ -231,7 +231,7 @@ When a polynomial is pruned, all empty monomials are removed, that is, the entri
 `exponents` whose associated coefficients are  exactly zero, which have no effect
 on the polynomial behavior.
 
-To prune a polynomial, use the [`prune`][polyany.Polynomial.prune] method:
+To prune a polynomial, use the [`prune`][polyany.polynomial.Polynomial.prune] method:
 
 ```numpy
 >>> pruned = poly.prune()
@@ -316,7 +316,7 @@ Dividing a polynomial by a scalar:
 ## :curly_loop: Partial derivatives
 
 The partial derivatives of polynomials can be evaluated by using the
-[`partial`][polyany.Polynomial.partial] method. Let's consider the polynomial:
+[`partial`][polyany.polynomial.Polynomial.partial] method. Let's consider the polynomial:
 
 $$
 P(\mathbf{x}) = 10 + 2\,x_1^2\,x_2\,x_3 + 5\,x_1\,x_2^3\,x_3^2
