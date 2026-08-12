@@ -10,6 +10,14 @@ theme:
   name: material
   custom_dir: docs/overrides
   palette:
+    # Auto mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: lucide/sun-moon
+        name: Switch to dark mode
+      primary: custom
+      accent: custom
+
     # Dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
