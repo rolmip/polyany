@@ -37,7 +37,7 @@ theme:
       accent: custom
   font:
     text: Inter
-    code: JetBrains Mono
+    code: Lilex
   logo: assets/logo_white.svg
   favicon: assets/logo_purple.svg
   features:
