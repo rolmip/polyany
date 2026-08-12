@@ -90,4 +90,4 @@ This project is open-source and licensed under the [BSD-3-Clause](https://openso
 
 ## :information_source: About
 
-This repository is part of the early foundation of **RolmiPy**, a Python implementation of ROLMIP.
+This repository is part of the early foundation of **RolmiPy**, a Python implementation of [ROLMIP](https://rolmip.github.io/).
