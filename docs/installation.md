@@ -1,5 +1,6 @@
 ---
 title: PolyAny
+icon: lucide/package
 ---
 
 ## :package: How to install

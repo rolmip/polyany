@@ -1,3 +1,7 @@
+---
+icon: lucide/rocket
+---
+
 <h1 align="center">
 <img src="assets/polyany_logo.png" alt="PolyAny Logo" width="500">
 </h1>

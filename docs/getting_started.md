@@ -1,3 +1,7 @@
+---
+icon: lucide/check
+---
+
 !!! info "Documentation under construction"
 
 ## :pencil: Creating polynomials
