@@ -83,8 +83,8 @@ plugins:
 nav:
   - PolyAny: index.md
   - Installation: installation.md
-  - Getting Started: "getting_started.md"
-  - API reference: "api.md"
+  - Getting Started: getting_started.md
+  - API reference: api.md
 
 markdown_extensions:
   - attr_list
