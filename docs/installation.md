@@ -1,5 +1,4 @@
 ---
-title: PolyAny
 icon: lucide/package
 ---
 
