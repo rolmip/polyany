@@ -14,7 +14,7 @@ repos:
           - --unsafe
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.2
+    rev: v0.16.3
     hooks:
       - id: ruff-check
         args: [--fix]
@@ -37,7 +37,7 @@ repos:
           - --skip-checking-raises=True
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.17.0
+    rev: v4.17.1
     hooks:
       - id: commitizen
         stages: [commit-msg]
