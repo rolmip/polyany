@@ -496,7 +496,7 @@ class Polynomial(BasePolynomial):
 
         Parameters
         ----------
-        other : Algebraic
+        other : ScalarAlgebraic
             The value to be subtracted. A scalar can be an int, float,
             or NumPy scalars.
 
