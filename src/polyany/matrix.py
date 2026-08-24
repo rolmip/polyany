@@ -113,6 +113,10 @@ class MatrixPolynomial(BasePolynomial):
             )
             raise ValueError(msg)
 
+        if converted_coefficients.size == 0:
+            msg = "Coefficients must have at least one element, got 0."
+            raise ValueError(msg)
+
         return converted_coefficients
 
     def __repr__(self) -> str:
