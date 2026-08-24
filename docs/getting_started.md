@@ -389,7 +389,7 @@ which can be obtained in {{ polyany }} as:
 2*x_1^2*x_2 + 10*x_1*x_2^3*x_3
 ```
 
-1. The method [partial][polyany.Polynomial.partial] uses a zero-based index.
+1. The method [partial][polyany.polynomial.Polynomial.partial] uses a zero-based index.
 
 ## :material-matrix: Matrix Polynomials
 
