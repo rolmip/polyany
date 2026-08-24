@@ -73,6 +73,10 @@ def test_polynomial_latex_representation(
         (([[0.0, 0.0], [0.0, 1.0], [1.0, 0.0]], [[-1, 2, 33]]), TypeError),
         # exponents without 2 dimensions
         (([1, 2, 3], [10, 11, 12]), ValueError),
+        # empty exponents
+        ((np.zeros((1, 0), dtype=np.int_), [1]), ValueError),
+        # empty exponents
+        ((np.array([], dtype=np.int_).reshape(0, 1), [1]), ValueError),
         # coefficients without 1 dimension
         (([[0, 0], [1, 0], [0, 1]], [[1, 2], [3, 4]]), ValueError),
         # coefficients without 1 dimension
