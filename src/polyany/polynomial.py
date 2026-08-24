@@ -10,7 +10,7 @@ from numpy.typing import ArrayLike
 from .base import BasePolynomial
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .types import Algebraic, Scalar
+    from .types import Scalar, ScalarAlgebraic
 
 
 class Polynomial(BasePolynomial):
@@ -491,7 +491,7 @@ class Polynomial(BasePolynomial):
 
         return self.__class__(exponents, coefficients)
 
-    def __sub__(self, other: Algebraic) -> Polynomial:
+    def __sub__(self, other: ScalarAlgebraic) -> Polynomial:
         """Subtraction with another polynomial or scalar
 
         Parameters
