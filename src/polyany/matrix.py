@@ -1,5 +1,12 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import numpy as np
 from numpy.typing import ArrayLike
+
+if TYPE_CHECKING:
+    from polyany.types import MatrixAlgebraic
 
 from .base import BasePolynomial
 
@@ -153,3 +160,99 @@ class MatrixPolynomial(BasePolynomial):
             formatted_lines.append(separator.join(line))
 
         return "\n".join(formatted_lines)
+
+    def __add__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
+        """Addition with another matrix polynomial, matrix or scalar
+
+        Parameters
+        ----------
+        other : MatrixAlgebraic
+            The operand in the addition.
+            A scalar can be an int, float, or NumPy scalars.
+            A matrix can be a NumPy 2D-array, nested lists or nested tuples.
+
+        Returns
+        -------
+        MatrixPolynomial
+            A new matrix polynomial representing the sum.
+        """
+        if not isinstance(other, ALGEBRAIC_TYPE):
+            return NotImplemented
+
+        if isinstance(other, SCALAR_TYPE):
+            broadcasted = np.broadcast_to(other, self.shape)
+            return self._add_matrix(broadcasted)
+
+        if isinstance(other, MATRIX_TYPE):
+            return self._add_matrix(other)
+
+        return self._add_polynomial(other)
+
+    def _add_matrix(self, other: ArrayLike) -> MatrixPolynomial:
+        try:
+            other = np.asarray(other).astype(
+                self.coefficients.dtype, casting="safe", copy=False
+            )
+        except Exception as e:
+            msg = (
+                "Operand must be safe-convertible to NumPy 2D-arrays "
+                "with float entries."
+            )
+            raise TypeError(msg) from e
+
+        if other.shape != self.shape:
+            msg = (
+                f"Cannot add matrix of shape {other.shape} to "
+                f"a polynomial of shape {self.shape}"
+            )
+            raise ValueError(msg)
+
+        coefficients = self.coefficients.copy()
+        exponents = self.exponents.copy()
+
+        has_constant_term = (self.exponents[0] == 0).all()
+
+        if has_constant_term:
+            coefficients[0] += other
+        else:
+            exponents = np.vstack(
+                (np.zeros((1, self.n_vars), dtype=exponents.dtype), exponents)
+            )
+            coefficients = np.concatenate((np.expand_dims(other, 0), coefficients))
+
+        return self.__class__(exponents, coefficients)
+
+    def _add_polynomial(self, other: MatrixPolynomial) -> MatrixPolynomial:
+        if other.shape != self.shape:
+            msg = (
+                f"Cannot add polynomial of shape {other.shape} to "
+                f"a polynomial of shape {self.shape}"
+            )
+            raise ValueError(msg)
+
+        max_n_vars = max(self.n_vars, other.n_vars)
+
+        if self.n_vars < max_n_vars:
+            self._domain_expansion(max_n_vars)
+        else:
+            other._domain_expansion(max_n_vars)
+
+        stacked_exponents = np.vstack((self.exponents, other.exponents))
+        stacked_coefficients = np.concatenate((self.coefficients, other.coefficients))
+
+        sorted_idx = np.lexsort(stacked_exponents.T)
+        coefficients = stacked_coefficients[sorted_idx]
+        exponents = stacked_exponents[sorted_idx]
+
+        changes = (exponents[1:] != exponents[:-1]).any(axis=1)
+        boundaries = np.concatenate(([0], np.nonzero(changes)[0] + 1))
+
+        unique_exponents = exponents[boundaries]
+        unique_coefficients = np.add.reduceat(coefficients, boundaries)
+
+        return self.__class__(unique_exponents, unique_coefficients)
+
+
+SCALAR_TYPE = (int, float, np.integer, np.floating)
+MATRIX_TYPE = (list, tuple, np.ndarray)
+ALGEBRAIC_TYPE = (*SCALAR_TYPE, *MATRIX_TYPE, MatrixPolynomial)
