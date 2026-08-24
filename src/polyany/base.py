@@ -79,6 +79,10 @@ class BasePolynomial(ABC):
             msg = f"Exponents must have 2 dimensions, got {converted_exponents.ndim}."
             raise ValueError(msg)
 
+        if converted_exponents.size == 0:
+            msg = "Exponents must have at least one element, got 0."
+            raise ValueError(msg)
+
         if not np.all(converted_exponents >= 0):
             msg = (
                 "PolyAny is not yet able to handle nonlinear polynomials. "
