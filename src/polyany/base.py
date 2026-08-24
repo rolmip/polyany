@@ -129,6 +129,25 @@ class BasePolynomial(ABC):
                 )
             )
 
+    def squeeze(self: TBasePolynomial) -> TBasePolynomial:
+        """Remove the extra variables from a polynomial.
+
+        The coefficients remain unchanged.
+
+        Returns
+        -------
+        Self
+            A new polynomial without extra variables.
+        """
+        exponents = self.exponents.copy()
+
+        extra_vars_mask = (exponents != 0).any(axis=0)
+
+        if not np.any(extra_vars_mask):
+            return self.__class__([[0]], self.coefficients.copy())
+
+        return self.__class__(exponents[:, extra_vars_mask], self.coefficients.copy())
+
     @staticmethod
     def _get_quadratic_exponents(n_vars: int) -> np.ndarray:
         eye = np.eye(n_vars, dtype=np.int16)
