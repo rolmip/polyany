@@ -1,3 +1,9 @@
+## 0.6.1 (2026-08-24)
+
+### Fix
+
+- reject empty arrays in polynomial creation (#144)
+
 ## 0.6.0 (2026-08-24)
 
 ### Feat
