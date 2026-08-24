@@ -252,6 +252,32 @@ class MatrixPolynomial(BasePolynomial):
 
         return self.__class__(unique_exponents, unique_coefficients)
 
+    def __sub__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
+        """Subtraction with another matrix polynomial, matrix or scalar
+
+        Parameters
+        ----------
+        other : MatrixAlgebraic
+            The operand in the subtraction.
+            A scalar can be an int, float, or NumPy scalars.
+            A matrix can be a NumPy 2D-array, nested lists or nested tuples.
+
+        Returns
+        -------
+        MatrixPolynomial
+            A new matrix polynomial representing the difference.
+        """
+        if isinstance(other, (SCALAR_TYPE, MatrixPolynomial)):
+            return self.__add__(-other)
+
+        try:
+            other = np.negative(other)
+        except Exception as e:
+            msg = "Operand must be safe-convertible to NumPy array"
+            raise TypeError(msg) from e
+
+        return self.__add__(other)
+
 
 SCALAR_TYPE = (int, float, np.integer, np.floating)
 MATRIX_TYPE = (list, tuple, np.ndarray)
