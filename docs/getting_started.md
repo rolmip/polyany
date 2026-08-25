@@ -279,8 +279,8 @@ Similarly, [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects support
 
 ```pycon
 >>> C_1 = np.eye(3)
->>> C_2 = np.ones((3,3))
->>> C_3 = np.arange(9).reshape(3,3)
+>>> C_2 = np.ones((3, 3))
+>>> C_3 = np.arange(9).reshape(3, 3)
 >>> mpoly = MatrixPolynomial([[0], [1], [2]], [C_1, C_2, C_3])
 >>> mpoly
 [[1. 0. 0.]    [[1. 1. 1.]        [[0. 1. 2.]
@@ -302,7 +302,7 @@ Similarly, [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects support
 Operating between matrix polynomials:
 
 ```pycon
->>> another_mpoly = MatrixPolynomial([[1]], np.ones((1,3,3)))
+>>> another_mpoly = MatrixPolynomial([[1]], np.ones((1, 3, 3)))
 >>> mpoly - another_mpoly
 [[1. 0. 0.]    [[0. 1. 2.]
  [0. 1. 0.]     [3. 4. 5.]
