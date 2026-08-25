@@ -96,6 +96,8 @@ class MatrixPolynomial(BasePolynomial):
      [0. 1.]]*x_1 +  [2. 3.]]*x_2
     """
 
+    __array_ufunc__ = None
+
     def __init__(self, exponents: ArrayLike, coefficients: ArrayLike) -> None:
         super().__init__(exponents, coefficients)
 
