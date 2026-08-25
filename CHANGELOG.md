@@ -1,3 +1,9 @@
+## 0.7.0 (2026-08-25)
+
+### Feat
+
+- addition and subtraction with matrix polynomials (#146)
+
 ## 0.6.1 (2026-08-24)
 
 ### Fix
