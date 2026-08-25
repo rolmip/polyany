@@ -463,6 +463,22 @@ def test_polynomial_partial_exceptions(var_index, expected_exception):
         Polynomial.univariate([1, 2, 3]).partial(var_index)
 
 
+@pytest.mark.parametrize(
+    "exponents,expected_exponents",
+    [
+        ([[0, 0], [1, 0], [2, 0]], [[0], [1], [2]]),
+        ([[0, 0, 0, 0, 0]], [[0]]),
+        ([[0, 1], [0, 2], [0, 3]], [[1], [2], [3]]),
+        ([[1, 0, 1], [1, 0, 2], [0, 0, 3]], [[1, 1], [1, 2], [0, 3]]),
+        ([[0, 0], [1, 2], [2, 3]], [[0, 0], [1, 2], [2, 3]]),
+    ],
+)
+def test_polynomial_squeeze(exponents, expected_exponents):
+    coefficients = np.ones(len(exponents))
+    poly = Polynomial(exponents, coefficients)
+
+    assert np.array_equal(poly.squeeze().exponents, expected_exponents)
+
 ## Matrix polynomials
 
 

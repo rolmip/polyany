@@ -73,10 +73,16 @@ def test_polynomial_latex_representation(
         (([[0.0, 0.0], [0.0, 1.0], [1.0, 0.0]], [[-1, 2, 33]]), TypeError),
         # exponents without 2 dimensions
         (([1, 2, 3], [10, 11, 12]), ValueError),
+        # empty exponents
+        ((np.zeros((1, 0), dtype=np.int_), [1]), ValueError),
+        # empty exponents
+        ((np.array([], dtype=np.int_).reshape(0, 1), [1]), ValueError),
         # coefficients without 1 dimension
         (([[0, 0], [1, 0], [0, 1]], [[1, 2], [3, 4]]), ValueError),
         # coefficients without 1 dimension
         (([[0, 0], [1, 0], [0, 1]], [[1, 2, 3]]), ValueError),
+        # empty coefficients
+        (([[0]], np.array([], dtype=np.float64)), ValueError),
         # scalar coefficient
         (([[0, 0]], 0), ValueError),
         # non unique exponents
@@ -211,6 +217,10 @@ def test_matrix_polynomial_string_representation(input_data, expected_string):
         (([[0, 0], [1, 0], [0, 1]], [[1, 2], [3, 4]]), ValueError),
         # matrix coefficients without 3 dimensions
         (([[0, 0], [1, 0], [0, 1]], [[1, 2, 3]]), ValueError),
+        # empty coefficient
+        (([[0]], np.zeros((1, 0, 1))), ValueError),
+        # empty coefficient
+        (([[0]], np.array([], dtype=np.float64).reshape(1, 0, 1)), ValueError),
         # non safe-convertible coefficient to float
         (([[0, 0]], [[["1"]]]), TypeError),
     ],

@@ -245,6 +245,33 @@ array([1., 2.])
 The pruned polynomial retains only the first and second term, which are the
 non-empty monomials.
 
+## :clamp: Squeezing
+
+Squeezing is the process of removing **extra variables** of a polynomial. That is, it removes
+the columns with all zeros in `exponents`.
+
+!!! Note
+    The squeezing process doesn't alter `coefficients` and `degree` attributes.
+
+```numpy
+>>> poly = Polynomial([[0, 0, 0], [0, 1, 0], [0, 2, 0]], [1, 2, 3])
+>>> poly.exponents
+array([[0, 0, 0],
+       [0, 1, 0],
+       [0, 2, 0]])
+```
+
+In the example above, the variables $x_1$ and $x_3$ are not utilized, so they can be removed by using
+the [`squeeze`][polyany.base.BasePolynomial.squeeze] method:
+
+```numpy
+>>> squeezed = poly.squeeze()
+>>> squeezed.exponents
+array([[0],
+       [1],
+       [2]])
+```
+
 ## :heavy_plus_sign: Addition and subtraction
 
 In {{ polyany }}, [`Polynomial`][polyany.polynomial.Polynomial] objects can be added to or subtracted from scalars[^2] and other scalar polynomials.

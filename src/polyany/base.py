@@ -79,6 +79,10 @@ class BasePolynomial(ABC):
             msg = f"Exponents must have 2 dimensions, got {converted_exponents.ndim}."
             raise ValueError(msg)
 
+        if converted_exponents.size == 0:
+            msg = "Exponents must have at least one element, got 0."
+            raise ValueError(msg)
+
         if not np.all(converted_exponents >= 0):
             msg = (
                 "PolyAny is not yet able to handle nonlinear polynomials. "
@@ -128,6 +132,25 @@ class BasePolynomial(ABC):
                     np.zeros(shape=(len(self.exponents), extra_vars), dtype=np.int16),
                 )
             )
+
+    def squeeze(self: TBasePolynomial) -> TBasePolynomial:
+        """Remove the extra variables from a polynomial.
+
+        The coefficients remain unchanged.
+
+        Returns
+        -------
+        Self
+            A new polynomial without extra variables.
+        """
+        exponents = self.exponents.copy()
+
+        extra_vars_mask = (exponents != 0).any(axis=0)
+
+        if not np.any(extra_vars_mask):
+            return self.__class__([[0]], self.coefficients.copy())
+
+        return self.__class__(exponents[:, extra_vars_mask], self.coefficients.copy())
 
     @staticmethod
     def _get_quadratic_exponents(n_vars: int) -> np.ndarray:
