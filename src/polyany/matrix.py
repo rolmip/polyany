@@ -278,6 +278,9 @@ class MatrixPolynomial(BasePolynomial):
 
         return self.__add__(other)
 
+    def __radd__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
+        return self.__add__(other)
+
 
 SCALAR_TYPE = (int, float, np.integer, np.floating)
 MATRIX_TYPE = (list, tuple, np.ndarray)
