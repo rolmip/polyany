@@ -479,6 +479,7 @@ def test_polynomial_squeeze(exponents, expected_exponents):
 
     assert np.array_equal(poly.squeeze().exponents, expected_exponents)
 
+
 ## Matrix polynomials
 
 
