@@ -3,7 +3,9 @@ import operator
 import numpy as np
 import pytest
 
-from polyany import Polynomial
+from polyany import MatrixPolynomial, Polynomial
+
+## Scalar polynomials
 
 
 @pytest.mark.parametrize(
@@ -459,3 +461,219 @@ def test_polynomial_partial_null_coefficient(var_index):
 def test_polynomial_partial_exceptions(var_index, expected_exception):
     with pytest.raises(expected_exception):
         Polynomial.univariate([1, 2, 3]).partial(var_index)
+
+
+## Matrix polynomials
+
+
+@pytest.mark.parametrize(
+    "scalar,expected_coefficients",
+    [
+        (0, [np.eye(2), np.ones((2, 2))]),
+        (1, [np.eye(2) + 1, np.ones((2, 2))]),
+        (-1, [np.eye(2) - 1, np.ones((2, 2))]),
+        (3.14, [np.eye(2) + 3.14, np.ones((2, 2))]),
+    ],
+)
+def test_matrix_polynomial_add_scalar_with_constant_term(scalar, expected_coefficients):
+    mpoly = MatrixPolynomial([[0], [1]], [np.eye(2), np.ones((2, 2))])
+
+    coefficients = (mpoly + scalar).coefficients
+
+    assert np.array_equal(coefficients, expected_coefficients)
+
+
+@pytest.mark.parametrize(
+    "scalar,expected_coefficients",
+    [
+        (0, [np.zeros((2, 2)), np.ones((2, 2))]),
+        (1, [np.ones((2, 2)), np.ones((2, 2))]),
+        (-1, [-np.ones((2, 2)), np.ones((2, 2))]),
+        (3.14, [3.14 * np.ones((2, 2)), np.ones((2, 2))]),
+    ],
+)
+def test_matrix_polynomial_add_scalar_without_constant_term(
+    scalar, expected_coefficients
+):
+    mpoly = MatrixPolynomial([[1]], [np.ones((2, 2))])
+
+    coefficients = (mpoly + scalar).coefficients
+
+    assert np.array_equal(coefficients, expected_coefficients)
+
+
+@pytest.mark.parametrize(
+    "scalar,expected_coefficients",
+    [
+        (0, [np.eye(2), np.ones((2, 2))]),
+        (1, [np.eye(2) + 1, np.ones((2, 2))]),
+        (-1, [np.eye(2) - 1, np.ones((2, 2))]),
+        (3.14, [np.eye(2) + 3.14, np.ones((2, 2))]),
+    ],
+)
+def test_matrix_polynomial_reflected_add_scalar(scalar, expected_coefficients):
+    mpoly = MatrixPolynomial([[0], [1]], [np.eye(2), np.ones((2, 2))])
+
+    coefficients = (scalar + mpoly).coefficients
+
+    assert np.array_equal(coefficients, expected_coefficients)
+
+
+@pytest.mark.parametrize(
+    "matrix,expected_coefficients",
+    [
+        (np.eye(2), [2 * np.eye(2), np.ones((2, 2))]),
+        (-np.eye(2), [np.zeros((2, 2)), np.ones((2, 2))]),
+        (np.ones((2, 2)), [np.eye(2) + 1, np.ones((2, 2))]),
+        ([[0, 0], [0, 0]], [np.eye(2), np.ones((2, 2))]),
+        (
+            ((0.1, 0.2), (0.3, 0.4)),
+            [np.eye(2) + ((0.1, 0.2), (0.3, 0.4)), np.ones((2, 2))],
+        ),
+    ],
+)
+def test_matrix_polynomial_add_matrix_with_constant_term(matrix, expected_coefficients):
+    mpoly = MatrixPolynomial([[0], [1]], [np.eye(2), np.ones((2, 2))])
+
+    coefficients = (mpoly + matrix).coefficients
+
+    assert np.array_equal(coefficients, expected_coefficients)
+
+
+@pytest.mark.parametrize(
+    "matrix,expected_coefficients",
+    [
+        (np.zeros((2, 2)), [np.zeros((2, 2)), np.ones((2, 2))]),
+        (np.ones((2, 2)), [np.ones((2, 2)), np.ones((2, 2))]),
+        ([[-1, -1], [-1, -1]], [-np.ones((2, 2)), np.ones((2, 2))]),
+        (
+            np.arange(4).reshape(2, 2),
+            [np.arange(4).reshape(2, 2), np.ones((2, 2))],
+        ),
+    ],
+)
+def test_matrix_polynomial_add_matrix_without_constant_term(
+    matrix, expected_coefficients
+):
+    mpoly = MatrixPolynomial([[1]], [np.ones((2, 2))])
+
+    coefficients = (mpoly + matrix).coefficients
+
+    assert np.array_equal(coefficients, expected_coefficients)
+
+
+@pytest.mark.parametrize(
+    "scalar,expected_coefficients",
+    [
+        (np.zeros((2, 2)), [np.eye(2), np.ones((2, 2))]),
+        (np.eye(2), [2 * np.eye(2), np.ones((2, 2))]),
+        (np.ones((2, 2)), [1 + np.eye(2), np.ones((2, 2))]),
+        (np.tri(2), [np.tri(2) + np.eye(2), np.ones((2, 2))]),
+    ],
+)
+def test_matrix_polynomial_reflected_add_matrix(scalar, expected_coefficients):
+    mpoly = MatrixPolynomial([[0], [1]], [np.eye(2), np.ones((2, 2))])
+
+    coefficients = (scalar + mpoly).coefficients
+
+    assert np.array_equal(coefficients, expected_coefficients)
+
+
+@pytest.mark.parametrize(
+    "matrix,expected_exception",
+    [
+        # non safe-convertible to numpy array
+        ([["a", 0], [0, 0]], TypeError),
+        # different shape
+        (np.ones((2, 1)), ValueError),
+        # empty array
+        (np.zeros((0, 1)), ValueError),
+        # empty array
+        (np.zeros((1, 0)), ValueError),
+    ],
+)
+def test_matrix_polynomial_add_matrix_exceptions(matrix, expected_exception):
+    mpoly = MatrixPolynomial([[0]], [np.eye(2)])
+
+    with pytest.raises(expected_exception):
+        mpoly + matrix
+
+
+@pytest.mark.parametrize(
+    "input_exponents,input_coefficients,expected_exponents,expected_coefficients",
+    [
+        (
+            [[3]],
+            [[[3, 1], [4, 1]]],
+            [[0], [1], [2], [3]],
+            [
+                np.eye(2),
+                np.ones((2, 2)),
+                np.arange(4).reshape(2, 2),
+                [[3, 1], [4, 1]],
+            ],
+        ),
+        (
+            [[0], [2]],
+            [np.ones((2, 2)), np.zeros((2, 2))],
+            [[0], [1], [2]],
+            [
+                np.eye(2) + 1,
+                np.ones((2, 2)),
+                np.arange(4).reshape(2, 2),
+            ],
+        ),
+        (
+            [[0], [1], [2]],
+            np.negative([np.eye(2), np.ones((2, 2)), np.arange(4).reshape(2, 2)]),
+            [[0], [1], [2]],
+            np.tile(np.zeros((2, 2)), (3, 1, 1)),
+        ),
+        (
+            [[0, 1], [0, 2]],
+            [np.full((2, 2), [1, 0]), np.diag([10, 20])],
+            [[0, 0], [1, 0], [0, 1], [2, 0], [0, 2]],
+            [
+                np.eye(2),
+                np.ones((2, 2)),
+                np.full((2, 2), [1, 0]),
+                np.arange(4).reshape(2, 2),
+                np.diag([10, 20]),
+            ],
+        ),
+        (
+            [[0, 0], [1, 0], [0, 1], [2, 0], [0, 2]],
+            [np.tril([2, 1]), np.triu([1, 2]), np.tri(2), np.diag([10, 20]), np.eye(2)],
+            [[0, 0], [1, 0], [0, 1], [2, 0], [0, 2]],
+            [
+                np.eye(2) + np.tril([2, 1]),
+                np.ones((2, 2)) + np.triu([1, 2]),
+                np.tri(2),
+                np.arange(4).reshape(2, 2) + np.diag([10, 20]),
+                np.eye(2),
+            ],
+        ),
+    ],
+)
+def test_matrix_polynomial_add_matrix_polynomial(
+    input_exponents, input_coefficients, expected_exponents, expected_coefficients
+):
+    mpoly1 = MatrixPolynomial(
+        [[0], [1], [2]], [np.eye(2), np.ones((2, 2)), np.arange(4).reshape(2, 2)]
+    )
+    mpoly2 = MatrixPolynomial(input_exponents, input_coefficients)
+
+    result = mpoly1 + mpoly2
+    exponents = result.exponents
+    coefficients = result.coefficients
+
+    assert np.array_equal(exponents, expected_exponents)
+    assert np.array_equal(coefficients, expected_coefficients)
+
+
+def test_matrix_polynomial_add_matrix_polynomial_exception():
+    mpoly1 = MatrixPolynomial([[0]], [np.eye(2)])
+    mpoly2 = MatrixPolynomial([[0]], [np.ones((2, 1))])
+
+    with pytest.raises(ValueError):
+        mpoly1 + mpoly2
