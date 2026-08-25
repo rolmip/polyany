@@ -178,7 +178,7 @@ class MatrixPolynomial(BasePolynomial):
         MatrixPolynomial
             A new matrix polynomial representing the sum.
         """
-        if not isinstance(other, ALGEBRAIC_TYPE):
+        if not isinstance(other, ALGEBRAIC_TYPE):  # pragma: no cover
             return NotImplemented
 
         if isinstance(other, SCALAR_TYPE):
