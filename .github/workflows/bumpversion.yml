@@ -34,6 +34,8 @@ jobs:
           github_token: ${{ steps.app-token.outputs.token }}
           changelog_increment_filename: body.md
           git_redirect_stderr: true
+          git_name: "${{ steps.app-token.outputs.app-slug }}[bot]"
+          git_email: "${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
       - name: Install uv
         uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
         with:
