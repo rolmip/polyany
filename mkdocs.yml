@@ -55,6 +55,7 @@ theme:
     - content.action.view
     - content.action.edit
     - content.tooltips
+    - content.footnote.tooltips
 
 plugins:
   - search

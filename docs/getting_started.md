@@ -274,7 +274,7 @@ array([[0],
 
 ## :heavy_plus_sign: Addition and subtraction
 
-In {{ polyany }}, Polynomial objects can be added or subtracted with scalars[^2] and other polynomials.
+In {{ polyany }}, [`Polynomial`][polyany.polynomial.Polynomial] objects can be added to or subtracted from scalars[^2] and other scalar polynomials.
 
 ```pycon
 >>> poly = Polynomial.univariate([1, -2, 3])
@@ -298,8 +298,48 @@ For addition/subtraction between polynomials:
 -3*x_2 + 3*x_1^2 + 4*x_1*x_2
 ```
 
+Similarly, [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects support addition and subtraction with scalars[^2], matrices[^3], and other matrix polynomials.
+
+!!! Warning "Interaction between scalar and matrix polynomials"
+    [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects cannot operate with
+    [`Polynomial`][polyany.polynomial.Polynomial] objects.
+
+```pycon
+>>> C_1 = np.eye(3)
+>>> C_2 = np.ones((3, 3))
+>>> C_3 = np.arange(9).reshape(3, 3)
+>>> mpoly = MatrixPolynomial([[0], [1], [2]], [C_1, C_2, C_3])
+>>> mpoly
+[[1. 0. 0.]    [[1. 1. 1.]        [[0. 1. 2.]
+ [0. 1. 0.]     [1. 1. 1.]         [3. 4. 5.]
+ [0. 0. 1.]] +  [1. 1. 1.]]*x_1 +  [6. 7. 8.]]*x_1^2
+>>> mpoly + 10 #(1)!
+[[11. 10. 10.]    [[1. 1. 1.]        [[0. 1. 2.]
+ [10. 11. 10.]     [1. 1. 1.]         [3. 4. 5.]
+ [10. 10. 11.]] +  [1. 1. 1.]]*x_1 +  [6. 7. 8.]]*x_1^2
+>>> mpoly + np.eye(3) #(2)!
+[[2. 0. 0.]    [[1. 1. 1.]        [[0. 1. 2.]
+ [0. 2. 0.]     [1. 1. 1.]         [3. 4. 5.]
+ [0. 0. 2.]] +  [1. 1. 1.]]*x_1 +  [6. 7. 8.]]*x_1^2
+```
+
+1. Similarly to NumPy, operations are performed using [broadcasting](https://numpy.org/doc/stable/user/absolute_beginners.html#broadcasting).
+2. You could use nested lists or nested tuples.
+
+Operating between matrix polynomials:
+
+```pycon
+>>> another_mpoly = MatrixPolynomial([[1]], np.ones((1, 3, 3)))
+>>> mpoly - another_mpoly
+[[1. 0. 0.]    [[0. 1. 2.]
+ [0. 1. 0.]     [3. 4. 5.]
+ [0. 0. 1.]] +  [6. 7. 8.]]*x_1^2
+```
+
 [^2]:
     Python builtins numeric types (`int`, `float`) and NumPy scalars. See [`Scalar`][polyany.types.Scalar]
+[^3]:
+    Lists, tuples and NumPy 2D-arrays.
 
 ## :heavy_multiplication_x: Multiplication and division
 
@@ -376,7 +416,7 @@ which can be obtained in {{ polyany }} as:
 2*x_1^2*x_2 + 10*x_1*x_2^3*x_3
 ```
 
-1. The method [partial][polyany.Polynomial.partial] uses a zero-based index.
+1. The method [partial][polyany.polynomial.Polynomial.partial] uses a zero-based index.
 
 ## :material-matrix: Matrix Polynomials
 
