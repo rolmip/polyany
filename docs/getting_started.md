@@ -17,7 +17,7 @@ The `exponents` matrix contains the exponents of each monomial of the polynomial
     Consider the monomial $M(\mathbf{x}) = 5\,x_1^2\,x_2\,x_3^4\,x_5$, its exponents and coefficient are given by:
 
     ```py
-    exponents = [[2, 1, 4, 0, 1]] #(1)!
+    exponents = [[2, 1, 4, 0, 1]]  # (1)!
     coefficient = [5]
     ```
 
@@ -53,8 +53,8 @@ To create a polynomial from an exponents matrix and a coefficients vector in {{ 
 ```py
 from polyany import Polynomial
 
-exponents = [[0, 0, 0], [1, 0, 0], [0, 1, 0]] #(1)!
-coefficients = [1, 2, 3] #(2)!
+exponents = [[0, 0, 0], [1, 0, 0], [0, 1, 0]]  # (1)!
+coefficients = [1, 2, 3]  # (2)!
 
 poly = Polynomial(exponents, coefficients)
 ```
@@ -110,7 +110,7 @@ To create a quadratic form a **square matrix** must be provided.
 ```py
 from polyany import Polynomial
 
-matrix = [[1, 2], [2, 3]] #(1)!
+matrix = [[1, 2], [2, 3]]  # (1)!
 quadratic_form_poly = Polynomial.quadratic_form(matrix)
 ```
 
@@ -165,7 +165,7 @@ The input argument (`point`) must be a vector with `n_vars` components.
 
 ```pycon
 >>> poly = Polynomial.univariate([1, 2, 3])
->>> poly([2]) #(1)!
+>>> poly([2])  # (1)!
 np.float64(17.0)
 ```
 
@@ -174,9 +174,7 @@ np.float64(17.0)
 For multivariate polynomials:
 
 ```pycon
->>> matrix = [[1, 2, 3],
-...           [2, 4, 5],
-...           [3, 5, 6]]
+>>> matrix = [[1, 2, 3], [2, 4, 5], [3, 5, 6]]
 >>> poly = Polynomial.quadratic_form(matrix)
 >>> poly([0, 0, 0])
 np.float64(0.0)
@@ -313,11 +311,11 @@ Similarly, [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects support
 [[1. 0. 0.]    [[1. 1. 1.]        [[0. 1. 2.]
  [0. 1. 0.]     [1. 1. 1.]         [3. 4. 5.]
  [0. 0. 1.]] +  [1. 1. 1.]]*x_1 +  [6. 7. 8.]]*x_1^2
->>> mpoly + 10 #(1)!
+>>> mpoly + 10  # (1)!
 [[11. 10. 10.]    [[1. 1. 1.]        [[0. 1. 2.]
  [10. 11. 10.]     [1. 1. 1.]         [3. 4. 5.]
  [10. 10. 11.]] +  [1. 1. 1.]]*x_1 +  [6. 7. 8.]]*x_1^2
->>> mpoly + np.eye(3) #(2)!
+>>> mpoly + np.eye(3)  # (2)!
 [[2. 0. 0.]    [[1. 1. 1.]        [[0. 1. 2.]
  [0. 2. 0.]     [1. 1. 1.]         [3. 4. 5.]
  [0. 0. 2.]] +  [1. 1. 1.]]*x_1 +  [6. 7. 8.]]*x_1^2
@@ -408,7 +406,7 @@ $$
 which can be obtained in {{ polyany }} as:
 
 ```pycon
->>> poly.partial(0) #(1)!
+>>> poly.partial(0)  # (1)!
 4*x_1*x_2*x_3 + 5*x_2^3*x_3^2
 >>> poly.partial(1)
 2*x_1^2*x_3 + 15*x_1*x_2^2*x_3^2
@@ -444,10 +442,10 @@ If we want to declare the matrix polynomial in the definition above, we define:
 ```py
 from polyany import MatrixPolynomial
 
-exponents = [[1, 0], [0, 1]] #(1)!
-C_1 = [[1, 0], [0, 1]] #(2)!
+exponents = [[1, 0], [0, 1]]  # (1)!
+C_1 = [[1, 0], [0, 1]]  # (2)!
 C_2 = [[3, 1], [4, 5]]
-coefficients = [C_1, C_2] #(3)!
+coefficients = [C_1, C_2]  # (3)!
 
 mpoly = MatrixPolynomial(exponents, coefficients)
 ```
