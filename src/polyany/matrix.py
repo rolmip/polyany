@@ -238,12 +238,10 @@ class MatrixPolynomial(BasePolynomial):
 
         max_n_vars = max(self.n_vars, other.n_vars)
 
-        if self.n_vars < max_n_vars:
-            self._domain_expansion(max_n_vars)
-        else:
-            other._domain_expansion(max_n_vars)
+        self_exponents = self._domain_expansion(max_n_vars)
+        other_exponents = other._domain_expansion(max_n_vars)
 
-        stacked_exponents = np.vstack((self.exponents, other.exponents))
+        stacked_exponents = np.vstack((self_exponents, other_exponents))
         stacked_coefficients = np.concatenate((self.coefficients, other.coefficients))
 
         sorted_idx = np.lexsort(stacked_exponents.T)
