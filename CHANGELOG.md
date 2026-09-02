@@ -1,3 +1,9 @@
+## 0.7.1 (2026-09-02)
+
+### Fix
+
+- in-place mutation in _domain_expansion (#157)
+
 ## 0.7.0 (2026-08-25)
 
 ### Feat
