@@ -9,6 +9,33 @@ from polyany import MatrixPolynomial, Polynomial
 
 
 @pytest.mark.parametrize(
+    "n_vars",
+    [1, 2, 3],
+)
+def test_polynomial_imutable_domain_expansion(n_vars):
+    original_exponents = [[0], [1]]
+    poly = Polynomial(original_exponents, [0, 0])
+    _ = poly._domain_expansion(n_vars)
+
+    assert np.array_equal(poly.exponents, original_exponents)
+
+
+@pytest.mark.parametrize(
+    "original_exponents,n_vars,expected_exponents",
+    [
+        ([[0], [1]], 1, [[0], [1]]),
+        ([[0], [1]], 2, [[0, 0], [1, 0]]),
+        ([[0, 1], [0, 2]], 3, [[0, 1, 0], [0, 2, 0]]),
+    ],
+)
+def test_polynomial_domain_expansion(original_exponents, n_vars, expected_exponents):
+    poly = Polynomial(original_exponents, [0, 1])
+    expanded_exponents = poly._domain_expansion(n_vars)
+
+    assert np.array_equal(expanded_exponents, expected_exponents)
+
+
+@pytest.mark.parametrize(
     "input_data,expected_output",
     [
         ([0, 0, 0], -2),

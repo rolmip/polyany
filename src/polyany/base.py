@@ -122,16 +122,18 @@ class BasePolynomial(ABC):
             msg = "Exponents entries must be unique."
             raise ValueError(msg)
 
-    def _domain_expansion(self, n_vars: int) -> None:
+    def _domain_expansion(self, n_vars: int) -> np.ndarray:
         extra_vars = n_vars - self.exponents.shape[1]
 
         if extra_vars > 0:
-            self.exponents = np.hstack(
+            return np.hstack(
                 (
                     self.exponents,
                     np.zeros(shape=(len(self.exponents), extra_vars), dtype=np.int16),
                 )
             )
+
+        return self.exponents
 
     def squeeze(self: TBasePolynomial) -> TBasePolynomial:
         """Remove the extra variables from a polynomial.

@@ -483,10 +483,10 @@ class Polynomial(BasePolynomial):
     def _add_polynomial(self, other: Polynomial) -> Polynomial:
         max_n_vars = max(self.n_vars, other.n_vars)
 
-        self._domain_expansion(max_n_vars)
-        other._domain_expansion(max_n_vars)
+        self_exponents = self._domain_expansion(max_n_vars)
+        other_exponents = other._domain_expansion(max_n_vars)
 
-        stacked_exponents = np.vstack((self.exponents, other.exponents))
+        stacked_exponents = np.vstack((self_exponents, other_exponents))
         stacked_coefficients = np.concatenate((self.coefficients, other.coefficients))
 
         exponents, indices = np.unique(stacked_exponents, axis=0, return_inverse=True)
@@ -549,11 +549,11 @@ class Polynomial(BasePolynomial):
     def _mul_polynomial(self, other: Polynomial) -> Polynomial:
         max_n_vars = max(self.n_vars, other.n_vars)
 
-        self._domain_expansion(max_n_vars)
-        other._domain_expansion(max_n_vars)
+        self_exponents = self._domain_expansion(max_n_vars)
+        other_exponents = other._domain_expansion(max_n_vars)
 
         cross_exponents = (
-            self.exponents[np.newaxis, :, :] + other.exponents[:, np.newaxis, :]
+            self_exponents[np.newaxis, :, :] + other_exponents[:, np.newaxis, :]
         ).reshape(-1, max_n_vars)
 
         cross_coefficients = (
