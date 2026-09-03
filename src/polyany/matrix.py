@@ -302,6 +302,17 @@ class MatrixPolynomial(BasePolynomial):
         MatrixPolynomial
             A new matrix polynomial representing the matrix product.
 
+        Raises
+        ------
+        TypeError
+            - If the operand is a matrix and cannot be safely converted to a
+            NumPy 2D-array of floats.
+
+        ValueError
+            - If the operand is a matrix without 2 dimensions.
+            - If the operand is an empty matrix.
+            - If the dimensions are incompatible, `self.shape[1] != other.shape[0]`.
+
         Notes
         -----
         Matrix multiplication is generally non-commutative. Which means that:
