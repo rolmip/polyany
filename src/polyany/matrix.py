@@ -288,6 +288,118 @@ class MatrixPolynomial(BasePolynomial):
     def __rsub__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
         return (-self).__add__(other)
 
+    def __matmul__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
+        """Matrix product with another matrix or matrix polynomial
+
+        Parameters
+        ----------
+        other : MatrixAlgebraic
+            The operand in the multiplication.
+            A matrix can be a NumPy 2D-array, nested lists or nested tuples.
+
+        Returns
+        -------
+        MatrixPolynomial
+            A new matrix polynomial representing the matrix product.
+
+        Notes
+        -----
+        Matrix multiplication is generally non-commutative. Which means that:
+        `operand_1 @ operand_2 != operand_2 @ operand_1`.
+
+        Matrix multiplication with scalars is not supported, use `*` instead.
+        """
+        return self._matmul(other, reflected=False)
+
+    def _matmul(self, other: MatrixAlgebraic, *, reflected: bool) -> MatrixPolynomial:
+        if not isinstance(other, (*MATRIX_TYPE, MatrixPolynomial)):  # pragma: no cover
+            return NotImplemented
+
+        if isinstance(other, MATRIX_TYPE):
+            return self._matmul_matrix(other, reflected=reflected)
+
+        return self._matmul_polynomial(other, reflected=reflected)
+
+    def _matmul_matrix(
+        self, other: MatrixAlgebraic, *, reflected: bool
+    ) -> MatrixPolynomial:
+        try:
+            other = np.asarray(other).astype(
+                self.coefficients.dtype, casting="safe", copy=False
+            )
+        except Exception as e:
+            msg = (
+                "Operand must be safe-convertible to NumPy 2D-arrays "
+                "with float entries."
+            )
+            raise TypeError(msg) from e
+
+        if other.ndim != 2:
+            msg = f"Matrix operand must have 2 dimensions, got {other.ndim}."
+            raise ValueError(msg)
+
+        if other.size == 0:
+            msg = "Matrix operand must have at least one element, got 0."
+            raise ValueError(msg)
+
+        left_operand, right_operand = (other, self) if reflected else (self, other)
+
+        if left_operand.shape[1] != right_operand.shape[0]:
+            msg = (
+                f"Left operand of shape {left_operand.shape} cannot be multiplied by "
+                f"a right operand of shape {right_operand.shape}: "
+                f"{left_operand.shape[1]} != {right_operand.shape[0]}."
+            )
+            raise ValueError(msg)
+
+        coefficients = (
+            other @ self.coefficients if reflected else self.coefficients @ other
+        )
+
+        return self.__class__(self.exponents.copy(), coefficients)
+
+    def _matmul_polynomial(
+        self, other: MatrixPolynomial, *, reflected: bool
+    ) -> MatrixPolynomial:
+        left_operand, right_operand = (other, self) if reflected else (self, other)
+
+        if left_operand.shape[1] != right_operand.shape[0]:
+            msg = (
+                f"Cannot multiply polynomial of shape {self.shape} with "
+                f"a polynomial of shape {other.shape}: "
+                f"{left_operand.shape[1]} != {right_operand.shape[0]}"
+            )
+            raise ValueError(msg)
+
+        max_n_vars = max(self.n_vars, other.n_vars)
+
+        left_exponents = self._domain_expansion(max_n_vars)
+        right_exponents = other._domain_expansion(max_n_vars)
+
+        cross_exponents = (
+            left_exponents[np.newaxis, :, :] + right_exponents[:, np.newaxis, :]
+        ).reshape(-1, max_n_vars)
+
+        cross_coefficients = (
+            left_operand.coefficients[np.newaxis, ...]
+            @ right_operand.coefficients[:, np.newaxis, ...]
+        ).reshape(-1, left_operand.shape[0], right_operand.shape[1])
+
+        sorted_idx = np.lexsort(cross_exponents.T)
+        coefficients = cross_coefficients[sorted_idx]
+        exponents = cross_exponents[sorted_idx]
+
+        changes = (exponents[1:] != exponents[:-1]).any(axis=1)
+        boundaries = np.concatenate(([0], np.nonzero(changes)[0] + 1))
+
+        unique_exponents = exponents[boundaries]
+        unique_coefficients = np.add.reduceat(coefficients, boundaries)
+
+        return self.__class__(unique_exponents, unique_coefficients)
+
+    def __rmatmul__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
+        return self._matmul(other, reflected=True)
+
 
 SCALAR_TYPE = (int, float, np.integer, np.floating)
 MATRIX_TYPE = (list, tuple, np.ndarray)
