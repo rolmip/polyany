@@ -47,5 +47,4 @@ jobs:
             dist/*.tar.gz
             dist/*.whl
           overwrite_files: false
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          token: ${{ steps.app-token.outputs.token }}
