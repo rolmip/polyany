@@ -913,3 +913,338 @@ def test_matrix_polynomial_sub_matrix_polynomial(
 
     assert np.array_equal(exponents, expected_exponents)
     assert np.array_equal(coefficients, expected_coefficients)
+
+
+@pytest.mark.parametrize(
+    "matrix",
+    [
+        np.eye(3),
+        np.ones((3, 2)),
+        np.vander([3, 1, 4]),
+        np.linspace(0, 1, 9).reshape(3, 3),
+        np.zeros((3, 1)),
+        np.diag([10, 20, 30]),
+    ],
+)
+def test_matrix_polynomial_matmul_matrix(matrix):
+    mpoly = MatrixPolynomial(
+        [[2, 0], [1, 1], [0, 3], [3, 1]],
+        [
+            np.triu([3, 1, 4]),
+            np.vander([3, 1, 4]),
+            np.linspace(0, 1, 9).reshape(3, 3),
+            np.arange(10, 19).reshape(3, 3),
+        ],
+    )
+
+    result = mpoly @ matrix
+
+    assert np.array_equal(result.coefficients, mpoly.coefficients @ matrix)
+
+
+@pytest.mark.parametrize(
+    "left_exponents,left_coefficients,expected_exponents,expected_coefficients",
+    [
+        (
+            [[1, 1, 1]],
+            [np.tri(2, 3)],
+            [[1, 1, 1], [2, 1, 1], [1, 2, 1], [2, 2, 1]],
+            np.tri(2, 3) @ [np.eye(3), np.ones((3, 3)), np.ones((3, 3)), np.tri(3)],
+        ),
+        (
+            [[0], [1], [2]],
+            [np.tri(3), np.ones((3, 3)), np.arange(9).reshape(3, 3)],
+            [
+                [0, 0],
+                [1, 0],
+                [0, 1],
+                [2, 0],
+                [1, 1],
+                [3, 0],
+                [2, 1],
+                [3, 1],
+            ],
+            [
+                np.tri(3),
+                np.tri(3) @ np.ones((3, 3)) + np.ones((3, 3)),
+                np.tri(3) @ np.ones((3, 3)),
+                np.ones((3, 3)) @ np.ones((3, 3)) + np.arange(9).reshape(3, 3),
+                np.tri(3) @ np.tri(3) + np.ones((3, 3)) @ np.ones((3, 3)),
+                np.arange(9).reshape(3, 3) @ np.ones((3, 3)),
+                np.ones((3, 3)) @ np.tri(3)
+                + np.arange(9).reshape(3, 3) @ np.ones((3, 3)),
+                np.arange(9).reshape(3, 3) @ np.tri(3),
+            ],
+        ),
+        (
+            [[0]],
+            [np.ones((5, 3))],
+            [[0, 0], [1, 0], [0, 1], [1, 1]],
+            np.ones((5, 3)) @ [np.eye(3), np.ones((3, 3)), np.ones((3, 3)), np.tri(3)],
+        ),
+        (
+            [[0, 0], [1, 0], [0, 1], [1, 1]],
+            [np.eye(3), np.ones((3, 3)), np.ones((3, 3)), np.tri(3)],
+            [
+                [0, 0],
+                [1, 0],
+                [0, 1],
+                [2, 0],
+                [1, 1],
+                [0, 2],
+                [2, 1],
+                [1, 2],
+                [2, 2],
+            ],
+            [
+                np.eye(3),
+                2 * np.ones((3, 3)),
+                2 * np.ones((3, 3)),
+                np.ones((3, 3)) @ np.ones((3, 3)),
+                2 * np.ones((3, 3)) @ np.ones((3, 3)) + 2 * np.tri(3),
+                np.ones((3, 3)) @ np.ones((3, 3)),
+                np.tri(3) @ np.ones((3, 3)) + np.ones((3, 3)) @ np.tri(3),
+                np.ones((3, 3)) @ np.tri(3) + np.tri(3) @ np.ones((3, 3)),
+                np.tri(3) @ np.tri(3),
+            ],
+        ),
+        (
+            [[2, 0], [1, 1], [0, 3], [3, 1]],
+            [
+                np.triu([3, 1, 4]),
+                np.vander([3, 1, 4]),
+                np.linspace(0, 1, 9).reshape(3, 3),
+                np.arange(10, 19).reshape(3, 3),
+            ],
+            [
+                [2, 0],
+                [1, 1],
+                [3, 0],
+                [2, 1],
+                [1, 2],
+                [0, 3],
+                [3, 1],
+                [2, 2],
+                [1, 3],
+                [0, 4],
+                [4, 1],
+                [3, 2],
+                [1, 4],
+                [4, 2],
+            ],
+            [
+                np.triu([3, 1, 4]),
+                np.vander([3, 1, 4]),
+                np.triu([3, 1, 4]) @ np.ones((3, 3)),
+                np.vander([3, 1, 4]) @ np.ones((3, 3))
+                + np.triu([3, 1, 4]) @ np.ones((3, 3)),
+                np.vander([3, 1, 4]) @ np.ones((3, 3)),
+                np.linspace(0, 1, 9).reshape(3, 3),
+                np.arange(10, 19).reshape(3, 3) + np.triu([3, 1, 4]) @ np.tri(3),
+                np.vander([3, 1, 4]) @ np.tri(3),
+                np.linspace(0, 1, 9).reshape(3, 3) @ np.ones((3, 3)),
+                np.linspace(0, 1, 9).reshape(3, 3) @ np.ones((3, 3)),
+                np.arange(10, 19).reshape(3, 3) @ np.ones((3, 3)),
+                np.arange(10, 19).reshape(3, 3) @ np.ones((3, 3)),
+                np.linspace(0, 1, 9).reshape(3, 3) @ np.tri(3),
+                np.arange(10, 19).reshape(3, 3) @ np.tri(3),
+            ],
+        ),
+    ],
+)
+def test_matrix_polynomial_matmul_matrix_polynomial(
+    left_exponents, left_coefficients, expected_exponents, expected_coefficients
+):
+    left_poly = MatrixPolynomial(left_exponents, left_coefficients)
+    right_poly = MatrixPolynomial(
+        [[0, 0], [1, 0], [0, 1], [1, 1]],
+        [np.eye(3), np.ones((3, 3)), np.ones((3, 3)), np.tri(3)],
+    )
+
+    result = left_poly @ right_poly
+
+    assert np.array_equal(result.exponents, expected_exponents)
+    assert np.array_equal(result.coefficients, expected_coefficients)
+
+
+@pytest.mark.parametrize(
+    "matrix",
+    [
+        np.eye(3),
+        np.ones((2, 3)),
+        np.vander([3, 1, 4]),
+        np.linspace(0, 1, 9).reshape(3, 3),
+        np.zeros((1, 3)),
+        np.diag([10, 20, 30]),
+    ],
+)
+def test_matrix_polynomial_reflected_matmul_matrix(matrix):
+    mpoly = MatrixPolynomial(
+        [[2, 0], [1, 1], [0, 3], [3, 1]],
+        [
+            np.triu([3, 1, 4]),
+            np.vander([3, 1, 4]),
+            np.linspace(0, 1, 9).reshape(3, 3),
+            np.arange(10, 19).reshape(3, 3),
+        ],
+    )
+
+    result = matrix @ mpoly
+
+    assert np.array_equal(result.coefficients, matrix @ mpoly.coefficients)
+
+
+@pytest.mark.parametrize(
+    "right_exponents,right_coefficients,expected_exponents,expected_coefficients",
+    [
+        (
+            [[1, 1, 1]],
+            [np.tri(3, 2)],
+            [[1, 1, 1], [2, 1, 1], [1, 2, 1], [2, 2, 1]],
+            [np.eye(3), np.ones((3, 3)), np.ones((3, 3)), np.tri(3)] @ np.tri(3, 2),
+        ),
+        (
+            [[0], [1], [2]],
+            [np.tri(3), np.ones((3, 3)), np.arange(9).reshape(3, 3)],
+            [
+                [0, 0],
+                [1, 0],
+                [0, 1],
+                [2, 0],
+                [1, 1],
+                [3, 0],
+                [2, 1],
+                [3, 1],
+            ],
+            [
+                np.tri(3),
+                np.ones((3, 3)) @ np.tri(3) + np.ones((3, 3)),
+                np.ones((3, 3)) @ np.tri(3),
+                np.ones((3, 3)) @ np.ones((3, 3)) + np.arange(9).reshape(3, 3),
+                np.tri(3) @ np.tri(3) + np.ones((3, 3)) @ np.ones((3, 3)),
+                np.ones((3, 3)) @ np.arange(9).reshape(3, 3),
+                np.tri(3) @ np.ones((3, 3))
+                + np.ones((3, 3)) @ np.arange(9).reshape(3, 3),
+                np.tri(3) @ np.arange(9).reshape(3, 3),
+            ],
+        ),
+        (
+            [[0]],
+            [np.ones((3, 5))],
+            [[0, 0], [1, 0], [0, 1], [1, 1]],
+            [np.eye(3), np.ones((3, 3)), np.ones((3, 3)), np.tri(3)] @ np.ones((3, 5)),
+        ),
+        (
+            [[0, 0], [1, 0], [0, 1], [1, 1]],
+            [np.eye(3), np.ones((3, 3)), np.ones((3, 3)), np.tri(3)],
+            [
+                [0, 0],
+                [1, 0],
+                [0, 1],
+                [2, 0],
+                [1, 1],
+                [0, 2],
+                [2, 1],
+                [1, 2],
+                [2, 2],
+            ],
+            [
+                np.eye(3),
+                2 * np.ones((3, 3)),
+                2 * np.ones((3, 3)),
+                np.ones((3, 3)) @ np.ones((3, 3)),
+                2 * np.ones((3, 3)) @ np.ones((3, 3)) + 2 * np.tri(3),
+                np.ones((3, 3)) @ np.ones((3, 3)),
+                np.tri(3) @ np.ones((3, 3)) + np.ones((3, 3)) @ np.tri(3),
+                np.ones((3, 3)) @ np.tri(3) + np.tri(3) @ np.ones((3, 3)),
+                np.tri(3) @ np.tri(3),
+            ],
+        ),
+        (
+            [[2, 0], [1, 1], [0, 3], [3, 1]],
+            [
+                np.triu([3, 1, 4]),
+                np.vander([3, 1, 4]),
+                np.linspace(0, 1, 9).reshape(3, 3),
+                np.arange(10, 19).reshape(3, 3),
+            ],
+            [
+                [2, 0],
+                [1, 1],
+                [3, 0],
+                [2, 1],
+                [1, 2],
+                [0, 3],
+                [3, 1],
+                [2, 2],
+                [1, 3],
+                [0, 4],
+                [4, 1],
+                [3, 2],
+                [1, 4],
+                [4, 2],
+            ],
+            [
+                np.triu([3, 1, 4]),
+                np.vander([3, 1, 4]),
+                np.ones((3, 3)) @ np.triu([3, 1, 4]),
+                np.ones((3, 3)) @ np.vander([3, 1, 4])
+                + np.ones((3, 3)) @ np.triu([3, 1, 4]),
+                np.ones((3, 3)) @ np.vander([3, 1, 4]),
+                np.linspace(0, 1, 9).reshape(3, 3),
+                np.arange(10, 19).reshape(3, 3) + np.tri(3) @ np.triu([3, 1, 4]),
+                np.tri(3) @ np.vander([3, 1, 4]),
+                np.ones((3, 3)) @ np.linspace(0, 1, 9).reshape(3, 3),
+                np.ones((3, 3)) @ np.linspace(0, 1, 9).reshape(3, 3),
+                np.ones((3, 3)) @ np.arange(10, 19).reshape(3, 3),
+                np.ones((3, 3)) @ np.arange(10, 19).reshape(3, 3),
+                np.tri(3) @ np.linspace(0, 1, 9).reshape(3, 3),
+                np.tri(3) @ np.arange(10, 19).reshape(3, 3),
+            ],
+        ),
+    ],
+)
+def test_matrix_polynomial_reflected_matmul_matrix_polynomial(
+    right_exponents, right_coefficients, expected_exponents, expected_coefficients
+):
+    left_poly = MatrixPolynomial(
+        [[0, 0], [1, 0], [0, 1], [1, 1]],
+        [np.eye(3), np.ones((3, 3)), np.ones((3, 3)), np.tri(3)],
+    )
+    right_poly = MatrixPolynomial(right_exponents, right_coefficients)
+
+    result = left_poly @ right_poly
+
+    assert np.array_equal(result.exponents, expected_exponents)
+    assert np.array_equal(result.coefficients, expected_coefficients)
+
+
+@pytest.mark.parametrize(
+    "matrix,expected_exception",
+    [
+        # non-safe convertible to numpy array
+        ([["a", 2], [3, 4]], TypeError),
+        # matrix must be 3D
+        (np.ones((1, 2, 2)), ValueError),
+        # empty array
+        (np.ones((2, 0)), ValueError),
+        # empty array
+        (np.ones((0, 2)), ValueError),
+        # incompatible shape
+        (np.eye(3), ValueError),
+    ],
+)
+def test_matrix_polynomial_matmul_matrix_exceptions(matrix, expected_exception):
+    mpoly = MatrixPolynomial([[0]], [np.eye(2)])
+
+    with pytest.raises(expected_exception):
+        mpoly @ matrix
+
+
+@pytest.mark.parametrize("reflected", [True, False])
+def test_matrix_polynomial_matmul_matrix_polynomial_exception(reflected):
+    mpoly1 = MatrixPolynomial([[0]], [np.ones((1, 2))])
+    mpoly2 = MatrixPolynomial([[0]], [np.ones((3, 4))])
+
+    with pytest.raises(ValueError):
+        mpoly1._matmul_polynomial(mpoly2, reflected=reflected)

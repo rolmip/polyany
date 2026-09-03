@@ -378,6 +378,45 @@ Dividing a polynomial by a scalar:
 2 - 4*x_1 + x_1^2
 ```
 
+## :cyclone: Matrix multiplication
+
+In {{ polyany}}, matrix multiplication can be performerd on [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects
+and matrices[^3].
+
+!!! warning
+    Scalars[^2] are **not accepted** in matrix multiplication, use element-wise multiplication instead.
+
+```numpy
+>>> mpoly = MatrixPolynomial([[0], [1]], [[[3, 1],[4, 1]], np.tri(2)])
+>>> mpoly
+[[3. 1.]    [[1. 0.]
+ [4. 1.]] +  [1. 1.]]*x_1
+>>> mpoly @ np.ones((2, 2))
+[[4. 4.]    [[1. 1.]
+ [5. 5.]] +  [2. 2.]]*x_1
+>>> np.ones((2,2)) @ mpoly
+[[7. 2.]    [[2. 1.]
+ [7. 2.]] +  [2. 1.]]*x_1
+```
+
+Matrix product of two matrix polynomials:
+
+```numpy
+>>> another_mpoly = MatrixPolynomial([[1, 0], [0, 1]], [np.vander([1, 2]), np.diag([1, 2])])
+>>> another_mpoly
+[[1. 1.]        [[1. 0.]
+ [2. 1.]]*x_1 +  [0. 2.]]*x_2
+>>> mpoly @ another_mpoly
+[[5. 4.]        [[3. 2.]        [[1. 1.]          [[1. 0.]
+ [6. 5.]]*x_1 +  [4. 2.]]*x_2 +  [3. 2.]]*x_1^2 +  [1. 2.]]*x_1*x_2
+>>> another_mpoly @ mpoly
+[[ 7.  2.]        [[3. 1.]        [[2. 1.]          [[1. 0.]
+ [10.  3.]]*x_1 +  [8. 2.]]*x_2 +  [3. 1.]]*x_1^2 +  [2. 2.]]*x_1*x_2
+```
+
+!!! note "Matrix multiplication is not-commutative"
+    In the examples above, notice that `operand_1 @ operand_2` is different of `operand_2 @ operand_1`.
+
 ## :curly_loop: Partial derivatives
 
 The partial derivatives of polynomials can be evaluated by using the
