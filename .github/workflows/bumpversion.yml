@@ -39,7 +39,7 @@ jobs:
       - name: Build
         run: uv build
       - name: Release
-        uses: softprops/action-gh-release@e5ee6bc58a36b838b92fc1217f2e4b414b5abcc8
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64
         with:
           body_path: "body.md"
           tag_name: ${{ env.REVISION }}
