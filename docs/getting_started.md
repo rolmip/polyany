@@ -501,3 +501,27 @@ mpoly = MatrixPolynomial(exponents, coefficients)
     >>> mpoly.shape
     (2, 2)
     ```
+
+## :regional_indicator_t: Transposition
+
+To transpose a [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] object you can use the [`T`][polyany.matrix.MatrixPolynomial.T] property.
+
+???+ tip "Example"
+    Create a matrix polynomial:
+
+    ```numpy
+    >>> mpoly = MatrixPolynomial([[1, 0], [0, 1]], [np.tri(3), np.arange(9).reshape(3, 3)])
+    >>> mpoly
+    [[1. 0. 0.]        [[0. 1. 2.]
+     [1. 1. 0.]         [3. 4. 5.]
+     [1. 1. 1.]]*x_1 +  [6. 7. 8.]]*x_2
+    ```
+
+    obtains its transpose with the [`T`][polyany.matrix.MatrixPolynomial.T] property:
+
+    ```numpy
+    >>> mpoly.T
+    [[1. 1. 1.]        [[0. 3. 6.]
+     [0. 1. 1.]         [1. 4. 7.]
+     [0. 0. 1.]]*x_1 +  [2. 5. 8.]]*x_2
+    ```

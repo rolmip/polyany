@@ -411,6 +411,33 @@ class MatrixPolynomial(BasePolynomial):
     def __rmatmul__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
         return self._matmul(other, reflected=True)
 
+    @property
+    def T(self) -> MatrixPolynomial:  # noqa: N802
+        """Transposition of a matrix polynomial
+
+        Returns
+        -------
+        MatrixPolynomial
+            A new matrix polynomial with matrix coefficients transposed.
+
+        Notes
+        -----
+        This method transposes only the coefficients, the exponents remain unchanged.
+
+        Examples
+        --------
+        >>> mpoly = MatrixPolynomial([[1, 2]], [np.vander([1, 2, 3])])
+        >>> mpoly
+        [[1. 1. 1.]
+         [4. 2. 1.]
+         [9. 3. 1.]]*x_1*x_2^2
+        >>> mpoly.T
+        [[1. 4. 9.]
+         [1. 2. 3.]
+         [1. 1. 1.]]*x_1*x_2^2
+        """
+        return self.__class__(self.exponents, self.coefficients.transpose((0, 2, 1)))
+
 
 SCALAR_TYPE = (int, float, np.integer, np.floating)
 MATRIX_TYPE = (list, tuple, np.ndarray)
