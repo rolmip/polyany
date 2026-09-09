@@ -499,7 +499,7 @@ class MatrixPolynomial(BasePolynomial):
         Currently, element-wise division can only be performed between
         matrix polynomials and scalars.
         """
-        if not isinstance(other, SCALAR_TYPE):
+        if not isinstance(other, SCALAR_TYPE):  # pragma: no cover
             return NotImplemented
 
         return self.__mul__(1 / other)
