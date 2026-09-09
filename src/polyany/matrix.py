@@ -388,7 +388,7 @@ class MatrixPolynomial(BasePolynomial):
         [matrix multiplication][polyany.matrix.MatrixPolynomial.__matmul__],
         `operand_1 * operand_2 == operand_2 * operand_1`.
         """
-        if not isinstance(other, ALGEBRAIC_TYPE):
+        if not isinstance(other, ALGEBRAIC_TYPE):  # pragma: no cover
             return NotImplemented
 
         if isinstance(other, SCALAR_TYPE):
