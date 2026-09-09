@@ -167,6 +167,33 @@ class MatrixPolynomial(BasePolynomial):
 
         return "\n".join(formatted_lines)
 
+    @classmethod
+    def zeros(cls, n_vars: int, shape: tuple[int, int]) -> MatrixPolynomial:
+        if not isinstance(n_vars, int):
+            msg = f"n_vars must be an int, got {type(n_vars)}."
+            raise TypeError(msg)
+
+        if not (
+            isinstance(shape, tuple)
+            and isinstance(shape[0], int)
+            and isinstance(shape[1], int)
+        ):
+            msg = "shape must be a tuple with two ints."
+            raise TypeError(msg)
+
+        if n_vars < 1:
+            msg = f"n_vars must be greater or equal to 1, got {n_vars}"
+            raise ValueError(msg)
+
+        if shape[0] < 1 or shape[1] < 1:
+            msg = "shape components must be >= 1."
+            raise ValueError(msg)
+
+        exponents = np.zeros((1, n_vars), dtype=np.int_)
+        coefficients = np.zeros((1, *shape))
+
+        return cls(exponents, coefficients)
+
     def __add__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
         """Addition with another matrix polynomial, matrix or scalar
 
