@@ -228,3 +228,23 @@ def test_matrix_polynomial_string_representation(input_data, expected_string):
 def test_matrix_polynomial_creation_exceptions(input_data, expected_exception):
     with pytest.raises(expected_exception):
         MatrixPolynomial(*input_data)
+
+
+@pytest.mark.parametrize(
+    "n_vars,shape,expected_exception",
+    [
+        # non int input
+        (1.5, (3, 3), TypeError),
+        # Non tuple shape
+        (1, [3, 2], TypeError),
+        # n_vars less than 1
+        (0, (3, 3), ValueError),
+        # Shape component less than 1
+        (1, (0, 2), ValueError),
+        # Shape component less than 1
+        (1, (2, 0), ValueError),
+    ],
+)
+def test_matrix_polynomial_zeros_exceptions(n_vars, shape, expected_exception):
+    with pytest.raises(expected_exception):
+        MatrixPolynomial.zeros(n_vars, shape)

@@ -6,7 +6,7 @@ import numpy as np
 from numpy.typing import ArrayLike
 
 if TYPE_CHECKING:
-    from polyany.types import MatrixAlgebraic
+    from polyany.types import MatrixAlgebraic, Scalar
 
 from .base import BasePolynomial
 
@@ -167,6 +167,74 @@ class MatrixPolynomial(BasePolynomial):
 
         return "\n".join(formatted_lines)
 
+    @classmethod
+    def zeros(cls, n_vars: int, shape: tuple[int, int]) -> MatrixPolynomial:
+        """Create a zeros matrix polynomial.
+
+        Returns a polynomial with a single monomial
+        (the zeros matrix with shape `shape`) in `n_vars` variables.
+
+        Parameters
+        ----------
+        n_vars : int
+            Number of variables in the matrix polynomial
+        shape : tuple[int, int]
+            Shape of the zeros matrix
+
+        Returns
+        -------
+        MatrixPolynomial
+            A zeros matrix polynomial.
+
+        Raises
+        ------
+        TypeError
+            - If `n_vars` is not an int
+            - If `shape` is not a tuple.
+            - If the `shape` components are not ints.
+
+        ValueError
+            - If `n_vars` is less than 1.
+            - If any `shape` component is less than 1.
+
+        Notes
+        -----
+        Primarily intended for internal use in specific cases.
+
+        Examples
+        --------
+        >>> mpoly = MatrixPolynomial.zeros(3, (2,3))
+        >>> mpoly
+        [[0. 0. 0.]
+         [0. 0. 0.]]
+        >>> mpoly.exponents
+        array([[0, 0, 0]])
+        """
+        if not isinstance(n_vars, int):
+            msg = f"n_vars must be an int, got {type(n_vars)}."
+            raise TypeError(msg)
+
+        if not (
+            isinstance(shape, tuple)
+            and isinstance(shape[0], int)
+            and isinstance(shape[1], int)
+        ):
+            msg = "shape must be a tuple with two ints."
+            raise TypeError(msg)
+
+        if n_vars < 1:
+            msg = f"n_vars must be greater or equal to 1, got {n_vars}"
+            raise ValueError(msg)
+
+        if shape[0] < 1 or shape[1] < 1:
+            msg = "shape components must be >= 1."
+            raise ValueError(msg)
+
+        exponents = np.zeros((1, n_vars), dtype=np.int_)
+        coefficients = np.zeros((1, *shape))
+
+        return cls(exponents, coefficients)
+
     def __add__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
         """Addition with another matrix polynomial, matrix or scalar
 
@@ -288,6 +356,154 @@ class MatrixPolynomial(BasePolynomial):
     def __rsub__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
         return (-self).__add__(other)
 
+    def __mul__(self, other: MatrixAlgebraic | Scalar) -> MatrixPolynomial:
+        """Element-wise product with a scalar, matrix or matrix polynomial
+
+        Parameters
+        ----------
+        other : MatrixAlgebraic | Scalar
+            The operand in the multiplication.
+            A matrix can be a NumPy 2D-array, nested lists or nested tuples.
+
+        Returns
+        -------
+        MatrixPolynomial
+            A new matrix polynomial representing the element-wise product.
+
+        Raises
+        ------
+        TypeError
+            - If the operand is a matrix and cannot be safely converted to a
+            NumPy 2D-array of floats.
+
+        ValueError
+            - If the operand is a matrix but does not have 2 dimensions.
+            - If the operand is a matrix but the dimensions are incompatible,
+            `self.shape != other.shape`.
+
+        Notes
+        -----
+        The element-wise multiplication, also known as the Hadamard product,
+        is commutative. Which means that, unlike
+        [matrix multiplication][polyany.matrix.MatrixPolynomial.__matmul__],
+        `operand_1 * operand_2 == operand_2 * operand_1`.
+        """
+        if not isinstance(other, ALGEBRAIC_TYPE):  # pragma: no cover
+            return NotImplemented
+
+        if isinstance(other, SCALAR_TYPE):
+            return self._mul_scalar(other)
+
+        if isinstance(other, MATRIX_TYPE):
+            return self._mul_matrix(other)
+
+        return self._mul_polynomial(other)
+
+    def _mul_scalar(self, other: Scalar) -> MatrixPolynomial:
+        if other == 0:
+            return self.__class__.zeros(self.n_vars, self.shape)
+
+        coefficients = self.coefficients * other
+
+        return self.__class__(self.exponents.copy(), coefficients)
+
+    def _mul_matrix(self, other: ArrayLike) -> MatrixPolynomial:
+        try:
+            other = np.asarray(other).astype(
+                self.coefficients.dtype, casting="safe", copy=False
+            )
+        except Exception as e:
+            msg = (
+                "Operand must be safe convertible to NumPy 2D-arrays with "
+                "float entries."
+            )
+            raise TypeError(msg) from e
+
+        if other.ndim != 2:
+            msg = f"Matrix operand must have 2 dimensions, got {other.ndim}."
+            raise ValueError(msg)
+
+        if other.shape != self.shape:
+            msg = (
+                f"Cannot multiply element-wise polynomial of shape {self.shape} with "
+                f"a matrix of shape {other.shape}"
+            )
+            raise ValueError(msg)
+
+        if (other == 0).all():
+            return self.__class__.zeros(self.n_vars, self.shape)
+
+        coefficients = self.coefficients * other
+
+        return self.__class__(self.exponents.copy(), coefficients)
+
+    def _mul_polynomial(self, other: MatrixPolynomial) -> MatrixPolynomial:
+        if self.shape != other.shape:
+            msg = (
+                f"Cannot multiply polynomial of shape {self.shape} with "
+                f"a polynomial of shape {other.shape}."
+            )
+            raise ValueError(msg)
+
+        max_n_vars = max(self.n_vars, other.n_vars)
+
+        self_exponents = self._domain_expansion(max_n_vars)
+        other_exponents = other._domain_expansion(max_n_vars)
+
+        cross_exponents = (
+            self_exponents[np.newaxis, :, :] + other_exponents[:, np.newaxis, :]
+        ).reshape(-1, max_n_vars)
+
+        cross_coefficients = (
+            self.coefficients[np.newaxis, ...] * other.coefficients[:, np.newaxis, ...]
+        ).reshape(-1, self.shape[0], self.shape[1])
+
+        sorted_idx = np.lexsort(cross_exponents.T)
+        coefficients = cross_coefficients[sorted_idx]
+        exponents = cross_exponents[sorted_idx]
+
+        changes = (exponents[1:] != exponents[:-1]).any(axis=1)
+        boundaries = np.concatenate(([0], np.nonzero(changes)[0] + 1))
+
+        unique_exponents = exponents[boundaries]
+        unique_coefficients = np.add.reduceat(coefficients, boundaries)
+
+        return self.__class__(unique_exponents, unique_coefficients)
+
+    def __rmul__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
+        return self.__mul__(other)
+
+    @np.errstate(divide="raise")
+    def __truediv__(self, other: Scalar) -> MatrixPolynomial:
+        """Element-wise division with a scalar
+
+        Parameters
+        ----------
+        other : Scalar
+            The value to divide element-wise the matrix polynomial.
+
+        Returns
+        -------
+        Polynomial
+            A new matrix polynomial representing the element-wise division.
+
+        Raises
+        ------
+        ZeroDivisionError
+            - If `other` is a builtin scalar and equal to zero.
+        FloatingPointError
+            - If `other` is a NumPy scalar and equal to zero.
+
+        Notes
+        -----
+        Currently, element-wise division can only be performed between
+        matrix polynomials and scalars.
+        """
+        if not isinstance(other, SCALAR_TYPE):  # pragma: no cover
+            return NotImplemented
+
+        return self.__mul__(1 / other)
+
     def __matmul__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
         """Matrix product with another matrix or matrix polynomial
 
@@ -318,7 +534,8 @@ class MatrixPolynomial(BasePolynomial):
         Matrix multiplication is generally non-commutative. Which means that:
         `operand_1 @ operand_2 != operand_2 @ operand_1`.
 
-        Matrix multiplication with scalars is not supported, use `*` instead.
+        Matrix multiplication with scalars is not supported, use
+        [`*`][polyany.matrix.MatrixPolynomial.__mul__] instead.
         """
         return self._matmul(other, reflected=False)
 

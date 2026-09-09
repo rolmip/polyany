@@ -1248,3 +1248,226 @@ def test_matrix_polynomial_matmul_matrix_polynomial_exception(reflected):
 
     with pytest.raises(ValueError):
         mpoly1._matmul_polynomial(mpoly2, reflected=reflected)
+
+
+@pytest.mark.parametrize("reflected", [False, True])
+@pytest.mark.parametrize("scalar", [-1, 1, np.float64(3.14)])
+def test_matrix_polynomial_mul_scalar(reflected, scalar):
+    mpoly = MatrixPolynomial(
+        [[0], [1], [2]], [np.tri(3), np.eye(3), np.vander([1, 2, 3])]
+    )
+
+    result = scalar * mpoly if reflected else mpoly * scalar
+    expected = mpoly.coefficients * scalar
+
+    assert np.array_equal(result.coefficients, expected)
+
+
+@pytest.mark.parametrize("reflected", [False, True])
+def test_matrix_polynomial_mul_scalar_zero(reflected):
+    mpoly = MatrixPolynomial(
+        [[0], [1], [2]], [np.tri(3), np.eye(3), np.vander([1, 2, 3])]
+    )
+
+    result = 0 * mpoly if reflected else mpoly * 0
+    coefficients = result.coefficients
+    expected_coefficients = np.zeros((1, *mpoly.shape))
+
+    assert mpoly.n_vars == result.n_vars
+    assert np.array_equal(coefficients, expected_coefficients)
+
+
+@pytest.mark.parametrize("reflected", [False, True])
+@pytest.mark.parametrize(
+    "matrix", [np.arange(9).reshape(3, 3), np.ones((3, 3)), np.eye(3)]
+)
+def test_matrix_polynomial_mul_matrix(reflected, matrix):
+    mpoly = MatrixPolynomial(
+        [[0], [1], [2]], [np.tri(3), np.eye(3), np.vander([1, 2, 3])]
+    )
+
+    result = matrix * mpoly if reflected else mpoly * matrix
+    expected = mpoly.coefficients * matrix
+
+    assert np.array_equal(result.coefficients, expected)
+
+
+@pytest.mark.parametrize("reflected", [False, True])
+def test_matrix_polynomial_mul_matrix_zeros(reflected):
+    mpoly = MatrixPolynomial(
+        [[0], [1], [2]], [np.tri(3), np.eye(3), np.vander([1, 2, 3])]
+    )
+
+    zeros = np.zeros(mpoly.shape)
+    result = zeros * mpoly if reflected else mpoly * zeros
+
+    coefficients = result.coefficients
+    expected_coefficients = np.zeros((1, *mpoly.shape))
+
+    assert mpoly.n_vars == result.n_vars
+    assert np.array_equal(coefficients, expected_coefficients)
+
+
+@pytest.mark.parametrize(
+    "exponents,coefficients,expected_exponents,expected_coefficients",
+    [
+        (
+            [[1, 1, 1]],
+            [np.tri(3)],
+            [[1, 1, 1], [2, 1, 1], [1, 2, 1], [2, 2, 1]],
+            np.tri(3) * [np.eye(3), np.ones((3, 3)), np.ones((3, 3)), np.tri(3)],
+        ),
+        (
+            [[0], [1], [2]],
+            [np.tri(3), np.ones((3, 3)), np.arange(9).reshape(3, 3)],
+            [
+                [0, 0],
+                [1, 0],
+                [0, 1],
+                [2, 0],
+                [1, 1],
+                [3, 0],
+                [2, 1],
+                [3, 1],
+            ],
+            [
+                np.tri(3) * np.eye(3),
+                np.tri(3) * np.ones((3, 3)) + np.ones((3, 3)) * np.eye(3),
+                np.tri(3) * np.ones((3, 3)),
+                np.ones((3, 3)) * np.ones((3, 3))
+                + np.arange(9).reshape(3, 3) * np.eye(3),
+                np.tri(3) * np.tri(3) + np.ones((3, 3)) * np.ones((3, 3)),
+                np.arange(9).reshape(3, 3) * np.ones((3, 3)),
+                np.ones((3, 3)) * np.tri(3)
+                + np.arange(9).reshape(3, 3) * np.ones((3, 3)),
+                np.arange(9).reshape(3, 3) * np.tri(3),
+            ],
+        ),
+        (
+            [[0]],
+            [np.ones((3, 3))],
+            [[0, 0], [1, 0], [0, 1], [1, 1]],
+            np.ones((3, 3)) * [np.eye(3), np.ones((3, 3)), np.ones((3, 3)), np.tri(3)],
+        ),
+        (
+            [[0, 0], [1, 0], [0, 1], [1, 1]],
+            [np.eye(3), np.ones((3, 3)), np.ones((3, 3)), np.tri(3)],
+            [
+                [0, 0],
+                [1, 0],
+                [0, 1],
+                [2, 0],
+                [1, 1],
+                [0, 2],
+                [2, 1],
+                [1, 2],
+                [2, 2],
+            ],
+            [
+                np.eye(3),
+                2 * np.ones((3, 3)) * np.eye(3),
+                2 * np.ones((3, 3)) * np.eye(3),
+                np.ones((3, 3)) * np.ones((3, 3)),
+                2 * np.ones((3, 3)) * np.ones((3, 3)) + 2 * np.tri(3) * np.eye(3),
+                np.ones((3, 3)) * np.ones((3, 3)),
+                np.tri(3) * np.ones((3, 3)) + np.ones((3, 3)) * np.tri(3),
+                np.ones((3, 3)) * np.tri(3) + np.tri(3) * np.ones((3, 3)),
+                np.tri(3) * np.tri(3),
+            ],
+        ),
+        (
+            [[2, 0], [1, 1], [0, 3], [3, 1]],
+            [
+                np.triu([3, 1, 4]),
+                np.vander([3, 1, 4]),
+                np.linspace(0, 1, 9).reshape(3, 3),
+                np.arange(10, 19).reshape(3, 3),
+            ],
+            [
+                [2, 0],
+                [1, 1],
+                [3, 0],
+                [2, 1],
+                [1, 2],
+                [0, 3],
+                [3, 1],
+                [2, 2],
+                [1, 3],
+                [0, 4],
+                [4, 1],
+                [3, 2],
+                [1, 4],
+                [4, 2],
+            ],
+            [
+                np.triu([3, 1, 4]) * np.eye(3),
+                np.vander([3, 1, 4]) * np.eye(3),
+                np.triu([3, 1, 4]) * np.ones((3, 3)),
+                np.vander([3, 1, 4]) * np.ones((3, 3))
+                + np.triu([3, 1, 4]) * np.ones((3, 3)),
+                np.vander([3, 1, 4]) * np.ones((3, 3)),
+                np.linspace(0, 1, 9).reshape(3, 3) * np.eye(3),
+                np.arange(10, 19).reshape(3, 3) * np.eye(3)
+                + np.triu([3, 1, 4]) * np.tri(3),
+                np.vander([3, 1, 4]) * np.tri(3),
+                np.linspace(0, 1, 9).reshape(3, 3) * np.ones((3, 3)),
+                np.linspace(0, 1, 9).reshape(3, 3) * np.ones((3, 3)),
+                np.arange(10, 19).reshape(3, 3) * np.ones((3, 3)),
+                np.arange(10, 19).reshape(3, 3) * np.ones((3, 3)),
+                np.linspace(0, 1, 9).reshape(3, 3) * np.tri(3),
+                np.arange(10, 19).reshape(3, 3) * np.tri(3),
+            ],
+        ),
+    ],
+)
+def test_matrix_polynomial_mul_matrix_polynomial(
+    exponents, coefficients, expected_exponents, expected_coefficients
+):
+    mpoly = MatrixPolynomial(
+        [[0, 0], [1, 0], [0, 1], [1, 1]],
+        [np.eye(3), np.ones((3, 3)), np.ones((3, 3)), np.tri(3)],
+    )
+    another_mpoly = MatrixPolynomial(exponents, coefficients)
+
+    result = mpoly * another_mpoly
+
+    assert np.array_equal(result.exponents, expected_exponents)
+    assert np.array_equal(result.coefficients, expected_coefficients)
+
+
+@pytest.mark.parametrize(
+    "matrix,expected_exception",
+    [
+        # non-safe convertible to numpy array
+        ([["a", 2], [3, 4]], TypeError),
+        # matrix must be 3D
+        (np.ones((1, 2, 2)), ValueError),
+        # incompatible shape
+        (np.ones((2, 0)), ValueError),
+        # incompatible shape
+        (np.eye(3), ValueError),
+    ],
+)
+def test_matrix_polynomial_mul_matrix_exceptions(matrix, expected_exception):
+    mpoly = MatrixPolynomial([[0]], [np.eye(2)])
+
+    with pytest.raises(expected_exception):
+        mpoly * matrix
+
+
+def test_matrix_polynomial_mul_matrix_polynomial_exception():
+    mpoly = MatrixPolynomial([[0]], [np.eye(2)])
+    another_mpoly = MatrixPolynomial([[0]], [np.eye(3)])
+
+    with pytest.raises(ValueError):
+        mpoly * another_mpoly
+
+
+@pytest.mark.parametrize("scalar", [-1, 1, np.float64(3.14)])
+def test_matrix_polynomial_truediv_scalar(scalar):
+    mpoly = MatrixPolynomial([[0], [1]], [np.eye(3), np.tri(3)])
+
+    result = (mpoly / scalar).coefficients
+    expected = mpoly.coefficients / scalar
+
+    assert np.array_equal(result, expected)
