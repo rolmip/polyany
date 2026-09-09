@@ -459,7 +459,8 @@ class MatrixPolynomial(BasePolynomial):
         Matrix multiplication is generally non-commutative. Which means that:
         `operand_1 @ operand_2 != operand_2 @ operand_1`.
 
-        Matrix multiplication with scalars is not supported, use `*` instead.
+        Matrix multiplication with scalars is not supported, use
+        [`*`][polyany.matrix.MatrixPolynomial.__mul__] instead.
         """
         return self._matmul(other, reflected=False)
 
