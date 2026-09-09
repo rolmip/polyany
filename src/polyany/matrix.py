@@ -169,6 +169,47 @@ class MatrixPolynomial(BasePolynomial):
 
     @classmethod
     def zeros(cls, n_vars: int, shape: tuple[int, int]) -> MatrixPolynomial:
+        """Create a zeros matrix polynomial.
+
+        Returns a polynomial with a single monomial
+        (the zeros matrix with shape `shape`) in `n_vars` variables.
+
+        Parameters
+        ----------
+        n_vars : int
+            Number of variables in the matrix polynomial
+        shape : tuple[int, int]
+            Shape of the zeros matrix
+
+        Returns
+        -------
+        MatrixPolynomial
+            A zeros matrix polynomial.
+
+        Raises
+        ------
+        TypeError
+            - If `n_vars` is not an int
+            - If `shape` is not a tuple.
+            - If the `shape` components are not ints.
+
+        ValueError
+            - If `n_vars` is less than 1.
+            - If any `shape` component is less than 1.
+
+        Notes
+        -----
+        Primarily intended for internal use in specific cases.
+
+        Examples
+        --------
+        >>> mpoly = MatrixPolynomial.zeros(3, (2,3))
+        >>> mpoly
+        [[0. 0. 0.]
+         [0. 0. 0.]]
+        >>> mpoly.exponents
+        array([[0, 0, 0]])
+        """
         if not isinstance(n_vars, int):
             msg = f"n_vars must be an int, got {type(n_vars)}."
             raise TypeError(msg)
