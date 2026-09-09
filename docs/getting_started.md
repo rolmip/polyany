@@ -341,7 +341,11 @@ Operating between matrix polynomials:
 
 ## :heavy_multiplication_x: Multiplication and division
 
-Polynomials can be multiplied with other polynomials and scalars[^2].
+!!! warning "Interaction between scalar polynomials and matrix polynomials"
+    [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects cannot operate with
+    [`Polynomial`][polyany.polynomial.Polynomial] objects.
+
+In {{ polyany}}, [`Polynomial`][polyany.polynomial.Polynomial] objects can be multiplied with other polynomials and scalars[^2].
 
 ```pycon
 >>> poly = Polynomial.univariate([10, -20, 5])
@@ -364,11 +368,34 @@ Multiplying two polynomials:
 3 - 6*x_1 + 9*x_1^2 + 3*x_1*x_2 - 6*x_1^2*x_2 + 9*x_1^3*x_2
 ```
 
-!!! warning "Division between polynomials"
-    Currently, division can only be performed **between polynomials and scalars**.
-    In the future, it is possible that division between polynomials will be supported.
+[`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects support element-wise multiplication
+with scalars[^2], matrices[^3], and other matrix polynomials.
 
-Dividing a polynomial by a scalar:
+```numpy
+>>> mpoly = MatrixPolynomial([[0], [1]], [np.tri(3), np.vander([1, 2, 3])])
+>>> mpoly
+[[1. 0. 0.]    [[1. 1. 1.]
+ [1. 1. 0.]     [4. 2. 1.]
+ [1. 1. 1.]] +  [9. 3. 1.]]*x_1
+>>> mpoly * 2 # (1)!
+[[2. 0. 0.]    [[ 2.  2.  2.]
+ [2. 2. 0.]     [ 8.  4.  2.]
+ [2. 2. 2.]] +  [18.  6.  2.]]*x_1
+>>> mpoly * np.eye(3) # (2)!
+[[1. 0. 0.]    [[1. 0. 0.]
+ [0. 1. 0.]     [0. 2. 0.]
+ [0. 0. 1.]] +  [0. 0. 1.]]*x_1
+```
+
+1. Similarly to NumPy, operations are performed using [broadcasting](https://numpy.org/doc/stable/user/absolute_beginners.html#broadcasting).
+2. You could use nested lists or nested tuples.
+
+!!! warning "Division between polynomials"
+    Currently, division can only be performed
+    **between [`Polynomial`][polyany.polynomial.Polynomial] objects and scalars[^2]**.
+    In the future, it is possible that division between polynomial objects will be supported.
+
+Dividing a [`Polynomial`][polyany.polynomial.Polynomial] object by a scalar[^2]:
 
 ```pycon
 >>> poly = Polynomial.univariate([10, -20, 5])
@@ -376,6 +403,23 @@ Dividing a polynomial by a scalar:
 10 - 20*x_1 + 5*x_1^2
 >>> poly / 5
 2 - 4*x_1 + x_1^2
+```
+
+Dividing a [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] object by a scalar[^2]:
+
+```numpy
+>>> mpoly = MatrixPolynomial(
+  [[0, 0], [1, 0], [0, 1]],
+  [np.tri(3), np.eye(3), np.vander([3, 1, 4])],
+)
+>>> mpoly
+[[1. 0. 0.]    [[1. 0. 0.]        [[ 9.  3.  1.]
+ [1. 1. 0.]     [0. 1. 0.]         [ 1.  1.  1.]
+ [1. 1. 1.]] +  [0. 0. 1.]]*x_1 +  [16.  4.  1.]]*x_2
+>>> mpoly / 4
+[[0.25 0.   0.  ]    [[0.25 0.   0.  ]        [[2.25 0.75 0.25]
+ [0.25 0.25 0.  ]     [0.   0.25 0.  ]         [0.25 0.25 0.25]
+ [0.25 0.25 0.25]] +  [0.   0.   0.25]]*x_1 +  [4.   1.   0.25]]*x_2
 ```
 
 ## :cyclone: Matrix multiplication
