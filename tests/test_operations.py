@@ -1461,3 +1461,13 @@ def test_matrix_polynomial_mul_matrix_polynomial_exception():
 
     with pytest.raises(ValueError):
         mpoly * another_mpoly
+
+
+@pytest.mark.parametrize("scalar", [-1, 1, np.float64(3.14)])
+def test_matrix_polynomial_truediv_scalar(scalar):
+    mpoly = MatrixPolynomial([[0], [1]], [np.eye(3), np.tri(3)])
+
+    result = (mpoly / scalar).coefficients
+    expected = mpoly.coefficients / scalar
+
+    assert np.array_equal(result, expected)
