@@ -473,6 +473,37 @@ class MatrixPolynomial(BasePolynomial):
     def __rmul__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
         return self.__mul__(other)
 
+    @np.errstate(divide="raise")
+    def __truediv__(self, other: Scalar) -> MatrixPolynomial:
+        """Element-wise division with a scalar
+
+        Parameters
+        ----------
+        other : Scalar
+            The value to divide element-wise the matrix polynomial.
+
+        Returns
+        -------
+        Polynomial
+            A new matrix polynomial representing the element-wise division.
+
+        Raises
+        ------
+        ZeroDivisionError
+            - If `other` is a builtin scalar and equal to zero.
+        FloatingPointError
+            - If `other` is a NumPy scalar and equal to zero.
+
+        Notes
+        -----
+        Currently, element-wise division can only be performed between
+        matrix polynomials and scalars.
+        """
+        if not isinstance(other, SCALAR_TYPE):
+            return NotImplemented
+
+        return self.__mul__(1 / other)
+
     def __matmul__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
         """Matrix product with another matrix or matrix polynomial
 
