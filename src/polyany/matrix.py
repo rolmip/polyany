@@ -430,6 +430,9 @@ class MatrixPolynomial(BasePolynomial):
             )
             raise ValueError(msg)
 
+        if (other == 0).all():
+            return self.__class__.zeros(self.n_vars, self.shape)
+
         coefficients = self.coefficients * other
 
         return self.__class__(self.exponents.copy(), coefficients)
