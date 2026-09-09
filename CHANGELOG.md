@@ -1,3 +1,10 @@
+## 0.9.0 (2026-09-09)
+
+### Feat
+
+- element-wise multiplication and division with matrix polynomials (#169)
+- add matrix transpose method (#168)
+
 ## 0.8.0 (2026-09-03)
 
 ### Feat
