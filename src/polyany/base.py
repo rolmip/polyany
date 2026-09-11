@@ -108,8 +108,7 @@ class BasePolynomial(ABC):
             raise ValueError(msg)
 
     def _sort_and_check_inputs(self) -> None:
-        monomials_degree = np.sum(self.exponents, axis=1)
-        sorted_idx = np.lexsort((*self.exponents.T, monomials_degree))
+        sorted_idx = np.lexsort(self.exponents.T)
 
         self.exponents, self.coefficients = (
             self.exponents[sorted_idx],

@@ -30,7 +30,7 @@ The `exponents` matrix contains the exponents of each monomial of the polynomial
     If we want to represent a polynomial, we declare the exponents and coefficients of each monomial. Consider:
 
     $$
-    P(\mathbf{x}) = 5\,x_1^2\,x_2\,x_3^4\,x_5 + 3\,x_1\,x_2 + 4\,x_4^4\,x_5^3
+    P(\mathbf{x}) = 3\,x_1\,x_2 + 5\,x_1^2\,x_2\,x_3^4\,x_5 + 4\,x_4^4\,x_5^3
     $$
 
     The monomials of $P(\mathbf{x})$ are:
@@ -53,7 +53,7 @@ To create a polynomial from an exponents matrix and a coefficients vector in {{ 
 ```py
 from polyany import Polynomial
 
-exponents = [[0, 0, 0], [1, 0, 0], [0, 1, 0]]  # (1)!
+exponents = [[0, 0], [1, 0], [0, 1]]  # (1)!
 coefficients = [1, 2, 3]  # (2)!
 
 poly = Polynomial(exponents, coefficients)
@@ -75,7 +75,7 @@ $$
     A univariate polynomial $P(x_1)$ is a polynomial that depends on a single variable $x_1$. An example of univariate polynomial is:
 
     $$
-    P(x_1) = 2 x_1^2 + 3 x_1 + 4
+    P(x_1) =  4 + 3 x_1 + 2 x_1^2
     $$
 
 To create univariate polynomials, a simpler syntax can be used, it only requires a `coefficients` vector.
@@ -192,8 +192,7 @@ Two polynomials are considered equal **if and only if** they have:
 - [x] The same total degree (`degree` attribute)
 - [x] The same coefficients (`coefficients` attribute)[^1]
 
-[^1]:
-    A comparison is made by using [`np.allclose()`](https://numpy.org/doc/stable/reference/generated/numpy.allclose.html), which checks if two arrays are equal within a tolerance.
+[^1]: A comparison is made by using [`np.allclose()`](https://numpy.org/doc/stable/reference/generated/numpy.allclose.html), which checks if two arrays are equal within a tolerance.
 
 Comparison with other types (sequences, scalars, NumPy arrays) always returns [`NotImplemented`](https://docs.python.org/3/library/constants.html#NotImplemented).
 
@@ -226,7 +225,7 @@ array([1., 2., 0., 0.])
 ```
 
 When a polynomial is pruned, all empty monomials are removed, that is, the entries in
-`exponents` whose associated coefficients are  exactly zero, which have no effect
+`exponents` whose associated coefficients are exactly zero, which have no effect
 on the polynomial behavior.
 
 To prune a polynomial, use the [`prune`][polyany.polynomial.Polynomial.prune] method:
@@ -249,7 +248,7 @@ Squeezing is the process of removing **extra variables** of a polynomial. That i
 the columns with all zeros in `exponents`.
 
 !!! Note
-    The squeezing process doesn't alter `coefficients` and `degree` attributes.
+The squeezing process doesn't alter `coefficients` and `degree` attributes.
 
 ```numpy
 >>> poly = Polynomial([[0, 0, 0], [0, 1, 0], [0, 2, 0]], [1, 2, 3])
@@ -291,16 +290,16 @@ For addition/subtraction between polynomials:
 >>> another_poly
 1 - 2*x_1 + 3*x_2 - 4*x_1*x_2
 >>> poly + another_poly
-2 - 4*x_1 + 3*x_2 + 3*x_1^2 - 4*x_1*x_2
+2 - 4*x_1 + 3*x_1^2 + 3*x_2 - 4*x_1*x_2
 >>> poly - another_poly
--3*x_2 + 3*x_1^2 + 4*x_1*x_2
+3*x_1^2 - 3*x_2 + 4*x_1*x_2
 ```
 
 Similarly, [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects support addition and subtraction with scalars[^2], matrices[^3], and other matrix polynomials.
 
 !!! Warning "Interaction between scalar and matrix polynomials"
-    [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects cannot operate with
-    [`Polynomial`][polyany.polynomial.Polynomial] objects.
+[`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects cannot operate with
+[`Polynomial`][polyany.polynomial.Polynomial] objects.
 
 ```pycon
 >>> C_1 = np.eye(3)
@@ -334,16 +333,15 @@ Operating between matrix polynomials:
  [0. 0. 1.]] +  [6. 7. 8.]]*x_1^2
 ```
 
-[^2]:
-    Python builtins numeric types (`int`, `float`) and NumPy scalars. See [`Scalar`][polyany.types.Scalar]
-[^3]:
-    Lists, tuples and NumPy 2D-arrays.
+[^2]: Python builtins numeric types (`int`, `float`) and NumPy scalars. See [`Scalar`][polyany.types.Scalar]
+
+[^3]: Lists, tuples and NumPy 2D-arrays.
 
 ## :heavy_multiplication_x: Multiplication and division
 
 !!! warning "Interaction between scalar polynomials and matrix polynomials"
-    [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects cannot operate with
-    [`Polynomial`][polyany.polynomial.Polynomial] objects.
+[`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects cannot operate with
+[`Polynomial`][polyany.polynomial.Polynomial] objects.
 
 In {{ polyany}}, [`Polynomial`][polyany.polynomial.Polynomial] objects can be multiplied with other polynomials and scalars[^2].
 
@@ -391,9 +389,9 @@ with scalars[^2], matrices[^3], and other matrix polynomials.
 2. You could use nested lists or nested tuples.
 
 !!! warning "Division between polynomials"
-    Currently, division can only be performed
-    **between [`Polynomial`][polyany.polynomial.Polynomial] objects and scalars[^2]**.
-    In the future, it is possible that division between polynomial objects will be supported.
+Currently, division can only be performed
+**between [`Polynomial`][polyany.polynomial.Polynomial] objects and scalars[^2]**.
+In the future, it is possible that division between polynomial objects will be supported.
 
 Dividing a [`Polynomial`][polyany.polynomial.Polynomial] object by a scalar[^2]:
 
@@ -428,7 +426,7 @@ In {{ polyany}}, matrix multiplication can be performerd on [`MatrixPolynomial`]
 and matrices[^3].
 
 !!! warning
-    Scalars[^2] are **not accepted** in matrix multiplication, use element-wise multiplication instead.
+Scalars[^2] are **not accepted** in matrix multiplication, use element-wise multiplication instead.
 
 ```numpy
 >>> mpoly = MatrixPolynomial([[0], [1]], [[[3, 1],[4, 1]], np.tri(2)])
@@ -451,15 +449,15 @@ Matrix product of two matrix polynomials:
 [[1. 1.]        [[1. 0.]
  [2. 1.]]*x_1 +  [0. 2.]]*x_2
 >>> mpoly @ another_mpoly
-[[5. 4.]        [[3. 2.]        [[1. 1.]          [[1. 0.]
- [6. 5.]]*x_1 +  [4. 2.]]*x_2 +  [3. 2.]]*x_1^2 +  [1. 2.]]*x_1*x_2
+[[5. 4.]        [[1. 1.]          [[3. 2.]        [[1. 0.]
+ [6. 5.]]*x_1 +  [3. 2.]]*x_1^2 +  [4. 2.]]*x_2 +  [1. 2.]]*x_1*x_2
 >>> another_mpoly @ mpoly
-[[ 7.  2.]        [[3. 1.]        [[2. 1.]          [[1. 0.]
- [10.  3.]]*x_1 +  [8. 2.]]*x_2 +  [3. 1.]]*x_1^2 +  [2. 2.]]*x_1*x_2
+[[ 7.  2.]        [[2. 1.]          [[3. 1.]        [[1. 0.]
+ [10.  3.]]*x_1 +  [3. 1.]]*x_1^2 +  [8. 2.]]*x_2 +  [2. 2.]]*x_1*x_2
 ```
 
 !!! note "Matrix multiplication is not-commutative"
-    In the examples above, notice that `operand_1 @ operand_2` is different of `operand_2 @ operand_1`.
+In the examples above, notice that `operand_1 @ operand_2` is different of `operand_2 @ operand_1`.
 
 ## :curly_loop: Partial derivatives
 
@@ -551,7 +549,7 @@ mpoly = MatrixPolynomial(exponents, coefficients)
 To transpose a [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] object you can use the [`T`][polyany.matrix.MatrixPolynomial.T] property.
 
 ???+ tip "Example"
-    Create a matrix polynomial:
+Create a matrix polynomial:
 
     ```numpy
     >>> mpoly = MatrixPolynomial([[1, 0], [0, 1]], [np.tri(3), np.arange(9).reshape(3, 3)])
