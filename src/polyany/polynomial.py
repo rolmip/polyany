@@ -73,14 +73,14 @@ class Polynomial(BasePolynomial):
     --------
     >>> from polyany import Polynomial
 
-    Create the polynomial: ``5*x_1**2*x_2*x_3**4*x_5 + 3*x_1*x_2 + 4*x_4**4*x_5**3``
+    Create the polynomial: ``3*x_1*x_2 + 5*x_1^2*x_2*x_3^4*x_5 + 4*x_4^4*x_5^3``
 
     >>> exponents = [[1, 1, 0, 0, 0],
     ...              [0, 0, 0, 4, 3],
     ...              [2, 1, 4, 0, 1]]
     >>> coefficients = [3, 4, 5]
     >>> Polynomial(exponents, coefficients)
-    3*x_1*x_2 + 4*x_4^4*x_5^3 + 5*x_1^2*x_2*x_3^4*x_5
+    3*x_1*x_2 + 5*x_1^2*x_2*x_3^4*x_5 + 4*x_4^4*x_5^3
     """
 
     def _sanitize_coefficients(self, coefficients: ArrayLike) -> np.ndarray:
