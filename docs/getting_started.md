@@ -549,7 +549,7 @@ mpoly = MatrixPolynomial(exponents, coefficients)
 To transpose a [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] object you can use the [`T`][polyany.matrix.MatrixPolynomial.T] property.
 
 ???+ tip "Example"
-Create a matrix polynomial:
+    Create a matrix polynomial:
 
     ```numpy
     >>> mpoly = MatrixPolynomial([[1, 0], [0, 1]], [np.tri(3), np.arange(9).reshape(3, 3)])
