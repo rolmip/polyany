@@ -168,6 +168,15 @@ class MatrixPolynomial(BasePolynomial):
         return "\n".join(formatted_lines)
 
     @classmethod
+    def _from_trusted_data(
+        cls, exponents: np.ndarray, coefficients: np.ndarray, n_vars: int
+    ) -> MatrixPolynomial:
+        polynomial = super()._from_trusted_data(exponents, coefficients, n_vars)
+        polynomial.shape = coefficients.shape[1:]
+
+        return polynomial
+
+    @classmethod
     def zeros(cls, n_vars: int, shape: tuple[int, int]) -> MatrixPolynomial:
         """Create a zeros matrix polynomial.
 
