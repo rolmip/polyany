@@ -568,11 +568,19 @@ class Polynomial(BasePolynomial):
             self.coefficients[np.newaxis, :] * other.coefficients[:, np.newaxis]
         ).ravel()
 
-        exponents, indices = np.unique(cross_exponents, axis=0, return_inverse=True)
-        coefficients = np.zeros(len(exponents))
-        np.add.at(coefficients, indices.ravel(), cross_coefficients)
+        sorted_idx = np.lexsort(cross_exponents.T)
+        coefficients = cross_coefficients[sorted_idx]
+        exponents = cross_exponents[sorted_idx]
 
-        return self.__class__(exponents, coefficients)
+        changes = (exponents[1:] != exponents[:-1]).any(axis=1)
+        boundaries = np.concatenate(([0], np.nonzero(changes)[0] + 1))
+
+        unique_exponents = exponents[boundaries]
+        unique_coefficients = np.add.reduceat(coefficients, boundaries)
+
+        return self._from_trusted_data(
+            unique_exponents, unique_coefficients, max_n_vars
+        )
 
     @np.errstate(divide="raise")
     def __truediv__(self, other: Scalar) -> Polynomial:
