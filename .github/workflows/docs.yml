@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d
       - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
-      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4
         with:
           version: "latest-known"
       - run: uv sync --only-group docs
