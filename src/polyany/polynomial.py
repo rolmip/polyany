@@ -478,7 +478,7 @@ class Polynomial(BasePolynomial):
             )
             coefficients = np.concatenate((np.atleast_1d(other), coefficients))
 
-        return self.__class__(exponents, coefficients)
+        return self._from_trusted_data(exponents, coefficients, self.n_vars)
 
     def _add_polynomial(self, other: Polynomial) -> Polynomial:
         max_n_vars = max(self.n_vars, other.n_vars)
@@ -489,11 +489,19 @@ class Polynomial(BasePolynomial):
         stacked_exponents = np.vstack((self_exponents, other_exponents))
         stacked_coefficients = np.concatenate((self.coefficients, other.coefficients))
 
-        exponents, indices = np.unique(stacked_exponents, axis=0, return_inverse=True)
-        coefficients = np.zeros(len(exponents))
-        np.add.at(coefficients, indices.ravel(), stacked_coefficients)
+        sorted_idx = np.lexsort(stacked_exponents.T)
+        coefficients = stacked_coefficients[sorted_idx]
+        exponents = stacked_exponents[sorted_idx]
 
-        return self.__class__(exponents, coefficients)
+        changes = (exponents[1:] != exponents[:-1]).any(axis=1)
+        boundaries = np.concatenate(([0], np.nonzero(changes)[0] + 1))
+
+        unique_exponents = exponents[boundaries]
+        unique_coefficients = np.add.reduceat(coefficients, boundaries)
+
+        return self._from_trusted_data(
+            unique_exponents, unique_coefficients, max_n_vars
+        )
 
     def __sub__(self, other: ScalarAlgebraic) -> Polynomial:
         """Subtraction with another polynomial or scalar
@@ -544,7 +552,7 @@ class Polynomial(BasePolynomial):
 
         coefficients = self.coefficients * other
 
-        return self.__class__(self.exponents.copy(), coefficients)
+        return self._from_trusted_data(self.exponents.copy(), coefficients, self.n_vars)
 
     def _mul_polynomial(self, other: Polynomial) -> Polynomial:
         max_n_vars = max(self.n_vars, other.n_vars)
@@ -560,11 +568,19 @@ class Polynomial(BasePolynomial):
             self.coefficients[np.newaxis, :] * other.coefficients[:, np.newaxis]
         ).ravel()
 
-        exponents, indices = np.unique(cross_exponents, axis=0, return_inverse=True)
-        coefficients = np.zeros(len(exponents))
-        np.add.at(coefficients, indices.ravel(), cross_coefficients)
+        sorted_idx = np.lexsort(cross_exponents.T)
+        coefficients = cross_coefficients[sorted_idx]
+        exponents = cross_exponents[sorted_idx]
 
-        return self.__class__(exponents, coefficients)
+        changes = (exponents[1:] != exponents[:-1]).any(axis=1)
+        boundaries = np.concatenate(([0], np.nonzero(changes)[0] + 1))
+
+        unique_exponents = exponents[boundaries]
+        unique_coefficients = np.add.reduceat(coefficients, boundaries)
+
+        return self._from_trusted_data(
+            unique_exponents, unique_coefficients, max_n_vars
+        )
 
     @np.errstate(divide="raise")
     def __truediv__(self, other: Scalar) -> Polynomial:

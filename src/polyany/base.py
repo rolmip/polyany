@@ -134,6 +134,25 @@ class BasePolynomial(ABC):
 
         return self.exponents
 
+    @classmethod
+    def _from_trusted_data(
+        cls: type[TBasePolynomial],
+        exponents: np.ndarray,
+        coefficients: np.ndarray,
+        n_vars: int,
+    ) -> TBasePolynomial:
+        """Internal classmethod to construct a polynomial object from already sorted and
+        validated data.
+        """
+        polynomial = cls.__new__(cls)
+
+        polynomial.exponents = exponents
+        polynomial.coefficients = coefficients
+        polynomial.n_vars = n_vars
+        polynomial.degree = np.max(np.sum(exponents, axis=1)).item()
+
+        return polynomial
+
     def squeeze(self: TBasePolynomial) -> TBasePolynomial:
         """Remove the extra variables from a polynomial.
 

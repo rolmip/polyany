@@ -182,6 +182,22 @@ def test_polynomial_zeros_exceptions(n_vars, expected_exception):
         Polynomial.zeros(n_vars)
 
 
+def test_polynomial_from_trusted_data():
+    exponents = [[0, 0], [1, 0], [0, 1]]
+    coefficients = [1, 2, 3]
+    standard_poly = Polynomial(exponents, coefficients)
+
+    trusted_poly = Polynomial._from_trusted_data(
+        standard_poly.exponents, standard_poly.coefficients, standard_poly.n_vars
+    )
+
+    assert type(standard_poly) is type(trusted_poly)
+    assert np.array_equal(standard_poly.exponents, trusted_poly.exponents)
+    assert np.array_equal(standard_poly.coefficients, trusted_poly.coefficients)
+    assert standard_poly.n_vars == trusted_poly.n_vars
+    assert standard_poly.degree == trusted_poly.degree
+
+
 ## Matrix polynomials
 
 
@@ -248,3 +264,20 @@ def test_matrix_polynomial_creation_exceptions(input_data, expected_exception):
 def test_matrix_polynomial_zeros_exceptions(n_vars, shape, expected_exception):
     with pytest.raises(expected_exception):
         MatrixPolynomial.zeros(n_vars, shape)
+
+
+def test_matrix_polynomial_from_trusted_data():
+    exponents = [[0, 0], [1, 0], [0, 1]]
+    coefficients = [np.eye(3), np.vander([1, 2, 3]), np.tri(3)]
+    standard_poly = MatrixPolynomial(exponents, coefficients)
+
+    trusted_poly = MatrixPolynomial._from_trusted_data(
+        standard_poly.exponents, standard_poly.coefficients, standard_poly.n_vars
+    )
+
+    assert type(standard_poly) is type(trusted_poly)
+    assert np.array_equal(standard_poly.exponents, trusted_poly.exponents)
+    assert np.array_equal(standard_poly.coefficients, trusted_poly.coefficients)
+    assert standard_poly.n_vars == trusted_poly.n_vars
+    assert standard_poly.degree == trusted_poly.degree
+    assert standard_poly.shape == trusted_poly.shape

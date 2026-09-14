@@ -168,6 +168,15 @@ class MatrixPolynomial(BasePolynomial):
         return "\n".join(formatted_lines)
 
     @classmethod
+    def _from_trusted_data(
+        cls, exponents: np.ndarray, coefficients: np.ndarray, n_vars: int
+    ) -> MatrixPolynomial:
+        polynomial = super()._from_trusted_data(exponents, coefficients, n_vars)
+        polynomial.shape = coefficients.shape[1:]
+
+        return polynomial
+
+    @classmethod
     def zeros(cls, n_vars: int, shape: tuple[int, int]) -> MatrixPolynomial:
         """Create a zeros matrix polynomial.
 
@@ -294,7 +303,7 @@ class MatrixPolynomial(BasePolynomial):
             )
             coefficients = np.concatenate((np.expand_dims(other, 0), coefficients))
 
-        return self.__class__(exponents, coefficients)
+        return self._from_trusted_data(exponents, coefficients, self.n_vars)
 
     def _add_polynomial(self, other: MatrixPolynomial) -> MatrixPolynomial:
         if other.shape != self.shape:
@@ -322,7 +331,9 @@ class MatrixPolynomial(BasePolynomial):
         unique_exponents = exponents[boundaries]
         unique_coefficients = np.add.reduceat(coefficients, boundaries)
 
-        return self.__class__(unique_exponents, unique_coefficients)
+        return self._from_trusted_data(
+            unique_exponents, unique_coefficients, max_n_vars
+        )
 
     def __sub__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
         """Subtraction with another matrix polynomial, matrix or scalar
@@ -405,7 +416,7 @@ class MatrixPolynomial(BasePolynomial):
 
         coefficients = self.coefficients * other
 
-        return self.__class__(self.exponents.copy(), coefficients)
+        return self._from_trusted_data(self.exponents.copy(), coefficients, self.n_vars)
 
     def _mul_matrix(self, other: ArrayLike) -> MatrixPolynomial:
         try:
@@ -435,7 +446,7 @@ class MatrixPolynomial(BasePolynomial):
 
         coefficients = self.coefficients * other
 
-        return self.__class__(self.exponents.copy(), coefficients)
+        return self._from_trusted_data(self.exponents.copy(), coefficients, self.n_vars)
 
     def _mul_polynomial(self, other: MatrixPolynomial) -> MatrixPolynomial:
         if self.shape != other.shape:
@@ -468,7 +479,9 @@ class MatrixPolynomial(BasePolynomial):
         unique_exponents = exponents[boundaries]
         unique_coefficients = np.add.reduceat(coefficients, boundaries)
 
-        return self.__class__(unique_exponents, unique_coefficients)
+        return self._from_trusted_data(
+            unique_exponents, unique_coefficients, max_n_vars
+        )
 
     def __rmul__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
         return self.__mul__(other)
@@ -584,7 +597,7 @@ class MatrixPolynomial(BasePolynomial):
             other @ self.coefficients if reflected else self.coefficients @ other
         )
 
-        return self.__class__(self.exponents.copy(), coefficients)
+        return self._from_trusted_data(self.exponents.copy(), coefficients, self.n_vars)
 
     def _matmul_polynomial(
         self, other: MatrixPolynomial, *, reflected: bool
@@ -623,7 +636,9 @@ class MatrixPolynomial(BasePolynomial):
         unique_exponents = exponents[boundaries]
         unique_coefficients = np.add.reduceat(coefficients, boundaries)
 
-        return self.__class__(unique_exponents, unique_coefficients)
+        return self._from_trusted_data(
+            unique_exponents, unique_coefficients, max_n_vars
+        )
 
     def __rmatmul__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
         return self._matmul(other, reflected=True)
