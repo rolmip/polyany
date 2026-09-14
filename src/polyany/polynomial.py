@@ -478,7 +478,7 @@ class Polynomial(BasePolynomial):
             )
             coefficients = np.concatenate((np.atleast_1d(other), coefficients))
 
-        return self.__class__(exponents, coefficients)
+        return self._from_trusted_data(exponents, coefficients, self.n_vars)
 
     def _add_polynomial(self, other: Polynomial) -> Polynomial:
         max_n_vars = max(self.n_vars, other.n_vars)
@@ -544,7 +544,7 @@ class Polynomial(BasePolynomial):
 
         coefficients = self.coefficients * other
 
-        return self.__class__(self.exponents.copy(), coefficients)
+        return self._from_trusted_data(self.exponents.copy(), coefficients, self.n_vars)
 
     def _mul_polynomial(self, other: Polynomial) -> Polynomial:
         max_n_vars = max(self.n_vars, other.n_vars)
