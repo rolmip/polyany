@@ -248,7 +248,8 @@ Squeezing is the process of removing **extra variables** of a polynomial. That i
 the columns with all zeros in `exponents`.
 
 !!! Note
-The squeezing process doesn't alter `coefficients` and `degree` attributes.
+
+    The squeezing process doesn't alter `coefficients` and `degree` attributes.
 
 ```numpy
 >>> poly = Polynomial([[0, 0, 0], [0, 1, 0], [0, 2, 0]], [1, 2, 3])
@@ -298,8 +299,9 @@ For addition/subtraction between polynomials:
 Similarly, [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects support addition and subtraction with scalars[^2], matrices[^3], and other matrix polynomials.
 
 !!! Warning "Interaction between scalar and matrix polynomials"
-[`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects cannot operate with
-[`Polynomial`][polyany.polynomial.Polynomial] objects.
+
+    [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects cannot operate with
+    [`Polynomial`][polyany.polynomial.Polynomial] objects.
 
 ```pycon
 >>> C_1 = np.eye(3)
@@ -340,8 +342,9 @@ Operating between matrix polynomials:
 ## :heavy_multiplication_x: Multiplication and division
 
 !!! warning "Interaction between scalar polynomials and matrix polynomials"
-[`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects cannot operate with
-[`Polynomial`][polyany.polynomial.Polynomial] objects.
+
+    [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects cannot operate with
+    [`Polynomial`][polyany.polynomial.Polynomial] objects.
 
 In {{ polyany}}, [`Polynomial`][polyany.polynomial.Polynomial] objects can be multiplied with other polynomials and scalars[^2].
 
@@ -389,9 +392,10 @@ with scalars[^2], matrices[^3], and other matrix polynomials.
 2. You could use nested lists or nested tuples.
 
 !!! warning "Division between polynomials"
-Currently, division can only be performed
-**between [`Polynomial`][polyany.polynomial.Polynomial] objects and scalars[^2]**.
-In the future, it is possible that division between polynomial objects will be supported.
+
+    Currently, division can only be performed
+    **between [`Polynomial`][polyany.polynomial.Polynomial] objects and scalars[^2]**.
+    In the future, it is possible that division between polynomial objects will be supported.
 
 Dividing a [`Polynomial`][polyany.polynomial.Polynomial] object by a scalar[^2]:
 
@@ -426,7 +430,8 @@ In {{ polyany}}, matrix multiplication can be performerd on [`MatrixPolynomial`]
 and matrices[^3].
 
 !!! warning
-Scalars[^2] are **not accepted** in matrix multiplication, use element-wise multiplication instead.
+
+    Scalars[^2] are **not accepted** in matrix multiplication, use element-wise multiplication instead.
 
 ```numpy
 >>> mpoly = MatrixPolynomial([[0], [1]], [[[3, 1],[4, 1]], np.tri(2)])
@@ -549,6 +554,7 @@ mpoly = MatrixPolynomial(exponents, coefficients)
 To transpose a [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] object you can use the [`T`][polyany.matrix.MatrixPolynomial.T] property.
 
 ???+ tip "Example"
+
     Create a matrix polynomial:
 
     ```numpy
