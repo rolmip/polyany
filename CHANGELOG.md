@@ -1,3 +1,22 @@
+## 0.10.0 (2026-09-17)
+
+### BREAKING CHANGE
+
+- any code that relies on the previous order will fail
+or produce unexpected results as the polynomial ordering is changed.
+
+### Feat
+
+- concatenation and block of matrix polynomials (#182)
+
+### Refactor
+
+- switch to pure lexicographical order in polynomial creation (#175)
+
+### Perf
+
+- optimize polynomial operations via trusted data method (#179)
+
 ## 0.9.0 (2026-09-09)
 
 ### Feat
