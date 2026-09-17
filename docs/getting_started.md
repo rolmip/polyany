@@ -248,7 +248,8 @@ Squeezing is the process of removing **extra variables** of a polynomial. That i
 the columns with all zeros in `exponents`.
 
 !!! Note
-The squeezing process doesn't alter `coefficients` and `degree` attributes.
+
+    The squeezing process doesn't alter `coefficients` and `degree` attributes.
 
 ```numpy
 >>> poly = Polynomial([[0, 0, 0], [0, 1, 0], [0, 2, 0]], [1, 2, 3])
@@ -298,8 +299,9 @@ For addition/subtraction between polynomials:
 Similarly, [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects support addition and subtraction with scalars[^2], matrices[^3], and other matrix polynomials.
 
 !!! Warning "Interaction between scalar and matrix polynomials"
-[`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects cannot operate with
-[`Polynomial`][polyany.polynomial.Polynomial] objects.
+
+    [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects cannot operate with
+    [`Polynomial`][polyany.polynomial.Polynomial] objects.
 
 ```pycon
 >>> C_1 = np.eye(3)
@@ -340,8 +342,9 @@ Operating between matrix polynomials:
 ## :heavy_multiplication_x: Multiplication and division
 
 !!! warning "Interaction between scalar polynomials and matrix polynomials"
-[`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects cannot operate with
-[`Polynomial`][polyany.polynomial.Polynomial] objects.
+
+    [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects cannot operate with
+    [`Polynomial`][polyany.polynomial.Polynomial] objects.
 
 In {{ polyany}}, [`Polynomial`][polyany.polynomial.Polynomial] objects can be multiplied with other polynomials and scalars[^2].
 
@@ -389,9 +392,10 @@ with scalars[^2], matrices[^3], and other matrix polynomials.
 2. You could use nested lists or nested tuples.
 
 !!! warning "Division between polynomials"
-Currently, division can only be performed
-**between [`Polynomial`][polyany.polynomial.Polynomial] objects and scalars[^2]**.
-In the future, it is possible that division between polynomial objects will be supported.
+
+    Currently, division can only be performed
+    **between [`Polynomial`][polyany.polynomial.Polynomial] objects and scalars[^2]**.
+    In the future, it is possible that division between polynomial objects will be supported.
 
 Dividing a [`Polynomial`][polyany.polynomial.Polynomial] object by a scalar[^2]:
 
@@ -426,7 +430,8 @@ In {{ polyany}}, matrix multiplication can be performerd on [`MatrixPolynomial`]
 and matrices[^3].
 
 !!! warning
-Scalars[^2] are **not accepted** in matrix multiplication, use element-wise multiplication instead.
+
+    Scalars[^2] are **not accepted** in matrix multiplication, use element-wise multiplication instead.
 
 ```numpy
 >>> mpoly = MatrixPolynomial([[0], [1]], [[[3, 1],[4, 1]], np.tri(2)])
@@ -457,7 +462,8 @@ Matrix product of two matrix polynomials:
 ```
 
 !!! note "Matrix multiplication is not-commutative"
-In the examples above, notice that `operand_1 @ operand_2` is different of `operand_2 @ operand_1`.
+
+    In the examples above, notice that `operand_1 @ operand_2` is different of `operand_2 @ operand_1`.
 
 ## :curly_loop: Partial derivatives
 
@@ -549,6 +555,7 @@ mpoly = MatrixPolynomial(exponents, coefficients)
 To transpose a [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] object you can use the [`T`][polyany.matrix.MatrixPolynomial.T] property.
 
 ???+ tip "Example"
+
     Create a matrix polynomial:
 
     ```numpy
@@ -567,3 +574,386 @@ To transpose a [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] object you 
      [0. 1. 1.]         [1. 4. 7.]
      [0. 0. 1.]]*x_1 +  [2. 5. 8.]]*x_2
     ```
+
+# :jigsaw: Concatenation
+
+## Simple concatenation
+
+!!! note "Definition"
+
+    Simple concatenation is the process of concatenating the coefficient matrices of several polynomials
+    (vertically or horizontally) with respect to each monomial. If a monomial exists in
+    one polynomial but not in the others, a zeros matrix of appropriate shape is utilized.
+
+???+ example "Vertical concatenation"
+
+    Consider these matrix polynomials:
+
+    $$
+    P_1(\mathbf{x}) =
+    \underbrace{
+    \begin{bmatrix}
+      1 & 1 \\
+      1 & 1
+    \end{bmatrix}}_{A_1}\,x_1\,x_2
+    +
+    \underbrace{
+    \begin{bmatrix}
+      1 & 0 \\
+      1 & 1
+    \end{bmatrix}}_{B_1}\,x_2^2
+    $$
+
+    $$
+    P_2(\mathbf{x}) =
+    \underbrace{
+    \begin{bmatrix}
+      0 & 1 \\
+      2 & 3 \\
+      4 & 5
+    \end{bmatrix}}_{A_2}
+    +
+    \underbrace{
+    \begin{bmatrix}
+      3 & 3 \\
+      3 & 3 \\
+      3 & 3
+    \end{bmatrix}}_{B_2}\,x_2^2
+    $$
+
+    Their vertical concatenation is:
+
+    $$
+    \begin{bmatrix} P_1(\mathbf{x}) \\ P_2(\mathbf{x}) \end{bmatrix}
+    =
+    \begin{bmatrix} \mathbf{0}_{2 \times 2} \\ A_2 \end{bmatrix}
+    +
+    \begin{bmatrix} A_1 \\ \mathbf{0}_{3 \times 2} \end{bmatrix}\,x_1\,x_2
+    +
+    \begin{bmatrix} B_1 \\ B_2 \end{bmatrix}\,x_2^2
+    $$
+
+    which is:
+
+    $$
+    \begin{bmatrix} P_1(\mathbf{x}) \\ P_2(\mathbf{x}) \end{bmatrix}
+    =
+    \begin{bmatrix}
+      0 & 0 \\
+      0 & 0 \\
+      \hline
+      0 & 1 \\
+      2 & 3 \\
+      4 & 5
+    \end{bmatrix}
+    +
+    \begin{bmatrix}
+      1 & 1 \\
+      1 & 1 \\
+      \hline
+      0 & 0 \\
+      0 & 0 \\
+      0 & 0
+    \end{bmatrix}\,x_1\,x_2
+    +
+    \begin{bmatrix}
+      1 & 0 \\
+      1 & 1 \\
+      \hline
+      3 & 3 \\
+      3 & 3 \\
+      3 & 3
+    \end{bmatrix}\,x_2^2
+    $$
+
+???+ example "Horizontal concatenation"
+
+    Consider the following two matrix polynomials:
+
+    $$
+    P_1(\mathbf{x})
+    =
+    \underbrace{
+    \begin{bmatrix}
+      1 & 0 \\
+      0 & 1
+    \end{bmatrix}
+    }_{A_1}
+    +
+    \underbrace{
+    \begin{bmatrix}
+      0 & 1 \\
+      2 & 3
+    \end{bmatrix}}_{B_1}\,x_1
+    +
+    \underbrace{
+    \begin{bmatrix}
+      1 & 0 \\
+      1 & 1
+    \end{bmatrix}}_{C_1}\,x_2
+    %
+    \quad\quad\quad
+    %
+    P_2(\mathbf{x})
+    =
+    \underbrace{
+    \begin{bmatrix}
+      1 & 1 & 1 \\
+      1 & 1 & 1
+    \end{bmatrix}}_{A_2}\,x_1
+    +
+    \underbrace{
+    \begin{bmatrix}
+      0 & 1 & 2 \\
+      3 & 4 & 5
+    \end{bmatrix}}_{B_2}\,x_2
+    $$
+
+    Their horizontal concatenation is:
+
+    $$
+    \begin{bmatrix} P_1(\mathbf{x}) & P_2(\mathbf{x}) \end{bmatrix}
+    =
+    \begin{bmatrix} A_1 & \mathbf{0}_{2 \times 3} \end{bmatrix} +
+    \begin{bmatrix} B_1 & A_2 \end{bmatrix}\,x_1 +
+    \begin{bmatrix} C_1 & B_2 \end{bmatrix}\,x_2 \\
+    $$
+
+    which is:
+
+    $$
+    \begin{bmatrix} P_1(\mathbf{x}) & P_2(\mathbf{x}) \end{bmatrix}
+    =
+    \left[\begin{array}{cc|ccc}
+      1 & 0 & 0 & 0 & 0 \\
+      0 & 1 & 0 & 0 & 0
+    \end{array}\right]
+    +
+    \left[\begin{array}{cc|ccc}
+      0 & 1 & 1 & 1 & 1 \\
+      2 & 3 & 1 & 1 & 1
+    \end{array}\right]\,x_1
+    +
+    \left[\begin{array}{cc|ccc}
+      1 & 0 & 0 & 1 & 2 \\
+      1 & 1 & 3 & 4 & 5
+    \end{array}\right]\,x_2
+    $$
+
+In {{ polyany }}, it's possible to concatenate [`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] objects
+by using the [`concatenate`][polyany.functions.concatenate] function from the
+[`polyany.functions`][polyany.functions] module.
+
+
+=== "Direct import"
+
+    ```python
+    from polyany.functions import concatenate
+    ```
+
+    Now, you can call `concatenate` directly.
+
+=== "Alias import"
+
+    ```python
+    import polyany.functions as pa
+    ```
+
+    Now, you can call as `pa.concatenate`.
+
+
+The [`concatenate`][polyany.functions.concatenate] function takes two arguments:
+the sequence (list or tuple) of matrix polynomials to concatenate, and the axis
+which informs which type of concatenation (vertical or horizontal) will be performed.
+
+!!! tip
+
+    As a rule of thumb, `axis = 0` means a vertical concatenation and `axis = 1` a
+    horizontal concatenation.
+
+!!! warning
+
+    To concatenate polynomials, their **shapes must be consistent**. This means that, in a
+    vertical concatenation (`axis = 0`), all polynomials must have the same number of columns (dimension 1).
+    When concatenating horizontally (`axis = 1`), they must have the same number of rows (dimension 0).
+
+Let's reproduce the first example in {{ polyany }}. First, we declare the matrix polynomials:
+
+```python
+mpoly1 = MatrixPolynomial(
+    [[1, 1], [0, 2]],
+    [np.ones((2, 2)), np.tri(2)],
+)
+mpoly2 = MatrixPolynomial(
+    [[0, 0], [0, 2]],
+    [np.arange(6).reshape(3, 2), 3 * np.ones((3, 2))],
+)
+```
+
+Now, we can concatenate them vertically:
+
+```pycon
+>>> concatenate([mpoly1, mpoly2])  # (1)!
+[[0. 0.]    [[1. 1.]            [[1. 0.]
+ [0. 0.]     [1. 1.]             [1. 1.]
+ [0. 1.]     [0. 0.]             [3. 3.]
+ [2. 3.]     [0. 0.]             [3. 3.]
+ [4. 5.]] +  [0. 0.]]*x_1*x_2 +  [3. 3.]]*x_2^2
+```
+
+1. By default, the `axis` argument is 0.
+
+For the second example:
+
+```python
+mpoly1 = MatrixPolynomial(
+    [[0, 0], [1, 0], [0, 1]],
+    [np.eye(2), np.arange(4).reshape(2, 2), np.tri(2)],
+)
+mpoly2 = MatrixPolynomial(
+    [[1, 0], [0, 1]],
+    [np.ones((2, 3)), np.arange(6).reshape(2, 3)],
+)
+```
+
+concatenating the polynomials horizontally:
+
+```pycon
+>>> concatenate([mpoly1, mpoly2], axis=1)
+[[1. 0. 0. 0. 0.]    [[0. 1. 1. 1. 1.]        [[1. 0. 0. 1. 2.]
+ [0. 1. 0. 0. 0.]] +  [2. 3. 1. 1. 1.]]*x_1 +  [1. 1. 3. 4. 5.]]*x_2
+```
+
+## Polynomial block
+
+!!! note "Definition"
+
+    A polynomial block is formed by concatenating several polynomials both vertically
+    **and** horizontally into a single polynomial.
+
+???+ example
+
+    Consider the following four polynomials:
+
+    $$
+    P_1(\mathbf{x})
+    =
+    \underbrace{
+    \begin{bmatrix}
+      1 & 0 \\
+      0 & 1
+    \end{bmatrix}
+    }_{A_1},
+    %
+    \quad\quad\quad
+    %
+    P_2(\mathbf{x})
+    =
+    \underbrace{
+    \begin{bmatrix}
+      0 & 1 & 2 \\
+      3 & 4 & 5
+    \end{bmatrix}
+    }_{A_2}
+    +
+    \underbrace{
+    \begin{bmatrix}
+      1 & 1 & 1 \\
+      1 & 1 & 1
+    \end{bmatrix}
+    }_{B_2}\,x_1
+    $$
+
+    $$
+    P_3(\mathbf{x})
+    =
+    \underbrace{
+    \begin{bmatrix}
+      2 & 2 \\
+      2 & 2 \\
+      2 & 2
+    \end{bmatrix}
+    }_{A_3}\,x_1,
+    %
+    \quad\quad\quad
+    %
+    P_4(\mathbf{x})
+    =
+    \underbrace{
+    \begin{bmatrix}
+      10 & 11 & 12 \\
+      13 & 14 & 15 \\
+      16 & 17 & 18
+    \end{bmatrix}
+    }_{A_4}
+    $$
+
+    A possible block of these polynomials is:
+
+    $$
+    \begin{bmatrix}
+      P_1(\mathbf{x}) & P_2(\mathbf{x}) \\
+      P_3(\mathbf{x}) & P_4(\mathbf{x})
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+      A_1 & A_2 \\
+      \mathbf{0}_{3 \times 2} & A_4
+    \end{bmatrix}
+    +
+    \begin{bmatrix}
+      \mathbf{0}_{2 \times 2} & B_2 \\
+      A_3 & \mathbf{0}_{3 \times 3}
+    \end{bmatrix}\,x_1
+    $$
+
+    which is:
+
+    $$
+    \begin{bmatrix}
+      P_1(\mathbf{x}) & P_2(\mathbf{x}) \\
+      P_3(\mathbf{x}) & P_4(\mathbf{x})
+    \end{bmatrix}
+    =
+    \left[\begin{array}{cc|ccc}
+      1 & 0 & 0 & 1 & 2 \\
+      0 & 1 & 3 & 4 & 5 \\
+      \hline
+      0 & 0 & 10 & 11 & 12 \\
+      0 & 0 & 13 & 14 & 15 \\
+      0 & 0 & 16 & 17 & 18
+    \end{array}\right]
+    +
+    \left[\begin{array}{cc|ccc}
+      0 & 0 & 1 & 1 & 1 \\
+      0 & 0 & 1 & 1 & 1 \\
+      \hline
+      2 & 2 & 0 & 0 & 0 \\
+      2 & 2 & 0 & 0 & 0 \\
+      2 & 2 & 0 & 0 & 0
+    \end{array}\right]\,x_1
+    $$
+
+To reproduce the example in {{ polyany }}, first we declare the polynomials:
+
+```python
+mpoly1 = MatrixPolynomial([[0]], [np.eye(2)])
+mpoly2 = MatrixPolynomial([[0], [1]], [np.arange(6).reshape(2, 3), np.ones((2, 3))])
+mpoly3 = MatrixPolynomial([[1]], [2 * np.ones((3, 2))])
+mpoly4 = MatrixPolynomial([[0]], [np.arange(10, 19).reshape(3, 3)])
+```
+
+Now, we can create the block using the [`block`][polyany.functions.block] function
+from [`polyany.functions`][polyany.functions] module:
+
+```pycon
+>>> block([[mpoly1, mpoly2], [mpoly3, mpoly4]])
+[[ 1.  0.  0.  1.  2.]    [[0. 0. 1. 1. 1.]
+ [ 0.  1.  3.  4.  5.]     [0. 0. 1. 1. 1.]
+ [ 0.  0. 10. 11. 12.]     [2. 2. 0. 0. 0.]
+ [ 0.  0. 13. 14. 15.]     [2. 2. 0. 0. 0.]
+ [ 0.  0. 16. 17. 18.]] +  [2. 2. 0. 0. 0.]]*x_1
+```
+
+The [`block`][polyany.functions.block] function works by concatenating the inner sequences
+horizontally and then concatenating the resulting polynomials vertically.
