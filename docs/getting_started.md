@@ -462,7 +462,8 @@ Matrix product of two matrix polynomials:
 ```
 
 !!! note "Matrix multiplication is not-commutative"
-In the examples above, notice that `operand_1 @ operand_2` is different of `operand_2 @ operand_1`.
+
+    In the examples above, notice that `operand_1 @ operand_2` is different of `operand_2 @ operand_1`.
 
 ## :curly_loop: Partial derivatives
 
