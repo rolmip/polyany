@@ -131,3 +131,89 @@ def test_concatenate_shape_exceptions(axis, shape):
 
     with pytest.raises(ValueError):
         pa.concatenate([mpoly1, mpoly2], axis=axis)
+
+
+def test_block_as_horizontal_concatenate():
+    mpoly = MatrixPolynomial([[0]], [np.eye(2)])
+    polynomials_grid = [[mpoly, mpoly, mpoly]]
+
+    assembled = pa.block(polynomials_grid)
+    concatenated = pa.concatenate(polynomials_grid[0], axis=1)
+
+    assert assembled.n_vars == concatenated.n_vars
+    assert assembled.degree == concatenated.degree
+    assert np.array_equal(assembled.exponents, concatenated.exponents)
+    assert np.array_equal(assembled.coefficients, concatenated.coefficients)
+
+
+def test_block_as_vertical_concatenate():
+    mpoly = MatrixPolynomial([[0]], [np.eye(2)])
+    polynomials_grid = [[mpoly], [mpoly], [mpoly]]
+
+    assembled = pa.block(polynomials_grid)
+    concatenated = pa.concatenate([mpoly, mpoly, mpoly])
+
+    assert assembled.n_vars == concatenated.n_vars
+    assert assembled.degree == concatenated.degree
+    assert np.array_equal(assembled.exponents, concatenated.exponents)
+    assert np.array_equal(assembled.coefficients, concatenated.coefficients)
+
+
+def test_block():
+    mpoly1 = MatrixPolynomial(
+        [[0, 0], [1, 0], [0, 1]], [np.eye(3), np.ones((3, 3)), np.tri(3)]
+    )
+    mpoly2 = MatrixPolynomial([[2]], [np.arange(6).reshape(3, 2)])
+    mpoly3 = MatrixPolynomial([[1, 0], [0, 1]], [3 * np.ones((5, 3)), np.eye(5, 3)])
+    mpoly4 = MatrixPolynomial([[0]], [np.arange(10).reshape(5, 2)])
+
+    assembled = pa.block([[mpoly1, mpoly2], [mpoly3, mpoly4]])
+
+    coefficient_0 = np.block(
+        [
+            [np.eye(3), np.zeros((3, 2))],
+            [np.zeros((5, 3)), np.arange(10).reshape(5, 2)],
+        ]
+    )
+    coefficient_1 = np.block(
+        [
+            [np.ones((3, 3)), np.zeros((3, 2))],
+            [3 * np.ones((5, 3)), np.zeros((5, 2))],
+        ]
+    )
+    coefficient_2 = np.block(
+        [
+            [np.zeros((3, 3)), np.arange(6).reshape(3, 2)],
+            [np.zeros((5, 3)), np.zeros((5, 2))],
+        ]
+    )
+    coefficient_3 = np.block(
+        [
+            [np.tri(3), np.zeros((3, 2))],
+            [np.eye(5, 3), np.zeros((5, 2))],
+        ]
+    )
+
+    assert assembled.n_vars == 2
+    assert assembled.degree == 2
+    assert np.array_equal(assembled.exponents, [[0, 0], [1, 0], [2, 0], [0, 1]])
+    assert np.array_equal(assembled.coefficients[0], coefficient_0)
+    assert np.array_equal(assembled.coefficients[1], coefficient_1)
+    assert np.array_equal(assembled.coefficients[2], coefficient_2)
+    assert np.array_equal(assembled.coefficients[3], coefficient_3)
+
+
+@pytest.mark.parametrize(
+    "input_sequence",
+    [
+        # inner element is not a sequence
+        [[MatrixPolynomial([[0]], [np.eye(1)])], np.eye(1)],
+        # inner element is not a sequence
+        [[MatrixPolynomial([[0]], [np.eye(1)])], MatrixPolynomial([[0]], [np.eye(1)])],
+        # inner element of wrong type
+        [[MatrixPolynomial([[0]], [np.eye(1)])], [np.eye(1)]],
+    ],
+)
+def test_block_exceptions(input_sequence):
+    with pytest.raises(TypeError):
+        pa.block(input_sequence)
