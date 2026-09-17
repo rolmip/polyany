@@ -12,6 +12,8 @@ icon: lucide/code-xml
 
 ::: polyany.matrix.MatrixPolynomial
 
+::: polyany.functions
+
 ## :construction: Internal
 
 !!! warning
