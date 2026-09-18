@@ -25,6 +25,7 @@ jobs:
             code:
               - 'src/**'
               - 'tests/**'
+              - 'uv.lock'
   test:
     permissions:
       contents: read
@@ -58,6 +59,7 @@ jobs:
         run: uv run --frozen pytest --doctest-modules --cov=src --cov-branch --cov-report=xml
 
       - name: Upload coverage reports to Codecov
+        if: ${{ matrix.python-version == '3.14' }}
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
