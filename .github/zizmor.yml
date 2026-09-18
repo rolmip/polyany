@@ -1,0 +1,7 @@
+rules:
+  excessive-permissions:
+    ignore:
+      - bumpversion.yml:7
+  superfluous-actions:
+    ignore:
+      - bumpversion.yml:46

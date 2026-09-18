@@ -43,3 +43,9 @@ repos:
         stages: [commit-msg]
       - id: commitizen-branch
         stages: [pre-push]
+
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: v1.30.1
+    hooks:
+      - id: zizmor
+        args: [--no-progress, --fix]
