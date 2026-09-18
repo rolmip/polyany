@@ -37,3 +37,27 @@ tests:
           - tests/**
   - head-branch:
       - "^test"
+
+BREAKING CHANGE:
+  - head-branch:
+      - "^(?:fix|feat|refactor)!"
+
+"component: base":
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/polyany/base.py
+
+"component: polynomial":
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/polyany/polynomial.py
+
+"component: matrix":
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/polyany/matrix.py
+
+"component: functions":
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/polyany/functions.py
