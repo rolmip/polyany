@@ -25,6 +25,7 @@ jobs:
             code:
               - 'src/**'
               - 'tests/**'
+              - 'uv.lock'
   test:
     permissions:
       contents: read
