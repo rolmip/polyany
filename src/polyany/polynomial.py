@@ -478,10 +478,13 @@ class Polynomial(BasePolynomial):
             )
             coefficients = np.concatenate((np.atleast_1d(other), coefficients))
 
-        return self._from_trusted_data(exponents, coefficients, self.n_vars)
+        return self._from_trusted_data(
+            exponents, coefficients, self.n_vars, self.degree
+        )
 
     def _add_polynomial(self, other: Polynomial) -> Polynomial:
         max_n_vars = max(self.n_vars, other.n_vars)
+        max_degree = max(self.degree, other.degree)
 
         self_exponents = self._domain_expansion(max_n_vars)
         other_exponents = other._domain_expansion(max_n_vars)
@@ -500,7 +503,7 @@ class Polynomial(BasePolynomial):
         unique_coefficients = np.add.reduceat(coefficients, boundaries)
 
         return self._from_trusted_data(
-            unique_exponents, unique_coefficients, max_n_vars
+            unique_exponents, unique_coefficients, max_n_vars, max_degree
         )
 
     def __sub__(self, other: ScalarAlgebraic) -> Polynomial:
@@ -552,10 +555,13 @@ class Polynomial(BasePolynomial):
 
         coefficients = self.coefficients * other
 
-        return self._from_trusted_data(self.exponents.copy(), coefficients, self.n_vars)
+        return self._from_trusted_data(
+            self.exponents.copy(), coefficients, self.n_vars, self.degree
+        )
 
     def _mul_polynomial(self, other: Polynomial) -> Polynomial:
         max_n_vars = max(self.n_vars, other.n_vars)
+        degree = self.degree + other.degree
 
         self_exponents = self._domain_expansion(max_n_vars)
         other_exponents = other._domain_expansion(max_n_vars)
@@ -579,7 +585,7 @@ class Polynomial(BasePolynomial):
         unique_coefficients = np.add.reduceat(coefficients, boundaries)
 
         return self._from_trusted_data(
-            unique_exponents, unique_coefficients, max_n_vars
+            unique_exponents, unique_coefficients, max_n_vars, degree
         )
 
     @np.errstate(divide="raise")
