@@ -668,7 +668,11 @@ class MatrixPolynomial(BasePolynomial):
          [1. 2. 3.]
          [1. 1. 1.]]*x_1*x_2^2
         """
-        return self.__class__(self.exponents, self.coefficients.transpose((0, 2, 1)))
+        return self._from_trusted_data(
+            self.exponents.copy(),
+            self.coefficients.transpose((0, 2, 1)).copy(),
+            self.n_vars,
+        )
 
 
 SCALAR_TYPE = (int, float, np.integer, np.floating)
