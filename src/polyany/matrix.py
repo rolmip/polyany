@@ -169,9 +169,9 @@ class MatrixPolynomial(BasePolynomial):
 
     @classmethod
     def _from_trusted_data(
-        cls, exponents: np.ndarray, coefficients: np.ndarray, n_vars: int
+        cls, exponents: np.ndarray, coefficients: np.ndarray, n_vars: int, degree: int
     ) -> MatrixPolynomial:
-        polynomial = super()._from_trusted_data(exponents, coefficients, n_vars)
+        polynomial = super()._from_trusted_data(exponents, coefficients, n_vars, degree)
         polynomial.shape = coefficients.shape[1:]
 
         return polynomial
@@ -303,7 +303,9 @@ class MatrixPolynomial(BasePolynomial):
             )
             coefficients = np.concatenate((np.expand_dims(other, 0), coefficients))
 
-        return self._from_trusted_data(exponents, coefficients, self.n_vars)
+        return self._from_trusted_data(
+            exponents, coefficients, self.n_vars, self.degree
+        )
 
     def _add_polynomial(self, other: MatrixPolynomial) -> MatrixPolynomial:
         if other.shape != self.shape:
@@ -314,6 +316,7 @@ class MatrixPolynomial(BasePolynomial):
             raise ValueError(msg)
 
         max_n_vars = max(self.n_vars, other.n_vars)
+        max_degree = max(self.degree, other.degree)
 
         self_exponents = self._domain_expansion(max_n_vars)
         other_exponents = other._domain_expansion(max_n_vars)
@@ -332,7 +335,7 @@ class MatrixPolynomial(BasePolynomial):
         unique_coefficients = np.add.reduceat(coefficients, boundaries)
 
         return self._from_trusted_data(
-            unique_exponents, unique_coefficients, max_n_vars
+            unique_exponents, unique_coefficients, max_n_vars, max_degree
         )
 
     def __sub__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
@@ -416,7 +419,9 @@ class MatrixPolynomial(BasePolynomial):
 
         coefficients = self.coefficients * other
 
-        return self._from_trusted_data(self.exponents.copy(), coefficients, self.n_vars)
+        return self._from_trusted_data(
+            self.exponents.copy(), coefficients, self.n_vars, self.degree
+        )
 
     def _mul_matrix(self, other: ArrayLike) -> MatrixPolynomial:
         try:
@@ -446,7 +451,9 @@ class MatrixPolynomial(BasePolynomial):
 
         coefficients = self.coefficients * other
 
-        return self._from_trusted_data(self.exponents.copy(), coefficients, self.n_vars)
+        return self._from_trusted_data(
+            self.exponents.copy(), coefficients, self.n_vars, self.degree
+        )
 
     def _mul_polynomial(self, other: MatrixPolynomial) -> MatrixPolynomial:
         if self.shape != other.shape:
@@ -457,6 +464,7 @@ class MatrixPolynomial(BasePolynomial):
             raise ValueError(msg)
 
         max_n_vars = max(self.n_vars, other.n_vars)
+        degree = self.degree + other.degree
 
         self_exponents = self._domain_expansion(max_n_vars)
         other_exponents = other._domain_expansion(max_n_vars)
@@ -480,7 +488,7 @@ class MatrixPolynomial(BasePolynomial):
         unique_coefficients = np.add.reduceat(coefficients, boundaries)
 
         return self._from_trusted_data(
-            unique_exponents, unique_coefficients, max_n_vars
+            unique_exponents, unique_coefficients, max_n_vars, degree
         )
 
     def __rmul__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
@@ -597,7 +605,9 @@ class MatrixPolynomial(BasePolynomial):
             other @ self.coefficients if reflected else self.coefficients @ other
         )
 
-        return self._from_trusted_data(self.exponents.copy(), coefficients, self.n_vars)
+        return self._from_trusted_data(
+            self.exponents.copy(), coefficients, self.n_vars, self.degree
+        )
 
     def _matmul_polynomial(
         self, other: MatrixPolynomial, *, reflected: bool
@@ -613,6 +623,7 @@ class MatrixPolynomial(BasePolynomial):
             raise ValueError(msg)
 
         max_n_vars = max(self.n_vars, other.n_vars)
+        degree = self.degree + other.degree
 
         left_exponents = self._domain_expansion(max_n_vars)
         right_exponents = other._domain_expansion(max_n_vars)
@@ -637,7 +648,7 @@ class MatrixPolynomial(BasePolynomial):
         unique_coefficients = np.add.reduceat(coefficients, boundaries)
 
         return self._from_trusted_data(
-            unique_exponents, unique_coefficients, max_n_vars
+            unique_exponents, unique_coefficients, max_n_vars, degree
         )
 
     def __rmatmul__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
@@ -672,6 +683,7 @@ class MatrixPolynomial(BasePolynomial):
             self.exponents.copy(),
             self.coefficients.transpose((0, 2, 1)).copy(),
             self.n_vars,
+            self.degree,
         )
 
 
