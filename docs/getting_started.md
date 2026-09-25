@@ -552,14 +552,34 @@ mpoly = MatrixPolynomial(exponents, coefficients)
 2. You could use [`np.eye`](https://numpy.org/doc/stable/reference/generated/numpy.eye.html) method.
 3. The coefficients array can also be nested tuples or a NumPy 3D array.
 
-???+ info "The `shape` attribute"
+### :two: From a scalar polynomial
 
-    The shape (number of rows and the number of columns) of the matrices in the polynomial can be obtained by the `shape` attribute. Following the example:
+A [`Polynomial`][polyany.polynomial.Polynomial] object can be converted into a
+[`MatrixPolynomial`][polyany.matrix.MatrixPolynomial] with the
+[`from_scalar`][polyany.matrix.MatrixPolynomial.from_scalar] classmethod.
 
-    ```numpy
-    >>> mpoly.shape
-    (2, 2)
-    ```
+The method recieves three attributes: the scalar polynomial to be converted, the desired shape
+of the resultant polynomial, and the conversion method.
+
+!!! tip "Conversion methods"
+
+    The default conversion method is `ones`, which uses a [ones matrix][numpy.ones] to
+    expand the scalar coefficients. The `eye` method uses an [identity matrix][numpy.eye] instead.
+
+```python
+>>> poly = Polynomial([[0, 0], [1, 0], [0, 1]], [1, 2, 3])
+>>> poly
+1 + 2*x_1 + 3*x_2
+>>> MatrixPolynomial.from_scalar(poly, shape=(3, 2)) # (1)!
+[[1. 1.]    [[2. 2.]        [[3. 3.]
+ [1. 1.]     [2. 2.]         [3. 3.]
+ [1. 1.]] +  [2. 2.]]*x_1 +  [3. 3.]]*x_2
+>>> MatrixPolynomial.from_scalar(poly, shape=(2, 2), method="eye")
+[[1. 0.]    [[2. 0.]        [[3. 0.]
+ [0. 1.]] +  [0. 2.]]*x_1 +  [0. 3.]]*x_2
+```
+
+1. By default, the conversion method is `ones`.
 
 ## :regional_indicator_t: Transposition
 
