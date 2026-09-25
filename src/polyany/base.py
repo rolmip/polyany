@@ -140,6 +140,7 @@ class BasePolynomial(ABC):
         exponents: np.ndarray,
         coefficients: np.ndarray,
         n_vars: int,
+        degree: int,
     ) -> TBasePolynomial:
         """Internal classmethod to construct a polynomial object from already sorted and
         validated data.
@@ -149,7 +150,7 @@ class BasePolynomial(ABC):
         polynomial.exponents = exponents
         polynomial.coefficients = coefficients
         polynomial.n_vars = n_vars
-        polynomial.degree = np.max(np.sum(exponents, axis=1)).item()
+        polynomial.degree = degree
 
         return polynomial
 

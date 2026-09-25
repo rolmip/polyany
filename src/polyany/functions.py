@@ -109,7 +109,7 @@ def concatenate(
     uniform_polynomials = []
     for poly in polynomials:
         dummy_poly = MatrixPolynomial._from_trusted_data(
-            unique_exponents, np.zeros((n_exps, *poly.shape)), max_n_vars
+            unique_exponents, np.zeros((n_exps, *poly.shape)), max_n_vars, 0
         )
         uniform_polynomials.append(poly + dummy_poly)
 

@@ -188,7 +188,10 @@ def test_polynomial_from_trusted_data():
     standard_poly = Polynomial(exponents, coefficients)
 
     trusted_poly = Polynomial._from_trusted_data(
-        standard_poly.exponents, standard_poly.coefficients, standard_poly.n_vars
+        standard_poly.exponents,
+        standard_poly.coefficients,
+        standard_poly.n_vars,
+        standard_poly.degree,
     )
 
     assert type(standard_poly) is type(trusted_poly)
@@ -272,7 +275,10 @@ def test_matrix_polynomial_from_trusted_data():
     standard_poly = MatrixPolynomial(exponents, coefficients)
 
     trusted_poly = MatrixPolynomial._from_trusted_data(
-        standard_poly.exponents, standard_poly.coefficients, standard_poly.n_vars
+        standard_poly.exponents,
+        standard_poly.coefficients,
+        standard_poly.n_vars,
+        standard_poly.degree,
     )
 
     assert type(standard_poly) is type(trusted_poly)
