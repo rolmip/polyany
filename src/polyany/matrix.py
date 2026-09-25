@@ -253,6 +253,46 @@ class MatrixPolynomial(BasePolynomial):
         shape: tuple[int, int],
         method: Literal["eye", "ones"] = "ones",
     ) -> MatrixPolynomial:
+        """Convert a scalar polynomial into a matrix polynomial.
+
+        Parameters
+        ----------
+        scalar_polynomial : Polynomial
+            The scalar polynomial to be converted.
+        shape : tuple[int, int]
+            Shape of the resultant matrix polynomial.
+        method : Literal["eye", "ones"]
+            Method used in the conversion. If "eye" the scalar coefficients are
+            expanded using an identity (eye) matrix. If "ones" the scalar coefficients
+            are expanded using an ones matrix. Defaults to "ones".
+
+        Returns
+        -------
+        MatrixPolynomial
+            The converted matrix polynomial.
+
+        Raises
+        ------
+        ValueError
+            - If method is not "eye" or "ones".
+
+        Notes
+        -----
+        The exponents, n_vars and degree remain unchanged in the conversion process.
+
+        Examples
+        --------
+        >>> from polyany import MatrixPolynomial, Polynomial
+        >>> poly = Polynomial.univariate([1, 2, 3])
+        >>> poly
+        1 + 2*x_1 + 3*x_1^2
+        >>> MatrixPolynomial.from_scalar(poly, (2, 2), "ones")
+        [[1. 1.]    [[2. 2.]        [[3. 3.]
+         [1. 1.]] +  [2. 2.]]*x_1 +  [3. 3.]]*x_1^2
+        >>> MatrixPolynomial.from_scalar(poly, (2, 2), "eye")
+        [[1. 0.]    [[2. 0.]        [[3. 0.]
+         [0. 1.]] +  [0. 2.]]*x_1 +  [0. 3.]]*x_1^2
+        """
         if method == "eye":
             matrix = np.eye(*shape)
         elif method == "ones":
