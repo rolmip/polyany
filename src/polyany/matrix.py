@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 from numpy.typing import ArrayLike
 
 if TYPE_CHECKING:
     from polyany.types import MatrixAlgebraic, Scalar
+
+    from .polynomial import Polynomial
 
 from .base import BasePolynomial
 
@@ -243,6 +245,32 @@ class MatrixPolynomial(BasePolynomial):
         coefficients = np.zeros((1, *shape))
 
         return cls(exponents, coefficients)
+
+    @classmethod
+    def from_scalar(
+        cls,
+        scalar_polynomial: Polynomial,
+        shape: tuple[int, int],
+        method: Literal["eye", "ones"] = "ones",
+    ) -> MatrixPolynomial:
+        if method == "eye":
+            matrix = np.eye(*shape)
+        elif method == "ones":
+            matrix = np.ones(shape)
+        else:
+            msg = f"Method must be 'eye' or 'ones', got {method}."
+            raise ValueError(msg)
+
+        matrix_coefficients = np.multiply.outer(
+            scalar_polynomial.coefficients, matrix, dtype=np.float64
+        )
+
+        return cls._from_trusted_data(
+            scalar_polynomial.exponents.copy(),
+            matrix_coefficients,
+            scalar_polynomial.n_vars,
+            scalar_polynomial.degree,
+        )
 
     def __add__(self, other: MatrixAlgebraic) -> MatrixPolynomial:
         """Addition with another matrix polynomial, matrix or scalar
