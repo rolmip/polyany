@@ -297,7 +297,7 @@ class MatrixPolynomial(BasePolynomial):
             matrix = np.eye(*shape)
         elif method == "ones":
             matrix = np.ones(shape)
-        else:
+        else:  # pragma: no cover
             msg = f"Method must be 'eye' or 'ones', got {method}."
             raise ValueError(msg)
 
