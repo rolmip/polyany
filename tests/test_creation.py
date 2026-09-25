@@ -287,3 +287,19 @@ def test_matrix_polynomial_from_trusted_data():
     assert standard_poly.n_vars == trusted_poly.n_vars
     assert standard_poly.degree == trusted_poly.degree
     assert standard_poly.shape == trusted_poly.shape
+
+
+@pytest.mark.parametrize("method", ["ones", "eye"])
+@pytest.mark.parametrize("shape", [(2, 2), (3, 2), (3, 3)])
+def test_matrix_polynomial_from_scalar(method, shape):
+    poly = Polynomial.univariate([1, 2, 3])
+    mpoly = MatrixPolynomial.from_scalar(poly, shape, method)
+
+    matrix = np.ones(shape) if method == "ones" else np.eye(*shape)
+    expected_coefficients = [1 * matrix, 2 * matrix, 3 * matrix]
+
+    assert np.array_equal(mpoly.exponents, poly.exponents)
+    assert np.array_equal(mpoly.coefficients, expected_coefficients)
+    assert mpoly.n_vars == poly.n_vars
+    assert mpoly.degree == poly.degree
+    assert mpoly.shape == shape
