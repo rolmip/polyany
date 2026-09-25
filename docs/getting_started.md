@@ -524,6 +524,17 @@ which can be obtained in {{ polyany }} as:
 
 In {{ polyany }}, a matrix polynomial can be created from exponents and coefficients, similar to [scalar polynomials](#from-exponents-and-coefficients), using the [MatrixPolynomial][polyany.matrix.MatrixPolynomial] class.
 
+???+ info "The `shape` attribute"
+
+    The shape (number of rows and the number of columns) of the matrices in the polynomial can be obtained by the `shape` attribute. Following the example:
+
+    ```numpy
+    >>> mpoly.shape
+    (2, 2)
+    ```
+
+### :one: From exponents and coefficients
+
 If we want to declare the matrix polynomial in the definition above, we define:
 
 ```py
